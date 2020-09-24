@@ -1,0 +1,63 @@
+{
+    "name": "vuongdq/vl-admin-tool",
+    "type": "library",
+    "description": "Admin Laravel Tool by Vuongdq",
+    "keywords": [
+        "laravel",
+        "api",
+        "model",
+        "request",
+        "migration",
+        "model",
+        "crud",
+        "repository",
+        "view",
+        "test",
+        "generator",
+        "swagger",
+        "vl-admin-tool",
+        "admin-tool",
+        "admin",
+        "cms"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Do Quoc Vuong",
+            "email": "vuongtlt13@gmail.com"
+        },
+        {
+            "name": "Mitul Golakiya",
+            "email": "me@mitul.me"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5",
+        "illuminate/support": "^7.0"
+    },
+    "require-dev": {
+        "phpunit": "^8.5",
+        "mockery": "^1.3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vuongdq\\VLAdminTool\\Database\\": "database/",
+            "Vuongdq\\VLAdminTool\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\Vuongdq\\VLAdminTool\\VLAdminToolServiceProvider"
+            ]
+        }
+    }
+}

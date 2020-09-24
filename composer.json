@@ -25,10 +25,6 @@
         {
             "name": "Do Quoc Vuong",
             "email": "vuongtlt13@gmail.com"
-        },
-        {
-            "name": "Mitul Golakiya",
-            "email": "me@mitul.me"
         }
     ],
     "require": {
@@ -60,4 +56,6 @@
             ]
         }
     }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

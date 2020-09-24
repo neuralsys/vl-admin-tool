@@ -43,7 +43,7 @@ return [
 
         'schema_files'      => resource_path('model_schemas/'),
 
-        'templates_dir'     => resource_path('/vl-admin-tool/templates/'),
+        'templates_dir'     => resource_path('vl-admin-tool/templates/'),
 
         'seeder'            => database_path('seeds/'),
 

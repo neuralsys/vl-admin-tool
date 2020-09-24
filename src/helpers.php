@@ -90,7 +90,7 @@ if (!function_exists('get_template_file_path')) {
         $templateName = str_replace('.', '/', $templateName);
 
         $templatesPath = config(
-            'admin_generator.path.templates_dir',
+            'vl_admin_tool.path.templates_dir',
             resource_path('vl-admin-tool/templates/')
         );
         $path = $templatesPath.$templateName.'.stub';
@@ -114,7 +114,7 @@ if (!function_exists('get_templates_package_path')) {
     function get_templates_package_path($templateType)
     {
         if (strpos($templateType, '/') === false) {
-            $templateType = base_path('pkgs/').$templateType;
+            $templateType = base_path('vendor/vuongdq/').$templateType;
         }
 
         return $templateType;

@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            @lang('models/models.singular')
+            @lang('vl-admin-tool-lang::models/model.singular')
         </h1>
     </section>
     <div class="content">
@@ -12,7 +12,7 @@
                 <div class="row">
                     {!! Form::open(['route' => 'models.store']) !!}
 
-                        @include('models.fields')
+                        @include('vl-admin-tool::models.fields')
 
                     {!! Form::close() !!}
                 </div>

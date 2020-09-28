@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 $middleware = config('vl_admin_tool.admin_middleware', 'admin.user');
 
-Route::group(['middleware' => $middleware, 'as' => 'vlat.'], function () {
+Route::group(['middleware' => $middleware], function () {
     Route::resource('models', 'ModelController');
 
     Route::resource('relations', 'RelationController');

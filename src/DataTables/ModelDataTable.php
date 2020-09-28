@@ -19,7 +19,7 @@ class ModelDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'models.datatables_actions');
+        return $dataTable->addColumn('action', 'vl-admin-tool::models.datatables_actions');
     }
 
     /**
@@ -89,16 +89,15 @@ class ModelDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'project_id' => new Column(['title' => __('models/models.fields.project_id'), 'data' => 'project_id']),
-            'class_name' => new Column(['title' => __('models/models.fields.class_name'), 'data' => 'class_name']),
-            'table_name' => new Column(['title' => __('models/models.fields.table_name'), 'data' => 'table_name']),
-            'description' => new Column(['title' => __('models/models.fields.description'), 'data' => 'description']),
-            'timestamps' => new Column(['title' => __('models/models.fields.timestamps'), 'data' => 'timestamps']),
-            'soft_delete' => new Column(['title' => __('models/models.fields.soft_delete'), 'data' => 'soft_delete']),
-            'test' => new Column(['title' => __('models/models.fields.test'), 'data' => 'test']),
-            'swagger' => new Column(['title' => __('models/models.fields.swagger'), 'data' => 'swagger']),
-            'datatables' => new Column(['title' => __('models/models.fields.datatables'), 'data' => 'datatables']),
-            'paginate' => new Column(['title' => __('models/models.fields.paginate'), 'data' => 'paginate'])
+            'class_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.class_name'), 'data' => 'class_name']),
+            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'table_name']),
+            'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
+            'timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'timestamps']),
+            'soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'soft_delete']),
+            'test' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.test'), 'data' => 'test']),
+            'swagger' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.swagger'), 'data' => 'swagger']),
+            'datatables' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.datatables'), 'data' => 'datatables']),
+            'paginate' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.paginate'), 'data' => 'paginate'])
         ];
     }
 

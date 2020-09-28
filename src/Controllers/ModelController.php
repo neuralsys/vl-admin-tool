@@ -26,7 +26,7 @@ class ModelController extends Controller
      */
     public function index(ModelDataTable $modelDataTable)
     {
-        return $modelDataTable->render('models.index');
+        return $modelDataTable->render('vl-admin-tool::models.index');
     }
 
     /**
@@ -36,7 +36,7 @@ class ModelController extends Controller
      */
     public function create()
     {
-        return view('models.create');
+        return view('vl-admin-tool::models.create');
     }
 
     /**
@@ -54,7 +54,7 @@ class ModelController extends Controller
 
         Flash::success(__('messages.saved', ['model' => __('models/models.singular')]));
 
-        return redirect(route('models.index'));
+        return redirect(route('vl-admin-tool::models.index'));
     }
 
     /**
@@ -74,7 +74,7 @@ class ModelController extends Controller
             return redirect(route('models.index'));
         }
 
-        return view('models.show')->with('model', $model);
+        return view('vl-admin-tool::models.show')->with('model', $model);
     }
 
     /**
@@ -94,7 +94,7 @@ class ModelController extends Controller
             return redirect(route('models.index'));
         }
 
-        return view('models.edit')->with('model', $model);
+        return view('vl-admin-tool::models.edit')->with('model', $model);
     }
 
     /**

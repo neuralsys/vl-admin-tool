@@ -332,9 +332,14 @@ class BaseCommand extends Command
      * @return string
      */
     public function getToolMigrationFolder() {
-        $rootPath = dirname(realpath(__DIR__.'/../../../'));
-        $migrationFolder = realpath(__DIR__.'/../../database/migrations');
-        $migrationFolder = str_replace($rootPath .'/', "", $migrationFolder);
-        return $migrationFolder;
+        $rootPath = $this->getPackagePath();
+        return $rootPath.'/database/migrations';
+    }
+
+    public function getPackagePath() {
+        $basePath = base_path('') . '/';
+        $fullPath = dirname(realpath(__DIR__.'/../'));
+        $relativePath = str_replace($basePath, '', $fullPath);
+        return $relativePath;
     }
 }

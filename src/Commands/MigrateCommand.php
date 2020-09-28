@@ -46,7 +46,6 @@ class MigrateCommand extends BaseCommand
 
     private function runToolMigration() {
         $migrationFolder = $this->getToolMigrationFolder();
-
         $force = $this->option('force');
         $pathOption = ['--path' => $migrationFolder];
         if ($force)

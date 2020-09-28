@@ -44,11 +44,12 @@ class VLAdminToolServiceProvider extends ServiceProvider
         $this->publishes([
             $configPath => config_path('vl_admin_tool.php'),
         ]);
-
-        $this->commands([
-            InstallCommand::class,
-            UninstallCommand::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+                UninstallCommand::class,
+            ]);
+        }
 
         $router->aliasMiddleware('admin.user', VLAdminToolMiddleware::class);
         $this->app->register('Vuongdq\VLAdminTool\Providers\VLAdminToolRouteServiceProvider');

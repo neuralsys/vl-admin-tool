@@ -49,12 +49,9 @@ class ModelController extends Controller
     public function store(CreateModelRequest $request)
     {
         $input = $request->all();
-
         $model = $this->modelRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/models.singular')]));
-
-        return redirect(route('vl-admin-tool::models.index'));
+        return redirect(route('models.index'));
     }
 
     /**
@@ -69,8 +66,6 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('models/models.singular').' '.__('messages.not_found'));
-
             return redirect(route('models.index'));
         }
 
@@ -89,8 +84,6 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
             return redirect(route('models.index'));
         }
 
@@ -110,14 +103,10 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
             return redirect(route('models.index'));
         }
 
         $model = $this->modelRepository->update($request->all(), $id);
-
-        Flash::success(__('messages.updated', ['model' => __('models/models.singular')]));
 
         return redirect(route('models.index'));
     }
@@ -134,14 +123,10 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
             return redirect(route('models.index'));
         }
 
         $this->modelRepository->delete($id);
-
-        Flash::success(__('messages.deleted', ['model' => __('models/models.singular')]));
 
         return redirect(route('models.index'));
     }

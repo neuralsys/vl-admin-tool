@@ -6,6 +6,15 @@
             @lang('vl-admin-tool-lang::models/model.singular')
         </h1>
     </section>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="content">
         <div class="box box-primary">
             <div class="box-body">

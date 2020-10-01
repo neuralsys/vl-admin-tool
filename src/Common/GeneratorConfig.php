@@ -366,23 +366,9 @@ class GeneratorConfig
             }
         }
 
-        if (empty($this->options['save'])) {
-            $this->options['save'] = config('admin_generator.laravel_generator.options.save_schema_file', true);
-        }
-
-        if (empty($this->options['localized'])) {
-            $this->options['localized'] = config('admin_generator.laravel_generator.options.localized', false);
-        }
-
-        if ($this->options['localized']) {
-            $commandData->getTemplatesManager()->setUseLocale(true);
-        }
+        $commandData->getTemplatesManager()->setUseLocale(true);
 
         $this->options['softDelete'] = config('admin_generator.laravel_generator.options.softDelete', false);
-        $this->options['repositoryPattern'] = config('admin_generator.laravel_generator.options.repository_pattern', true);
-        if (!empty($this->options['skip'])) {
-            $this->options['skip'] = array_map('trim', explode(',', $this->options['skip']));
-        }
 
         if (!empty($this->options['datatables'])) {
             if (strtolower($this->options['datatables']) == 'true') {

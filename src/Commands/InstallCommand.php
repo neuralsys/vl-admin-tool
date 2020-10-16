@@ -46,6 +46,7 @@ class InstallCommand extends BaseCommand
         if (!$this->hasOption('skip-seeding') || !$this->option('skip-seeding'))
             $this->call('vlat:seed');
 
+
         $this->info('Install VL Admin Tool successfully!');
         return 0;
     }

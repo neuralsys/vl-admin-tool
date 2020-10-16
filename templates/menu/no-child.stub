@@ -1,0 +1,6 @@
+<li class="nav-item">
+    <a href="$INDEX_ROUTE" class="nav-link {{ Request::is('$URL_PATTERN') ? 'active' : '' }}">
+          <i class="fas fa-circle nav-icon"></i>
+          <p>$MENU_TITLE</p>
+    </a>
+</li>

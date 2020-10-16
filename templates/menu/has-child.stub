@@ -1,0 +1,12 @@
+<li class="nav-item has-treeview {{ $CONDITION ? 'menu-open' : '' }}">
+    <a href="$INDEX_ROUTE" class="nav-link {{ ($CONDITION) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-circle"></i>
+          <p>
+            $MENU_TITLE
+            <i class="right fas fa-angle-left"></i>
+          </p>
+    </a>
+    <ul class="nav nav-treeview">
+        $CHILDRENT_MENUS
+    </ul>
+</li>

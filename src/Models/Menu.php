@@ -27,9 +27,11 @@ class Menu extends Model
 
     public $fillable = [
         'url_pattern',
-        'index_url',
+        'type',
+        'index_route_name',
         'title',
-        'parent_id'
+        'parent_id',
+        'pos',
     ];
 
     /**
@@ -39,10 +41,12 @@ class Menu extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'type' => 'string',
         'url_pattern' => 'string',
-        'index_url' => 'string',
+        'index_route_name' => 'string',
         'title' => 'string',
-        'parent_id' => 'integer'
+        'parent_id' => 'integer',
+        'pos' => 'integer'
     ];
 
     /**
@@ -52,10 +56,38 @@ class Menu extends Model
      */
     public static $rules = [
         'url_pattern' => 'required|string|max:255',
-        'index_url' => 'required|string|max:255',
+        'type' => 'required|string|max:255|in:header,has-child,no-child',
+        'index_route_name' => 'required|string|max:255',
         'title' => 'required|string|max:255',
-        'parent_id' => 'required|integer'
+        'parent_id' => 'required|integer',
+        'pos' => 'required|integer'
     ];
 
+    public function parent() {
+        return $this->belongsTo(Menu::class, 'parent_id');
+    }
 
+    public function childrent() {
+        return $this->hasMany(Menu::class, 'parent_id');
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        static::creating(function (Menu $item) {
+            if ($item->pos === null) {
+                $maxPos = $item->parent->childrent->max('pos');
+                if ($maxPos === null) $maxPos = 1;
+                $item->pos = $maxPos;
+            }
+        });
+
+        static::deleting(function (Menu $item) {
+            $childrent = $item->childrent;
+            foreach ($childrent as $child) {
+                $child->parent_id = 0;
+                $child->save();
+            }
+        });
+    }
 }

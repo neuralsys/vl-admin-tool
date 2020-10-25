@@ -41,7 +41,7 @@ class GenerateMenuCommand extends BaseCommand {
         $menus = $menuRepo->where('parent_id', 0)->orderBy('pos')->get();
         $result = '';
         foreach ($menus as $menu)
-            $result = $result . PHP_EOL . $this->generateMenu($menu);
+            $result = $result . PHP_EOL . $this->generateMenu($menu, 1);
 
         $menuPath = resource_path('views/layouts/menu.blade.php');
         file_put_contents($menuPath, $result);
@@ -51,8 +51,6 @@ class GenerateMenuCommand extends BaseCommand {
 
     public function getOptions() {
         return [
-            ['skip-migration', null, InputOption::VALUE_NONE, 'Skip migrating after install'],
-            ['skip-seeding', null, InputOption::VALUE_NONE, 'Skip seeding after install'],
             ['force', null, InputOption::VALUE_NONE, 'Force install'],
         ];
     }
@@ -61,15 +59,15 @@ class GenerateMenuCommand extends BaseCommand {
         return [];
     }
 
-    public function generateMenu($menu) {
+    public function generateMenu($menu, $level) {
         $result = '';
         $templateMenu = get_template('menu/'.$menu->type, 'vl-admin-tool');
-        $variables = $this->getVariables($menu);
+        $variables = $this->getVariables($menu, $level);
         $menu = fill_template($variables, $templateMenu);
         return $menu;
     }
 
-    public function getVariables($menu) {
+    public function getVariables($menu, $level) {
         switch ($menu->type) {
             case 'header':
                 return [
@@ -80,7 +78,8 @@ class GenerateMenuCommand extends BaseCommand {
                 return [
                     '$MENU_TITLE' => $menu->title,
                     '$INDEX_ROUTE' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
-                    '$URL_PATTERN' => $menu->url_pattern
+                    '$URL_PATTERN' => $menu->url_pattern,
+                    '$MENU_LEVEL' => $level
                 ];
                 break;
             case 'has-child':
@@ -90,7 +89,7 @@ class GenerateMenuCommand extends BaseCommand {
                 foreach ($childrenMenus as $childrenMenu) {
                     if ($condition == '') $condition = "Request::is('$childrenMenu->url_pattern')";
                     else $condition = $condition . ' | ' . "Request::is('$childrenMenu->url_pattern')";
-                    $menuObj = $this->generateMenu($childrenMenu);
+                    $menuObj = $this->generateMenu($childrenMenu, $level + 1);
                     $menus = $menus.PHP_EOL.$menuObj;
                 }
 
@@ -99,6 +98,7 @@ class GenerateMenuCommand extends BaseCommand {
                     '$CONDITION' => $condition,
                     '$INDEX_ROUTE' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$CHILDRENT_MENUS' => $menus,
+                    '$MENU_LEVEL' => $level
                 ];
                 break;
         }

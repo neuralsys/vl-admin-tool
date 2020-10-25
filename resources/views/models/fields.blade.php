@@ -1,7 +1,9 @@
 <!-- Class Name Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('class_name', __('vl-admin-tool-lang::models/model.fields.class_name').':') !!}
-    {!! Form::text('class_name', null, ['class' => 'form-control']) !!}
+<div class="col-sm-6">
+    <div class="form-group">
+        {!! Form::label('class_name', __('vl-admin-tool-lang::models/model.fields.class_name').':') !!}
+        {!! Form::text('class_name', null, ['class' => 'form-control']) !!}
+    </div>
 </div>
 
 <!-- Table Name Field -->
@@ -62,10 +64,4 @@
 <div class="form-group col-sm-6">
     {!! Form::label('paginate', __('vl-admin-tool-lang::models/model.fields.paginate')) !!}
     {!! Form::number('paginate', 15, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit(__('vl-admin-tool-lang::crud.save'), ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('models.index') }}" class="btn btn-default">@lang('vl-admin-tool-lang::crud.cancel')</a>
 </div>

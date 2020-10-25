@@ -30,16 +30,6 @@ class ModelController extends Controller
     }
 
     /**
-     * Show the form for creating a new Models.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('vl-admin-tool::models.create');
-    }
-
-    /**
      * Store a newly created Models in storage.
      *
      * @param CreateModelRequest $request
@@ -51,7 +41,7 @@ class ModelController extends Controller
         $input = $request->all();
         $model = $this->modelRepository->create($input);
 
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.add_success', ['model' => __('vl-admin-tool-lang::models/model.singular')]));
     }
 
     /**

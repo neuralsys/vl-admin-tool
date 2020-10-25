@@ -45,24 +45,20 @@ class ModelDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => 'Bfrtip',
+                'dom'       => '<"model-toolbar">Bflrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
+                'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
+                                    fnRowCallBack(nRow, aData, iDisplayIndex);
+                                 }",
+//                'drawCallback' => 'function() {
+//                    generateFooter();
+//                }',
                 'buttons'   => [
-                    [
-                       'extend' => 'create',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-plus"></i> ' .__('auth.app.create').''
-                    ],
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'print',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-print"></i> ' .__('auth.app.print').''
                     ],
                     [
                        'extend' => 'reset',
@@ -78,6 +74,8 @@ class ModelDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
+                "lengthMenu" => [[1, 25, 50, -1], [1, 25, 50, "All"]],
+                'select' => true
             ]);
     }
 

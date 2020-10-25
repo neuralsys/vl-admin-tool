@@ -21,9 +21,3 @@
     {!! Form::label('parent_id', __('models/menus.fields.parent_id').':') !!}
     {!! Form::number('parent_id', null, ['class' => 'form-control']) !!}
 </div>
-
-<!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit(__('crud.save'), ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('menus.index') }}" class="btn btn-default">@lang('crud.cancel')</a>
-</div>

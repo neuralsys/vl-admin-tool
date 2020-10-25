@@ -1,5 +1,5 @@
 <li class="nav-item has-treeview {{ $CONDITION ? 'menu-open' : '' }}">
-    <a href="$INDEX_ROUTE" class="nav-link {{ ($CONDITION) ? 'active' : '' }}">
+    <a href="$INDEX_ROUTE" class="nav-link {{ ($CONDITION) ? 'active' : '' }}" style="padding-left: {{1 + 0.8 * ($MENU_LEVEL - 1)}}rem">
           <i class="nav-icon fas fa-circle"></i>
           <p>
             $MENU_TITLE

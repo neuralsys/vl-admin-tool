@@ -63,7 +63,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary pull-right">
+                    <button type="submit" class="btn btn-primary float-right">
                         <i class="fa fa-btn fa-envelope"></i> @lang('auth.forgot_password.send_pwd_reset')
                     </button>
                 </div>

@@ -2,11 +2,11 @@
 
 @section('content')
     <section class="content-header">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @lang('models/translationFiles.plural')
         </h1>
-        <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('translationFiles.create') }}">@lang('crud.add_new')</a>
+        <h1 class="float-right">
+           <a class="btn btn-primary float-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('translationFiles.create') }}">@lang('crud.add_new')</a>
         </h1>
     </section>
     <div class="content">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="text-center">
-        
+
         </div>
     </div>
 @endsection

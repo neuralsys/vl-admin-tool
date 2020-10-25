@@ -1,5 +1,5 @@
-<div class="modal fade" id="model-create-modal">
-    <form id="model-create-form" method="POST" action="{{route('models.store')}}">
+<div class="modal fade" id="model-edit-modal">
+    <form id="model-edit-form" method="POST" data-template-action="{{route('models.update', '%s')}}">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -8,6 +8,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                @method('PUT')
                 <div class="modal-body">
                     <div class="row">
                         @include('vl-admin-tool::models.fields')
@@ -28,11 +29,11 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
-            modelCreateForm.on('submit', (evt) => {
+            modelEditForm.on('submit', (evt) => {
                 evt.preventDefault();
-                sendFormAjax(modelCreateForm, {
+                sendFormAjax(modelEditForm, {
                     table: modelTable,
-                    modal: modelCreateModal
+                    modal: modelEditModal
                 })
             });
         });

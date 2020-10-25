@@ -46,10 +46,9 @@ class ModelDataTable extends DataTable
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
                 'dom'       => '<"model-toolbar">Bflrtip',
-                'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                                    fnRowCallBack(nRow, aData, iDisplayIndex);
+                                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
                                  }",
 //                'drawCallback' => 'function() {
 //                    generateFooter();
@@ -74,7 +73,7 @@ class ModelDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
-                "lengthMenu" => [[1, 25, 50, -1], [1, 25, 50, "All"]],
+                "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 'select' => true
             ]);
     }

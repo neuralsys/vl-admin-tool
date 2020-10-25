@@ -41,7 +41,7 @@ class ModelController extends Controller
         $input = $request->all();
         $model = $this->modelRepository->create($input);
 
-        return $this->success(__('vl-admin-tool-lang::crud.add_success', ['model' => __('vl-admin-tool-lang::models/model.singular')]));
+        return $this->success(__('vl-admin-tool-lang::crud.add_success'));
     }
 
     /**
@@ -63,24 +63,6 @@ class ModelController extends Controller
     }
 
     /**
-     * Show the form for editing the specified Models.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $model = $this->modelRepository->find($id);
-
-        if (empty($model)) {
-            return redirect(route('models.index'));
-        }
-
-        return view('vl-admin-tool::models.edit')->with('model', $model);
-    }
-
-    /**
      * Update the specified Models in storage.
      *
      * @param  int              $id
@@ -93,12 +75,12 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            return redirect(route('models.index'));
+            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
         }
 
         $model = $this->modelRepository->update($request->all(), $id);
 
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.update_success'));
     }
 
     /**
@@ -113,11 +95,11 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            return redirect(route('models.index'));
+            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
         }
 
         $this->modelRepository->delete($id);
 
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.delete_success'));
     }
 }

@@ -7,7 +7,15 @@
         <i class="fas fa-edit"></i>
     </button>
 
-    <button class='btn btn-danger btn-xs datatable-action' onclick="deleteRecord(this, '{{route("models.destroy", "%s")}}')">
+    <button
+        class='btn btn-danger btn-xs datatable-action'
+        onclick="deleteRecord(this, '{{route("models.destroy", "%s")}}', true, {
+            mainText: '@lang('crud.are_you_sure')',
+            detailText: '@lang('crud.confirm_delete_text')',
+            cancel: '@lang('crud.cancel')',
+            agree: '@lang('crud.agree')',
+            })"
+    >
         <i class="fas fa-trash-alt"></i>
     </button>
 </div>

@@ -68,10 +68,8 @@ class BaseCommand extends Command
             $modelGenerator->generate();
         }
 
-        if (!$this->isSkip('repository') && $this->commandData->getOption('repositoryPattern')) {
-            $repositoryGenerator = new RepositoryGenerator($this->commandData);
-            $repositoryGenerator->generate();
-        }
+        $repositoryGenerator = new RepositoryGenerator($this->commandData);
+        $repositoryGenerator->generate();
 
         if ($this->commandData->getOption('factory') || (
             !$this->isSkip('tests') and $this->commandData->getAddOn('tests')

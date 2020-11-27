@@ -13,13 +13,13 @@ return [
 
         'migration'         => database_path('migrations/'),
 
-        'model'             => app_path('Models/'),
+        'model'             => base_path('vendor/vuongdq/vl-admin-tool/src/Models/'),
 
         'trait'             => app_path('Traits/'),
 
-        'datatables'        => app_path('DataTables/'),
+        'datatables'        => base_path('vendor/vuongdq/vl-admin-tool/src/DataTables/'),
 
-        'repository'        => app_path('Repositories/'),
+        'repository'        => base_path('vendor/vuongdq/vl-admin-tool/src/Repositories/'),
 
         'routes'            => base_path('routes/web.php'),
 
@@ -29,7 +29,7 @@ return [
 
         'api_request'       => app_path('Http/Requests/API/'),
 
-        'controller'        => app_path('Http/Controllers/'),
+        'controller'        => base_path('vendor/vuongdq/vl-admin-tool/src/Controllers/'),
 
         'api_controller'    => app_path('Http/Controllers/API/'),
 
@@ -39,7 +39,7 @@ return [
 
         'tests'             => base_path('tests/'),
 
-        'views'             => resource_path('views/'),
+        'views'             => base_path('vendor/vuongdq/vl-admin-tool/resources/views/'),
 
         'schema_files'      => resource_path('model_schemas/'),
 
@@ -63,17 +63,17 @@ return [
 
     'namespace' => [
 
-        'model'             => 'App\Models',
+        'model'             => 'Vuongdq\VLAdminTool\Models',
 
-        'datatables'        => 'App\DataTables',
+        'datatables'        => 'Vuongdq\VLAdminTool\DataTables',
 
-        'repository'        => 'App\Repositories',
+        'repository'        => 'Vuongdq\VLAdminTool\Repositories',
 
-        'controller'        => 'App\Http\Controllers',
+        'controller'        => 'Vuongdq\VLAdminTool\Controllers',
 
         'api_controller'    => 'App\Http\Controllers\API',
 
-        'request'           => 'App\Http\Requests',
+        'request'           => 'Vuongdq\VLAdminTool\Requests',
 
         'api_request'       => 'App\Http\Requests\API',
 
@@ -83,7 +83,7 @@ return [
 
         'tests'             => 'Tests',
 
-        'traits'            => 'App\Traits'
+        'traits'            => 'Vuongdq\VLAdminTool\Traits'
     ],
 
     /*
@@ -123,7 +123,6 @@ return [
     */
 
     'options' => [
-
         'softDelete' => true,
 
         'save_schema_file' => true,

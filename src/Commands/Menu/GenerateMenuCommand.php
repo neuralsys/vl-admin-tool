@@ -79,7 +79,8 @@ class GenerateMenuCommand extends BaseCommand {
                     '$MENU_TITLE' => $menu->title,
                     '$INDEX_ROUTE' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$URL_PATTERN' => $menu->url_pattern,
-                    '$MENU_LEVEL' => $level
+                    '$PADDING_LEFT' => 1 + 0.8 * ($level - 1),
+                    '$ICON_CLASS' => 'fas fa-circle nav-icon'
                 ];
                 break;
             case 'has-child':
@@ -98,7 +99,8 @@ class GenerateMenuCommand extends BaseCommand {
                     '$CONDITION' => $condition,
                     '$INDEX_ROUTE' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$CHILDRENT_MENUS' => $menus,
-                    '$MENU_LEVEL' => $level
+                    '$PADDING_LEFT' => 1 + 0.8 * ($level - 1),
+                    '$ICON_CLASS' => 'fas fa-circle nav-icon'
                 ];
                 break;
         }

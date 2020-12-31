@@ -1,70 +1,83 @@
-@php
-    $uuid = rand(1, 10000);
-@endphp
 <!-- Model Id Field -->
-<div class="col-sm-6">
-    <div class="form-group">
-        {!! Form::label('model_id'.$uuid, __('vl-admin-tool-lang::models/field.fields.model_id').':') !!}
-        {!! Form::select('model_id', array('4' => '4', '2' => '2'), '1', ['class' => 'form-control', "data-column" => "model_id", "id" => 'model_id'.$uuid]) !!}
-    </div>
-</div>
-
-<!-- Table Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('table_name'.$uuid, __('vl-admin-tool-lang::models/model.fields.table_name').':') !!}
-    {!! Form::text('table_name', null, ['class' => 'form-control', "data-column" => "table_name", "id" => 'table_name'.$uuid]) !!}
+    {!! Form::label('model_id', __('models/fields.fields.model_id').':') !!}
+    {!! Form::number('model_id', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Singular Field -->
+<!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('singular'.$uuid, __('vl-admin-tool-lang::models/model.fields.singular').':') !!}
-    {!! Form::text('singular', null, ['class' => 'form-control', "data-column" => "singular", "id" => 'singular'.$uuid]) !!}
+    {!! Form::label('name', __('models/fields.fields.name').':') !!}
+    {!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Plural Field -->
+<!-- Db Type Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('plurals'.$uuid, __('vl-admin-tool-lang::models/model.fields.plurals').':') !!}
-    {!! Form::text('plurals', null, ['class' => 'form-control', "data-column" => "plurals", "id" => 'plurals'.$uuid]) !!}
+    {!! Form::label('db_type', __('models/fields.fields.db_type').':') !!}
+    {!! Form::text('db_type', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Description Field -->
-<div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('description'.$uuid, __('vl-admin-tool-lang::models/model.fields.description').':') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control', "data-column" => "description", "id" => 'description'.$uuid]) !!}
-</div>
-
-<!-- Timestamps Field -->
+<!-- Html Type Field -->
 <div class="form-group col-sm-6">
-    {!! Form::checkbox('timestamps', '1', true, ['id' => 'timestamps'.$uuid, "data-column" => "timestamps"]) !!}
-    {!! Form::label('timestamps'.$uuid, __('vl-admin-tool-lang::models/model.fields.timestamps')) !!}
+    {!! Form::label('html_type', __('models/fields.fields.html_type').':') !!}
+    {!! Form::text('html_type', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Soft Delete Field -->
+<!-- Primary Field -->
 <div class="form-group col-sm-6">
-    {!! Form::checkbox('soft_delete', '1', true, ["data-column" => "soft_delete", "id" => 'soft_delete'.$uuid]) !!}
-    {!! Form::label('soft_delete'.$uuid, __('vl-admin-tool-lang::models/model.fields.soft_delete')) !!}
+    {!! Form::label('primary', __('models/fields.fields.primary').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('primary', 0) !!}
+        {!! Form::checkbox('primary', '1', null) !!} 1
+    </label>
 </div>
 
-<!-- Test Field -->
+<!-- Unique Field -->
 <div class="form-group col-sm-6">
-    {!! Form::checkbox('test', '1', true, ["data-column" => "test", "id" => 'test'.$uuid]) !!}
-    {!! Form::label('test'.$uuid, __('vl-admin-tool-lang::models/model.fields.test')) !!}
+    {!! Form::label('unique', __('models/fields.fields.unique').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('unique', 0) !!}
+        {!! Form::checkbox('unique', '1', null) !!} 1
+    </label>
 </div>
 
-<!-- Swagger Field -->
+<!-- Auto Increment Field -->
 <div class="form-group col-sm-6">
-    {!! Form::checkbox('swagger', '1', false, ["data-column" => "swagger", "id" => 'swagger'.$uuid]) !!}
-    {!! Form::label('swagger'.$uuid, __('vl-admin-tool-lang::models/model.fields.swagger')) !!}
+    {!! Form::label('auto_increment', __('models/fields.fields.auto_increment').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('auto_increment', 0) !!}
+        {!! Form::checkbox('auto_increment', '1', null) !!} 1
+    </label>
 </div>
 
-<!-- Datatables Field -->
+<!-- Nullable Field -->
 <div class="form-group col-sm-6">
-    {!! Form::checkbox('datatables', '1', true, ["data-column" => "datatables", "id" => 'datatables'.$uuid]) !!}
-    {!! Form::label('datatables'.$uuid, __('vl-admin-tool-lang::models/model.fields.datatables')) !!}
+    {!! Form::label('nullable', __('models/fields.fields.nullable').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('nullable', 0) !!}
+        {!! Form::checkbox('nullable', '1', null) !!} 1
+    </label>
 </div>
 
-<!-- Paginate Field -->
+<!-- Creatable Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('paginate'.$uuid, __('vl-admin-tool-lang::models/model.fields.paginate')) !!}
-    {!! Form::number('paginate', 15, ['class' => 'form-control', "data-default-value" => 15, "data-column" => "paginate", "id" => 'paginate'.$uuid]) !!}
+    {!! Form::label('creatable', __('models/fields.fields.creatable').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('creatable', 0) !!}
+        {!! Form::checkbox('creatable', '1', null) !!} 1
+    </label>
+</div>
+
+<!-- Editable Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('editable', __('models/fields.fields.editable').':') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('editable', 0) !!}
+        {!! Form::checkbox('editable', '1', null) !!} 1
+    </label>
+</div>
+
+<!-- Submit Field -->
+<div class="form-group col-sm-12">
+    {!! Form::submit(__('crud.save'), ['class' => 'btn btn-primary']) !!}
+    <a href="{{ route('fields.index') }}" class="btn btn-default">@lang('crud.cancel')</a>
 </div>

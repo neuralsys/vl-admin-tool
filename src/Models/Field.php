@@ -2,13 +2,14 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Field
- * @package App\Models
- * @version November 27, 2020, 9:03 am UTC
+ * @package Vuongdq\VLAdminTool\Models
+ * @version December 31, 2020, 9:19 am UTC
  *
+ * @property \Vuongdq\VLAdminTool\Models\Model $model
  * @property integer $model_id
  * @property string $name
  * @property string $db_type
@@ -20,16 +21,10 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property boolean $creatable
  * @property boolean $editable
  */
-class Field extends Model
+class Field extends EloquentModel
 {
-
+    
     public $table = 'fields';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
 
     public $fillable = [
         'model_id',
@@ -44,6 +39,7 @@ class Field extends Model
         'editable'
     ];
 
+    
     /**
      * The attributes that should be casted to native types.
      *
@@ -64,22 +60,10 @@ class Field extends Model
     ];
 
     /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'model_id' => 'required',
-        'name' => 'required|string|max:255',
-        'db_type' => 'required|string|max:255',
-        'html_type' => 'required|string|max:255',
-        'primary' => 'required|boolean',
-        'unique' => 'required|boolean',
-        'auto_increment' => 'required|boolean',
-        'nullable' => 'required|boolean',
-        'creatable' => 'required|boolean',
-        'editable' => 'required|boolean'
-    ];
-
-
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function model()
+    {
+        return $this->belongsTo(\Vuongdq\VLAdminTool\Models\Model::class, 'model_id');
+    }
 }

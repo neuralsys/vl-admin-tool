@@ -184,15 +184,24 @@ class TableFieldsGenerator
      */
     public static function getTimestampFieldNames()
     {
-        if (!config('admin_generator.laravel_generator.timestamps.enabled', true)) {
+        if (!config('vl_admin_tool.timestamps.enabled', true)) {
             return [];
         }
 
-        $createdAtName = config('admin_generator.laravel_generator.timestamps.created_at', 'created_at');
-        $updatedAtName = config('admin_generator.laravel_generator.timestamps.updated_at', 'updated_at');
-        $deletedAtName = config('admin_generator.laravel_generator.timestamps.deleted_at', 'deleted_at');
+        $createdAtName = config('vl_admin_tool.timestamps.created_at', 'created_at');
+        $updatedAtName = config('vl_admin_tool.timestamps.updated_at', 'updated_at');
 
-        return [$createdAtName, $updatedAtName, $deletedAtName];
+        return [$createdAtName, $updatedAtName];
+    }
+
+    public static function getSoftDeleteFieldName() {
+        if (!config('vl_admin_tool.options.softDelete', true)) {
+            return null;
+        }
+
+        $deletedAtName = config('vl_admin_tool.timestamps.deleted_at', 'deleted_at');
+
+        return $deletedAtName;
     }
 
     /**

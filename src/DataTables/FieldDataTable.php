@@ -19,7 +19,8 @@ class FieldDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'fields.datatables_actions');
+        return $dataTable
+            ->addColumn('action', 'fields.datatables_actions');
     }
 
     /**
@@ -45,29 +46,16 @@ class FieldDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => 'Bfrtip',
-                'stateSave' => true,
+                'dom'       => '<"field-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
+                'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
+                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                 }",
                 'buttons'   => [
-                    [
-                       'extend' => 'create',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-plus"></i> ' .__('auth.app.create').''
-                    ],
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'print',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-print"></i> ' .__('auth.app.print').''
-                    ],
-                    [
-                       'extend' => 'reset',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-undo"></i> ' .__('auth.app.reset').''
                     ],
                     [
                        'extend' => 'reload',
@@ -78,6 +66,8 @@ class FieldDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
+                 "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                 'select' => true
             ]);
     }
 

@@ -2,17 +2,22 @@
 
 namespace Vuongdq\VLAdminTool\Controllers;
 
+use App\Http\Controllers\Controller;
 use Vuongdq\VLAdminTool\DataTables\FieldDataTable;
-use App\Http\Requests;
-use App\Http\Requests\CreateFieldRequest;
-use App\Http\Requests\UpdateFieldRequest;
-use App\Models\Field;
-use Flash;
-use App\Http\Controllers\AppBaseController;
-use Response;
+use Vuongdq\VLAdminTool\Requests\CreateFieldRequest;
+use Vuongdq\VLAdminTool\Requests\UpdateFieldRequest;
+use Vuongdq\VLAdminTool\Repositories\FieldRepository;
 
-class FieldController extends AppBaseController
+class FieldController extends Controller
 {
+    /** @var  FieldRepository */
+    private $fieldRepository;
+
+    public function __construct(FieldRepository $fieldRepo)
+    {
+        $this->fieldRepository = $fieldRepo;
+    }
+
     /**
      * Display a listing of the Field.
      *
@@ -22,16 +27,6 @@ class FieldController extends AppBaseController
     public function index(FieldDataTable $fieldDataTable)
     {
         return $fieldDataTable->render('fields.index');
-    }
-
-    /**
-     * Show the form for creating a new Field.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('fields.create');
     }
 
     /**
@@ -45,12 +40,9 @@ class FieldController extends AppBaseController
     {
         $input = $request->all();
 
-        /** @var Field $field */
-        $field = Field::create($input);
+        $field = $this->fieldRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/fields.singular')]));
-
-        return redirect(route('fields.index'));
+        return $this->success(__('crud.add_success'));
     }
 
     /**
@@ -62,37 +54,13 @@ class FieldController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Field $field */
-        $field = Field::find($id);
+        $field = $this->fieldRepository->find($id);
 
         if (empty($field)) {
-            Flash::error(__('models/fields.singular').' '.__('messages.not_found'));
-
             return redirect(route('fields.index'));
         }
 
         return view('fields.show')->with('field', $field);
-    }
-
-    /**
-     * Show the form for editing the specified Field.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        /** @var Field $field */
-        $field = Field::find($id);
-
-        if (empty($field)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/fields.singular')]));
-
-            return redirect(route('fields.index'));
-        }
-
-        return view('fields.edit')->with('field', $field);
     }
 
     /**
@@ -105,21 +73,15 @@ class FieldController extends AppBaseController
      */
     public function update($id, UpdateFieldRequest $request)
     {
-        /** @var Field $field */
-        $field = Field::find($id);
+        $field = $this->fieldRepository->find($id);
 
         if (empty($field)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/fields.singular')]));
-
-            return redirect(route('fields.index'));
+            return $this->error(__('crud.not_found'));
         }
 
-        $field->fill($request->all());
-        $field->save();
+        $field = $this->fieldRepository->update($request->all(), $id);
 
-        Flash::success(__('messages.updated', ['model' => __('models/fields.singular')]));
-
-        return redirect(route('fields.index'));
+        return $this->success(__('crud.update_success'));
     }
 
     /**
@@ -127,25 +89,18 @@ class FieldController extends AppBaseController
      *
      * @param  int $id
      *
-     * @throws \Exception
-     *
      * @return Response
      */
     public function destroy($id)
     {
-        /** @var Field $field */
-        $field = Field::find($id);
+        $field = $this->fieldRepository->find($id);
 
         if (empty($field)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/fields.singular')]));
-
-            return redirect(route('fields.index'));
+            return $this->error(__('crud.not_found'));
         }
 
-        $field->delete();
+        $this->fieldRepository->delete($id);
 
-        Flash::success(__('messages.deleted', ['model' => __('models/fields.singular')]));
-
-        return redirect(route('fields.index'));
+        return $this->success(__('crud.delete_success'));
     }
 }

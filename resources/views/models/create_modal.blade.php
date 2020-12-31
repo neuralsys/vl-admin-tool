@@ -27,6 +27,10 @@
 
 @push('scripts')
     <script type="text/javascript">
+        var modelCreateModal = $('#model-create-modal');
+        var modelCreateForm = $('#model-create-modal #model-create-form');
+    </script>
+    <script type="text/javascript">
         $(document).ready(function () {
             modelCreateForm.on('submit', (evt) => {
                 evt.preventDefault();

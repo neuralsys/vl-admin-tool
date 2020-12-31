@@ -40,6 +40,7 @@ class ModelGenerator extends BaseGenerator
         $this->path = $commandData->config->pathModel;
         $this->fileName = $this->commandData->modelName.'.php';
         $this->table = $this->commandData->dynamicVars['$TABLE_NAME$'];
+//        var_dump($this->commandData);
     }
 
     public function generate()
@@ -107,7 +108,7 @@ class ModelGenerator extends BaseGenerator
 
     private function fillSoftDeletes($templateData)
     {
-        if (!$this->commandData->getOption('softDelete')) {
+        if (!$this->commandData->getOption('softDelete') || !$this->commandData->isUseSoftDelete()) {
             $templateData = str_replace('$SOFT_DELETE_IMPORT$', '', $templateData);
             $templateData = str_replace('$SOFT_DELETE$', '', $templateData);
             $templateData = str_replace('$SOFT_DELETE_DATES$', '', $templateData);
@@ -118,7 +119,7 @@ class ModelGenerator extends BaseGenerator
                 $templateData
             );
             $templateData = str_replace('$SOFT_DELETE$', infy_tab()."use SoftDeletes;\n", $templateData);
-            $deletedAtTimestamp = config('admin_generator.laravel_generator.timestamps.deleted_at', 'deleted_at');
+            $deletedAtTimestamp = config('vl_admin_tool.timestamps.deleted_at', 'deleted_at');
             $templateData = str_replace(
                 '$SOFT_DELETE_DATES$',
                 infy_nl_tab()."protected \$dates = ['".$deletedAtTimestamp."'];\n",
@@ -245,29 +246,19 @@ class ModelGenerator extends BaseGenerator
 
     private function fillTimestamps($templateData)
     {
-        $timestamps = TableFieldsGenerator::getTimestampFieldNames();
-
+        $isUseTimestamps = $this->commandData->isUseTimestamps();
         $replace = '';
-        if (empty($timestamps)) {
+        if (!$isUseTimestamps) {
             $replace = infy_nl_tab()."public \$timestamps = false;\n";
         }
 
-        if ($this->commandData->getOption('fromTable') && !empty($timestamps)) {
-            list($created_at, $updated_at) = collect($timestamps)->map(function ($field) {
-                return !empty($field) ? "'$field'" : 'null';
-            });
-
-            $replace .= infy_nl_tab()."const CREATED_AT = $created_at;";
-            $replace .= infy_nl_tab()."const UPDATED_AT = $updated_at;\n";
-        }
-
-        return str_replace('$TIMESTAMPS$', $replace, $templateData);
+        return str_replace('$USE_TIMESTAMPS$', $replace, $templateData);
     }
 
-    private function generateRules()
+    public function generateRules()
     {
-        $dont_require_fields = config('admin_generator.laravel_generator.options.hidden_fields', [])
-                + config('admin_generator.laravel_generator.options.excluded_fields', $this->excluded_fields);
+        $dont_require_fields = config('vl_admin_tool.options.hidden_fields', [])
+                + config('vl_admin_tool.options.excluded_fields', $this->excluded_fields);
 
         $rules = [];
 
@@ -315,13 +306,13 @@ class ModelGenerator extends BaseGenerator
                             break;
                     }
 
-                    $field->validations = implode('|', $rule);
+                    $field->validations = implode('|', array_unique($rule));
                 }
             }
 
             if (!empty($field->validations)) {
                 if (Str::contains($field->validations, 'unique:')) {
-                    $rule = explode('|', $field->validations);
+                    $rule = array_unique(explode('|', $field->validations));
                     // move unique rule to last
                     usort($rule, function ($record) {
                         return (Str::contains($record, 'unique:')) ? 1 : 0;

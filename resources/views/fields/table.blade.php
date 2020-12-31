@@ -10,16 +10,12 @@
 
 @push('scripts')
     @include('layouts.datatables_js')
-    @include('vl-admin-tool::fields.toolbar_js')
+    @include('fields.toolbar_js')
     {!! $dataTable->scripts() !!}
 
     <script type="text/javascript">
         var fieldSelectedRows = [];
         var fieldTable = $('#field-datatable').DataTable();
-        var fieldCreateModal = $('#field-create-modal');
-        var fieldCreateForm = $('#field-create-modal #field-create-form');
-        var fieldEditModal = $('#field-edit-modal');
-        var fieldEditForm = $('#field-edit-modal #field-edit-form');
     </script>
 
     <script type="text/javascript">

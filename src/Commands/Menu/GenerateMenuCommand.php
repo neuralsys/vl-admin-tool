@@ -63,6 +63,7 @@ class GenerateMenuCommand extends BaseCommand {
         $result = '';
         $templateMenu = get_template('menu/'.$menu->type, 'vl-admin-tool');
         $variables = $this->getVariables($menu, $level);
+        $variables['$TABS$'] = infy_tabs(($level - 1) * 2);
         $menu = fill_template($variables, $templateMenu);
         return $menu;
     }
@@ -84,7 +85,7 @@ class GenerateMenuCommand extends BaseCommand {
                 ];
                 break;
             case 'has-child':
-                $childrenMenus = $menu->childrent;
+                $childrenMenus = $menu->children;
                 $menus = '';
                 $condition = '';
                 foreach ($childrenMenus as $childrenMenu) {

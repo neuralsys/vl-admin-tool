@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">@lang('vl-admin-tool-lang::crud.add_new') @lang('vl-admin-tool-lang::models/field.singular')</h4>
+                    <h4 class="modal-title">@lang('crud.add_new') @lang('models/field.singular')</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -11,7 +11,7 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="row">
-                        @include('vl-admin-tool::fields.fields')
+                        @include('fields.fields')
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -27,6 +27,10 @@
 <!-- /.modal -->
 
 @push('scripts')
+    <script type="text/javascript">
+        var fieldEditModal = $('#field-edit-modal');
+        var fieldEditForm = $('#field-edit-modal #field-edit-form');
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             fieldEditForm.on('submit', (evt) => {

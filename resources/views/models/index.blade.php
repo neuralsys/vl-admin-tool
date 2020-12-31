@@ -16,13 +16,8 @@
     </section>
     <div class="content">
         <div class="clearfix"></div>
-
-        <div class="clearfix"></div>
-        @include('vl-admin-tool::models.table')
+        @include('vl-admin-tool::models.table_with_crud_modals')
     </div>
-
-    @include('vl-admin-tool::models.create_modal')
-    @include('vl-admin-tool::models.edit_modal')
 @endsection
 
 @push('scripts')

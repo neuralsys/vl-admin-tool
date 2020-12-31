@@ -16,10 +16,6 @@
     <script type="text/javascript">
         var modelSelectedRows = [];
         var modelTable = $('#model-datatable').DataTable();
-        var modelCreateModal = $('#model-create-modal');
-        var modelCreateForm = $('#model-create-modal #model-create-form');
-        var modelEditModal = $('#model-edit-modal');
-        var modelEditForm = $('#model-edit-modal #model-edit-form');
     </script>
 
     <script type="text/javascript">

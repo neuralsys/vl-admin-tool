@@ -28,6 +28,10 @@
 
 @push('scripts')
     <script type="text/javascript">
+        var modelEditModal = $('#model-edit-modal');
+        var modelEditForm = $('#model-edit-modal #model-edit-form');
+    </script>
+    <script type="text/javascript">
         $(document).ready(function () {
             modelEditForm.on('submit', (evt) => {
                 evt.preventDefault();

@@ -2,7 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as ModelE;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Models
@@ -21,13 +21,10 @@ use Illuminate\Database\Eloquent\Model as ModelE;
  * @property boolean $datatables
  * @property boolean $paginate
  */
-class Model extends ModelE
+class Model extends EloquentModel
 {
 
     public $table = 'models';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
 
     public $fillable = [
         'class_name',

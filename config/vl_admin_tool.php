@@ -25,7 +25,7 @@ return [
 
         'api_routes'        => base_path('routes/api.php'),
 
-        'request'           => app_path('Http/Requests/'),
+        'request'           => base_path('vendor/vuongdq/vl-admin-tool/src/Requests/'),
 
         'api_request'       => app_path('Http/Requests/API/'),
 
@@ -162,8 +162,6 @@ return [
         'swagger'       => false,
 
         'tests'         => true,
-
-        'datatables'    => true,
 
         'menu'          => [
 

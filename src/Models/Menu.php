@@ -2,7 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Menu
@@ -14,16 +14,10 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string $title
  * @property integer $parent_id
  */
-class Menu extends Model
+class Menu extends EloquentModel
 {
 
     public $table = 'menus';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
 
     public $fillable = [
         'url_pattern',
@@ -67,7 +61,7 @@ class Menu extends Model
         return $this->belongsTo(Menu::class, 'parent_id');
     }
 
-    public function childrent() {
+    public function children() {
         return $this->hasMany(Menu::class, 'parent_id');
     }
 
@@ -76,15 +70,18 @@ class Menu extends Model
 
         static::creating(function (Menu $item) {
             if ($item->pos === null) {
-                $maxPos = $item->parent->childrent->max('pos');
+                if (empty($item->parent))
+                    $maxPos = Menu::where('parent_id', 0)->where('pos', '<>', '9999')->get()->max('pos');
+                else
+                    $maxPos = $item->parent->children->max('pos');
                 if ($maxPos === null) $maxPos = 1;
                 $item->pos = $maxPos;
             }
         });
 
         static::deleting(function (Menu $item) {
-            $childrent = $item->childrent;
-            foreach ($childrent as $child) {
+            $children = $item->children;
+            foreach ($children as $child) {
                 $child->parent_id = 0;
                 $child->save();
             }

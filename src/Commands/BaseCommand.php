@@ -135,7 +135,7 @@ class BaseCommand extends Command
             $routeGenerator->generate();
         }
 
-        if (!$this->isSkip('menu') and $this->commandData->config->getAddOn('menu.enabled')) {
+        if (!$this->isSkip('menu')) {
             $menuGenerator = new MenuGenerator($this->commandData);
             $menuGenerator->generate();
         }

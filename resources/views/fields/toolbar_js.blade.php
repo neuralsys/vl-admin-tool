@@ -2,7 +2,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             setTimeout(() => {
-                $("div.model-toolbar").html(`@include('vl-admin-tool::models.toolbar')`);
+                $("div.field-toolbar").html(`@include('fields.toolbar')`);
             }, 10)
         });
     </script>

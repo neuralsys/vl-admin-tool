@@ -2,12 +2,12 @@
 
 namespace Vuongdq\VLAdminTool\DataTables;
 
-use Vuongdq\VLAdminTool\Models\Project;
+use Vuongdq\VLAdminTool\Models\Field;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
 
-class ProjectDataTable extends DataTable
+class FieldDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -19,16 +19,17 @@ class ProjectDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'projects.datatables_actions');
+        return $dataTable
+            ->addColumn('action', 'fields.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Project $model
+     * @param \App\Models\Field $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Project $model)
+    public function query(Field $model)
     {
         return $model->newQuery();
     }
@@ -45,29 +46,16 @@ class ProjectDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => 'Bfrtip',
-                'stateSave' => true,
+                'dom'       => '<"field-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
+                'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
+                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                 }",
                 'buttons'   => [
-                    [
-                       'extend' => 'create',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-plus"></i> ' .__('auth.app.create').''
-                    ],
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'print',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-print"></i> ' .__('auth.app.print').''
-                    ],
-                    [
-                       'extend' => 'reset',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-undo"></i> ' .__('auth.app.reset').''
                     ],
                     [
                        'extend' => 'reload',
@@ -78,6 +66,8 @@ class ProjectDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
+                 "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                 'select' => true
             ]);
     }
 
@@ -89,8 +79,16 @@ class ProjectDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name' => new Column(['title' => __('models/projects.fields.name'), 'data' => 'name']),
-            'description' => new Column(['title' => __('models/projects.fields.description'), 'data' => 'description'])
+            'model_id' => new Column(['title' => __('models/fields.fields.model_id'), 'data' => 'model_id']),
+            'name' => new Column(['title' => __('models/fields.fields.name'), 'data' => 'name']),
+            'db_type' => new Column(['title' => __('models/fields.fields.db_type'), 'data' => 'db_type']),
+            'html_type' => new Column(['title' => __('models/fields.fields.html_type'), 'data' => 'html_type']),
+            'primary' => new Column(['title' => __('models/fields.fields.primary'), 'data' => 'primary']),
+            'unique' => new Column(['title' => __('models/fields.fields.unique'), 'data' => 'unique']),
+            'auto_increment' => new Column(['title' => __('models/fields.fields.auto_increment'), 'data' => 'auto_increment']),
+            'nullable' => new Column(['title' => __('models/fields.fields.nullable'), 'data' => 'nullable']),
+            'creatable' => new Column(['title' => __('models/fields.fields.creatable'), 'data' => 'creatable']),
+            'editable' => new Column(['title' => __('models/fields.fields.editable'), 'data' => 'editable'])
         ];
     }
 
@@ -101,6 +99,6 @@ class ProjectDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'projects_datatable_' . time();
+        return 'fields_datatable_' . time();
     }
 }

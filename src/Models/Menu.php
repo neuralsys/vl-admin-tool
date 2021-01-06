@@ -2,7 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Menu
@@ -14,22 +14,18 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string $title
  * @property integer $parent_id
  */
-class Menu extends Model
+class Menu extends EloquentModel
 {
 
     public $table = 'menus';
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
-
     public $fillable = [
         'url_pattern',
-        'index_url',
+        'type',
+        'index_route_name',
         'title',
-        'parent_id'
+        'parent_id',
+        'pos',
     ];
 
     /**
@@ -39,10 +35,12 @@ class Menu extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'type' => 'string',
         'url_pattern' => 'string',
-        'index_url' => 'string',
+        'index_route_name' => 'string',
         'title' => 'string',
-        'parent_id' => 'integer'
+        'parent_id' => 'integer',
+        'pos' => 'integer'
     ];
 
     /**
@@ -52,10 +50,41 @@ class Menu extends Model
      */
     public static $rules = [
         'url_pattern' => 'required|string|max:255',
-        'index_url' => 'required|string|max:255',
+        'type' => 'required|string|max:255|in:header,has-child,no-child',
+        'index_route_name' => 'required|string|max:255',
         'title' => 'required|string|max:255',
-        'parent_id' => 'required|integer'
+        'parent_id' => 'required|integer',
+        'pos' => 'required|integer'
     ];
 
+    public function parent() {
+        return $this->belongsTo(Menu::class, 'parent_id');
+    }
 
+    public function children() {
+        return $this->hasMany(Menu::class, 'parent_id');
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        static::creating(function (Menu $item) {
+            if ($item->pos === null) {
+                if (empty($item->parent))
+                    $maxPos = Menu::where('parent_id', 0)->where('pos', '<>', '9999')->get()->max('pos');
+                else
+                    $maxPos = $item->parent->children->max('pos');
+                if ($maxPos === null) $maxPos = 1;
+                $item->pos = $maxPos;
+            }
+        });
+
+        static::deleting(function (Menu $item) {
+            $children = $item->children;
+            foreach ($children as $child) {
+                $child->parent_id = 0;
+                $child->save();
+            }
+        });
+    }
 }

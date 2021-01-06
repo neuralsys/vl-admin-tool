@@ -83,7 +83,6 @@ class GeneratorConfig
         'prefix',
         'paginate',
         'skip',
-        'datatables',
         'views',
         'relations',
         'plural',
@@ -91,8 +90,6 @@ class GeneratorConfig
         'forceMigrate',
         'factory',
         'seeder',
-        'repositoryPattern',
-        'localized',
         'connection',
     ];
 
@@ -134,31 +131,31 @@ class GeneratorConfig
 
         $this->nsApp = $commandData->commandObj->getLaravel()->getNamespace();
         $this->nsApp = substr($this->nsApp, 0, strlen($this->nsApp) - 1);
-        $this->nsRepository = config('admin_generator.laravel_generator.namespace.repository', 'App\Repositories').$prefix;
-        $this->nsModel = config('admin_generator.laravel_generator.namespace.model', 'App\Models').$prefix;
-        if (config('admin_generator.laravel_generator.ignore_model_prefix', false)) {
-            $this->nsModel = config('admin_generator.laravel_generator.namespace.model', 'App\Models');
+        $this->nsRepository = config('vl_admin_tool.namespace.repository', 'App\Repositories').$prefix;
+        $this->nsModel = config('vl_admin_tool.namespace.model', 'App\Models').$prefix;
+        if (config('vl_admin_tool.ignore_model_prefix', false)) {
+            $this->nsModel = config('vl_admin_tool.namespace.model', 'App\Models');
         }
-        $this->nsDataTables = config('admin_generator.laravel_generator.namespace.datatables', 'App\DataTables').$prefix;
+        $this->nsDataTables = config('vl_admin_tool.namespace.datatables', 'App\DataTables').$prefix;
         $this->nsModelExtend = config(
-            'vl-admin-tool.model_extend_class',
+            'vl_admin_tool.model_extend_class',
             'Illuminate\Database\Eloquent\Model'
         );
 
         $this->nsApiController = config(
-            'vl-admin-tool.namespace.api_controller',
+            'vl_admin_tool.namespace.api_controller',
             'App\Http\Controllers\API'
         ).$prefix;
-        $this->nsApiRequest = config('admin_generator.laravel_generator.namespace.api_request', 'App\Http\Requests\API').$prefix;
+        $this->nsApiRequest = config('vl_admin_tool.namespace.api_request', 'App\Http\Requests\API').$prefix;
 
-        $this->nsRequest = config('admin_generator.laravel_generator.namespace.request', 'App\Http\Requests').$prefix;
-        $this->nsRequestBase = config('admin_generator.laravel_generator.namespace.request', 'App\Http\Requests');
-        $this->nsBaseController = config('admin_generator.laravel_generator.namespace.controller', 'App\Http\Controllers');
-        $this->nsController = config('admin_generator.laravel_generator.namespace.controller', 'App\Http\Controllers').$prefix;
+        $this->nsRequest = config('vl_admin_tool.namespace.request', 'App\Http\Requests').$prefix;
+        $this->nsRequestBase = config('vl_admin_tool.namespace.request', 'App\Http\Requests');
+        $this->nsBaseController = config('vl_admin_tool.namespace.controller', 'App\Http\Controllers');
+        $this->nsController = config('vl_admin_tool.namespace.controller', 'App\Http\Controllers').$prefix;
 
-        $this->nsApiTests = config('admin_generator.laravel_generator.namespace.api_test', 'Tests\APIs');
-        $this->nsRepositoryTests = config('admin_generator.laravel_generator.namespace.repository_test', 'Tests\Repositories');
-        $this->nsTests = config('admin_generator.laravel_generator.namespace.tests', 'Tests');
+        $this->nsApiTests = config('vl_admin_tool.namespace.api_test', 'Tests\APIs');
+        $this->nsRepositoryTests = config('vl_admin_tool.namespace.repository_test', 'Tests\Repositories');
+        $this->nsTests = config('vl_admin_tool.namespace.tests', 'Tests');
     }
 
     public function loadPaths()
@@ -176,55 +173,55 @@ class GeneratorConfig
         }
 
         $this->pathRepository = config(
-            'vl-admin-tool.path.repository',
+            'vl_admin_tool.path.repository',
             app_path('Repositories/')
         ).$prefix;
 
-        $this->pathModel = config('admin_generator.laravel_generator.path.model', app_path('Models/')).$prefix;
-        if (config('admin_generator.laravel_generator.ignore_model_prefix', false)) {
-            $this->pathModel = config('admin_generator.laravel_generator.path.model', app_path('Models/'));
+        $this->pathModel = config('vl_admin_tool.path.model', app_path('Models/')).$prefix;
+        if (config('vl_admin_tool.ignore_model_prefix', false)) {
+            $this->pathModel = config('vl_admin_tool.path.model', app_path('Models/'));
         }
 
-        $this->pathDataTables = config('admin_generator.laravel_generator.path.datatables', app_path('DataTables/')).$prefix;
+        $this->pathDataTables = config('vl_admin_tool.path.datatables', app_path('DataTables/')).$prefix;
 
         $this->pathApiController = config(
-            'vl-admin-tool.path.api_controller',
+            'vl_admin_tool.path.api_controller',
             app_path('Http/Controllers/API/')
         ).$prefix;
 
         $this->pathApiRequest = config(
-            'vl-admin-tool.path.api_request',
+            'vl_admin_tool.path.api_request',
             app_path('Http/Requests/API/')
         ).$prefix;
 
-        $this->pathApiRoutes = config('admin_generator.laravel_generator.path.api_routes', base_path('routes/api.php'));
+        $this->pathApiRoutes = config('vl_admin_tool.path.api_routes', base_path('routes/api.php'));
 
-        $this->pathApiTests = config('admin_generator.laravel_generator.path.api_test', base_path('tests/APIs/'));
+        $this->pathApiTests = config('vl_admin_tool.path.api_test', base_path('tests/APIs/'));
 
         $this->pathController = config(
-            'vl-admin-tool.path.controller',
+            'vl_admin_tool.path.controller',
             app_path('Http/Controllers/')
         ).$prefix;
 
-        $this->pathRequest = config('admin_generator.laravel_generator.path.request', app_path('Http/Requests/')).$prefix;
+        $this->pathRequest = config('vl_admin_tool.path.request', app_path('Http/Requests/')).$prefix;
 
-        $this->pathRoutes = config('admin_generator.laravel_generator.path.routes', base_path('routes/web.php'));
-        $this->pathFactory = config('admin_generator.laravel_generator.path.factory', database_path('factories/'));
+        $this->pathRoutes = config('vl_admin_tool.path.routes', base_path('routes/web.php'));
+        $this->pathFactory = config('vl_admin_tool.path.factory', database_path('factories/'));
 
         $this->pathViews = config(
-            'vl-admin-tool.path.views',
+            'vl_admin_tool.path.views',
             resource_path('views/')
         ).$viewPrefix.$this->mSnakePlural.'/';
 
-        $this->pathSeeder = config('admin_generator.laravel_generator.path.seeder', database_path('seeds/'));
-        $this->pathDatabaseSeeder = config('admin_generator.laravel_generator.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
+        $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('seeds/'));
+        $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
         $this->pathViewProvider = config(
-            'vl-admin-tool.path.view_provider',
+            'vl_admin_tool.path.view_provider',
             app_path('Providers/ViewServiceProvider.php')
         );
 
         $this->modelJsPath = config(
-            'vl-admin-tool.path.modelsJs',
+            'vl_admin_tool.path.modelsJs',
             resource_path('assets/js/models/')
         );
     }
@@ -303,12 +300,12 @@ class GeneratorConfig
 
         $commandData->addDynamicVariable(
             '$API_PREFIX$',
-            config('admin_generator.laravel_generator.api_prefix', 'api')
+            config('vl_admin_tool.api_prefix', 'api')
         );
 
         $commandData->addDynamicVariable(
             '$API_VERSION$',
-            config('admin_generator.laravel_generator.api_version', 'v1')
+            config('vl_admin_tool.api_version', 'v1')
         );
 
         $commandData->addDynamicVariable('$SEARCHABLE$', '');
@@ -366,39 +363,17 @@ class GeneratorConfig
             }
         }
 
-        if (empty($this->options['save'])) {
-            $this->options['save'] = config('admin_generator.laravel_generator.options.save_schema_file', true);
-        }
+        $commandData->getTemplatesManager()->setUseLocale(true);
 
-        if (empty($this->options['localized'])) {
-            $this->options['localized'] = config('admin_generator.laravel_generator.options.localized', false);
-        }
-
-        if ($this->options['localized']) {
-            $commandData->getTemplatesManager()->setUseLocale(true);
-        }
-
-        $this->options['softDelete'] = config('admin_generator.laravel_generator.options.softDelete', false);
-        $this->options['repositoryPattern'] = config('admin_generator.laravel_generator.options.repository_pattern', true);
-        if (!empty($this->options['skip'])) {
-            $this->options['skip'] = array_map('trim', explode(',', $this->options['skip']));
-        }
-
-        if (!empty($this->options['datatables'])) {
-            if (strtolower($this->options['datatables']) == 'true') {
-                $this->addOns['datatables'] = true;
-            } else {
-                $this->addOns['datatables'] = false;
-            }
-        }
+        $this->options['softDelete'] = config('vl_admin_tool.options.softDelete', false);
     }
 
     public function preparePrefixes()
     {
-        $this->prefixes['route'] = explode('/', config('admin_generator.laravel_generator.prefixes.route', ''));
-        $this->prefixes['path'] = explode('/', config('admin_generator.laravel_generator.prefixes.path', ''));
-        $this->prefixes['view'] = explode('.', config('admin_generator.laravel_generator.prefixes.view', ''));
-        $this->prefixes['public'] = explode('/', config('admin_generator.laravel_generator.prefixes.public', ''));
+        $this->prefixes['route'] = explode('/', config('vl_admin_tool.prefixes.route', ''));
+        $this->prefixes['path'] = explode('/', config('vl_admin_tool.prefixes.path', ''));
+        $this->prefixes['view'] = explode('.', config('vl_admin_tool.prefixes.view', ''));
+        $this->prefixes['public'] = explode('/', config('vl_admin_tool.prefixes.public', ''));
 
         if ($this->getOption('prefix')) {
             $multiplePrefixes = explode('/', $this->getOption('prefix'));
@@ -493,7 +468,7 @@ class GeneratorConfig
             $this->loadDynamicVariables($this->commandData);
         }
 
-        $addOns = ['swagger', 'tests', 'datatables'];
+        $addOns = ['swagger', 'tests'];
 
         foreach ($addOns as $addOn) {
             if (isset($jsonData['addOns'][$addOn])) {
@@ -527,10 +502,9 @@ class GeneratorConfig
 
     public function prepareAddOns()
     {
-        $this->addOns['swagger'] = config('admin_generator.laravel_generator.add_on.swagger', false);
-        $this->addOns['tests'] = config('admin_generator.laravel_generator.add_on.tests', false);
-        $this->addOns['datatables'] = config('admin_generator.laravel_generator.add_on.datatables', false);
-        $this->addOns['menu.enabled'] = config('admin_generator.laravel_generator.add_on.menu.enabled', false);
-        $this->addOns['menu.menu_file'] = config('admin_generator.laravel_generator.add_on.menu.menu_file', 'layouts.menu');
+        $this->addOns['swagger'] = config('vl_admin_tool.add_on.swagger', false);
+        $this->addOns['tests'] = config('vl_admin_tool.add_on.tests', false);
+        $this->addOns['menu.enabled'] = config('vl_admin_tool.add_on.menu.enabled', false);
+        $this->addOns['menu.menu_file'] = config('vl_admin_tool.add_on.menu.menu_file', 'layouts.menu');
     }
 }

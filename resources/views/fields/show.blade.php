@@ -9,12 +9,11 @@
     <div class="content">
         <div class="box box-primary">
             <div class="box-body">
-                <div class="row">
-                    {!! Form::open(['route' => 'models.store']) !!}
-
-                        @include('models.fields')
-
-                    {!! Form::close() !!}
+                <div class="row" style="padding-left: 20px">
+                    @include('models.show_fields')
+                    <a href="{{ route('models.index') }}" class="btn btn-default">
+                        @lang('crud.back')
+                    </a>
                 </div>
             </div>
         </div>

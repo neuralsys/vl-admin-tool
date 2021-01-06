@@ -2,21 +2,19 @@
 
 namespace $NAMESPACE_MODEL$;
 
-use $NAMESPACE_MODEL_EXTEND$ as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 $SOFT_DELETE_IMPORT$
 $DOCS$
-class $MODEL_NAME$ extends Model
+class $MODEL_NAME$ extends EloquentModel
 {
-$SOFT_DELETE$
+    $SOFT_DELETE$
     public $table = '$TABLE_NAME$';
-    $TIMESTAMPS$
-$SOFT_DELETE_DATES$
-$CONNECTION$
-$PRIMARY$
+
     public $fillable = [
         $FIELDS$
     ];
 
+    $USE_TIMESTAMPS$
     /**
      * The attributes that should be casted to native types.
      *
@@ -24,15 +22,6 @@ $PRIMARY$
      */
     protected $casts = [
         $CAST$
-    ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        $RULES$
     ];
 
     $RELATIONS$

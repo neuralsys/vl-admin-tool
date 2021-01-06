@@ -12,6 +12,8 @@ use Vuongdq\VLAdminTool\Commands\Common\MigrationGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\ModelGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\RepositoryGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\InstallCommand;
+use Vuongdq\VLAdminTool\Commands\Menu\GenerateMenuCommand;
+use Vuongdq\VLAdminTool\Commands\Menu\InsertAdminMenuCommand;
 use Vuongdq\VLAdminTool\Commands\MigrateCommand;
 use Vuongdq\VLAdminTool\Commands\Publish\GeneratorPublishCommand;
 use Vuongdq\VLAdminTool\Commands\Publish\LayoutPublishCommand;
@@ -21,6 +23,7 @@ use Vuongdq\VLAdminTool\Commands\RollbackGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ControllerGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\RequestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ScaffoldGeneratorCommand;
+use Vuongdq\VLAdminTool\Commands\GenerateCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ViewsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\SeedingCommand;
 use Vuongdq\VLAdminTool\Commands\UninstallCommand;
@@ -74,6 +77,19 @@ class VLAdminToolServiceProvider extends ServiceProvider
             return new SeedingCommand();
         });
 
+        $this->app->singleton('vlat.menu.insert', function ($app) {
+            return new InsertAdminMenuCommand();
+        });
+
+        $this->app->singleton('vlat.menu.generate', function ($app) {
+            return new GenerateMenuCommand();
+        });
+
+        $this->app->singleton('vlat.generate', function ($app) {
+            return new GenerateCommand();
+        });
+
+        //
         $this->app->singleton('vlat.scaffold', function ($app) {
             return new ScaffoldGeneratorCommand();
         });
@@ -138,6 +154,16 @@ class VLAdminToolServiceProvider extends ServiceProvider
             'vlat.publish',
             'vlat.migrate',
             'vlat.seed',
+
+            'vlat.menu.insert',
+            'vlat.menu.generate',
+
+            'vlat.generate',
+//            'vlat.generate:model',
+//            'vlat.generate:controller',
+//            'vlat.generate:request',
+//            'vlat.generate:views',
+
             'vlat.scaffold',
             'vlat.api_scaffold',
             'vlat.publish.layout',

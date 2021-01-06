@@ -302,4 +302,22 @@ class CommandData
         $this->fields = $tableFieldsGenerator->fields;
         $this->relations = $tableFieldsGenerator->relations;
     }
+
+    public function isUseTimestamps() {
+        $timestamps = TableFieldsGenerator::getTimestampFieldNames();
+        foreach ($this->fields as $field) {
+            if (in_array($field->name, $timestamps)) return true;
+        }
+
+        return false;
+    }
+
+    public function isUseSoftDelete() {
+        $deletedAtName = TableFieldsGenerator::getSoftDeleteFieldName();
+        foreach ($this->fields as $field) {
+            if ($field->name == $deletedAtName) return true;
+        }
+
+        return false;
+    }
 }

@@ -2,63 +2,45 @@
 
 namespace Vuongdq\VLAdminTool\Generators\Scaffold;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Common\CommandData;
 use Vuongdq\VLAdminTool\Generators\BaseGenerator;
+use Vuongdq\VLAdminTool\Repositories\MenuRepository;
+use Illuminate\Support\Facades\Artisan;
 
 class MenuGenerator extends BaseGenerator
 {
     /** @var CommandData */
     private $commandData;
 
-    /** @var string */
-    private $path;
-
-    /** @var string */
-    private $templateType;
-
-    /** @var string */
-    private $menuContents;
-
-    /** @var string */
-    private $menuTemplate;
-
     public function __construct(CommandData $commandData)
     {
         $this->commandData = $commandData;
-        $this->path = config(
-            'vl-admin-tool.path.views',
-            resource_path(
-                'views/'
-            )
-        ).$commandData->getAddOn('menu.menu_file');
-        $this->templateType = config('admin_generator.laravel_generator.templates', 'adminlte-templates');
-
-        $this->menuContents = file_get_contents($this->path);
-
-        $templateName = 'menu_template';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
-
-        $this->menuTemplate = get_template('scaffold.layouts.'.$templateName, $this->templateType);
-
-        $this->menuTemplate = fill_template($this->commandData->dynamicVars, $this->menuTemplate);
     }
 
     public function generate()
     {
-        $this->menuContents .= $this->menuTemplate.infy_nl();
-        $existingMenuContents = file_get_contents($this->path);
-        if (Str::contains($existingMenuContents, '<span>'.$this->commandData->config->mHumanPlural.'</span>')) {
+        DB::beginTransaction();
+        $parentId = 0;
+        $menuRepo = app(MenuRepository::class);
+        try {
+            $modelMenu = $menuRepo->create([
+                'url_pattern' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$*'),
+                'type' => 'no-child',
+                'index_route_name' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$.index'),
+                'title' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME$'),
+                'parent_id' => $parentId
+            ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
             $this->commandData->commandObj->info('Menu '.$this->commandData->config->mHumanPlural.' is already exists, Skipping Adjustment.');
-
-            return;
+            $this->commandData->commandError($e->getMessage());
         }
 
-        file_put_contents($this->path, $this->menuContents);
         $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' menu added.');
+        Artisan::call('vlat.menu:generate', []);
     }
 
     public function rollback()

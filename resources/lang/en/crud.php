@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'add_new'      => 'Add New',
     'cancel'       => 'Cancel',
     'save'         => 'Save',
@@ -14,4 +13,7 @@ return [
     'updated_at'   => 'Updated At',
     'deleted_at'   => 'Deleted At',
     'are_you_sure' => 'Are you sure?',
+
+    # CRUD Status
+    'add_success' => 'Add new :model successfully!',
 ];

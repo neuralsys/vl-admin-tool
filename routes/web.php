@@ -4,16 +4,18 @@ use Illuminate\Support\Facades\Route;
 
 $middleware = config('vl_admin_tool.admin_middleware', 'admin.user');
 
-Route::group(['middleware' => $middleware, 'as' => 'vlat.'], function () {
-    Route::resource('models', 'ModelController');
+Route::group(['middleware' => $middleware], function () {
+    Route::resource('models', 'ModelController')->parameter('models', 'id');
 
-    Route::resource('relations', 'RelationController');
+    Route::resource('fields', 'FieldController')->parameter('fields', 'id');
 
-    Route::resource('menus', 'MenuController');
+    Route::resource('relations', 'RelationController')->parameter('relations', 'id');
 
-    Route::resource('langs', 'LangController');
+    Route::resource('menus', 'MenuController')->parameter('menus', 'id');
 
-    Route::resource('translationFiles', 'TranslationFileController');
+    Route::resource('langs', 'LangController')->parameter('langs', 'id');
 
-    Route::resource('translations', 'TranslationController');
+    Route::resource('translationFiles', 'TranslationFileController')->parameter('translationFiles', 'id');
+
+    Route::resource('translations', 'TranslationController')->parameter('translations', 'id');
 });

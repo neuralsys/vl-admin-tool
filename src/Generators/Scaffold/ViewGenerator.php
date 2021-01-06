@@ -28,7 +28,7 @@ class ViewGenerator extends BaseGenerator
     {
         $this->commandData = $commandData;
         $this->path = $commandData->config->pathViews;
-        $this->templateType = config('admin_generator.laravel_generator.templates', 'adminlte-templates');
+        $this->templateType = config('vl_admin_tool.templates', 'adminlte-templates');
     }
 
     public function generate()
@@ -49,6 +49,7 @@ class ViewGenerator extends BaseGenerator
 
             if (in_array('index', $viewsToBeGenerated)) {
                 $this->generateTable();
+                $this->generateTableTypes();
                 $this->generateIndex();
             }
 
@@ -64,18 +65,19 @@ class ViewGenerator extends BaseGenerator
                 $this->generateUpdate();
             }
 
-            if (in_array('show', $viewsToBeGenerated)) {
-                $this->generateShowFields();
-                $this->generateShow();
-            }
+//            if (in_array('show', $viewsToBeGenerated)) {
+//                $this->generateShowFields();
+//                $this->generateShow();
+//            }
         } else {
             $this->generateTable();
+            $this->generateTableTypes();
             $this->generateIndex();
             $this->generateFields();
             $this->generateCreate();
             $this->generateUpdate();
-            $this->generateShowFields();
-            $this->generateShow();
+//            $this->generateShowFields();
+//            $this->generateShow();
         }
 
         $this->commandData->commandComment('Views created: ');
@@ -83,16 +85,51 @@ class ViewGenerator extends BaseGenerator
 
     private function generateTable()
     {
-        if ($this->commandData->getAddOn('datatables')) {
-            $templateData = $this->generateDataTableBody();
-            $this->generateDataTableActions();
-        } else {
-            $templateData = $this->generateBladeTableBody();
-        }
+        $this->generateDataTableToolbar();
+        $templateData = $this->generateDataTableBody();
+        $this->generateDataTableActions();
 
         FileUtil::createFile($this->path, 'table.blade.php', $templateData);
 
         $this->commandData->commandInfo('table.blade.php created');
+    }
+
+    private function generateDataTableToolbar() {
+        $templateData = get_template('scaffold.views.toolbar', $this->templateType);
+
+        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
+
+        FileUtil::createFile($this->path, 'toolbar.blade.php', $templateData);
+
+        $this->commandData->commandInfo('toolbar.blade.php created');
+
+        // js file
+        $templateData = get_template('scaffold.views.toolbar_js', $this->templateType);
+
+        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
+
+        FileUtil::createFile($this->path, 'toolbar_js.blade.php', $templateData);
+
+        $this->commandData->commandInfo('toolbar_js.blade.php created');
+    }
+
+    private function generateTableTypes() {
+        $templateData = get_template('scaffold.views.table_with_crud_modals', $this->templateType);
+
+        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
+
+        FileUtil::createFile($this->path, 'table_with_crud_modals.blade.php', $templateData);
+
+        $this->commandData->commandInfo('table_with_crud_modals.blade.php created');
+
+        // only view
+        $templateData = get_template('scaffold.views.table_only_view', $this->templateType);
+
+        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
+
+        FileUtil::createFile($this->path, 'table_only_view.blade.php', $templateData);
+
+        $this->commandData->commandInfo('table_only_view.blade.php created');
     }
 
     private function generateDataTableBody()
@@ -105,10 +142,6 @@ class ViewGenerator extends BaseGenerator
     private function generateDataTableActions()
     {
         $templateName = 'datatables_actions';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
 
         $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
 
@@ -198,29 +231,11 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'index';
 
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
-
         $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
-        if ($this->commandData->getAddOn('datatables')) {
-            $templateData = str_replace('$PAGINATE$', '', $templateData);
-        } else {
-            $paginate = $this->commandData->getOption('paginate');
-
-            if ($paginate) {
-                $paginateTemplate = get_template('scaffold.views.paginate', $this->templateType);
-
-                $paginateTemplate = fill_template($this->commandData->dynamicVars, $paginateTemplate);
-
-                $templateData = str_replace('$PAGINATE$', $paginateTemplate, $templateData);
-            } else {
-                $templateData = str_replace('$PAGINATE$', '', $templateData);
-            }
-        }
+        $templateData = str_replace('$PAGINATE$', '', $templateData);
 
         FileUtil::createFile($this->path, 'index.blade.php', $templateData);
 
@@ -231,11 +246,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'fields';
 
-        $localized = false;
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-            $localized = true;
-        }
+        $localized = true;
 
         $this->htmlFields = [];
 
@@ -315,9 +326,6 @@ class ViewGenerator extends BaseGenerator
     private function generateViewComposer($tableName, $variableName, $columns, $selectTable, $modelName = null)
     {
         $templateName = 'scaffold.fields.select';
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
         $fieldTemplate = get_template($templateName, $this->templateType);
 
         $viewServiceProvider = new ViewServiceProviderGenerator($this->commandData);
@@ -335,42 +343,31 @@ class ViewGenerator extends BaseGenerator
 
     private function generateCreate()
     {
-        $templateName = 'create';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
+        $templateName = 'create_modal';
 
         $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
-        FileUtil::createFile($this->path, 'create.blade.php', $templateData);
-        $this->commandData->commandInfo('create.blade.php created');
+        FileUtil::createFile($this->path, 'create_modal.blade.php', $templateData);
+        $this->commandData->commandInfo('create_modal.blade.php created');
     }
 
     private function generateUpdate()
     {
-        $templateName = 'edit';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
+        $templateName = 'edit_modal';
 
         $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
-        FileUtil::createFile($this->path, 'edit.blade.php', $templateData);
-        $this->commandData->commandInfo('edit.blade.php created');
+        FileUtil::createFile($this->path, 'edit_modal.blade.php', $templateData);
+        $this->commandData->commandInfo('edit_modal.blade.php created');
     }
 
     private function generateShowFields()
     {
         $templateName = 'show_field';
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
         $fieldTemplate = get_template('scaffold.views.'.$templateName, $this->templateType);
 
         $fieldsStr = '';
@@ -397,10 +394,6 @@ class ViewGenerator extends BaseGenerator
     private function generateShow()
     {
         $templateName = 'show';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
 
         $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
 

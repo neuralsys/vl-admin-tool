@@ -2,7 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as ModelE;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Models
@@ -21,20 +21,16 @@ use Illuminate\Database\Eloquent\Model as ModelE;
  * @property boolean $datatables
  * @property boolean $paginate
  */
-class Model extends ModelE
+class Model extends EloquentModel
 {
 
     public $table = 'models';
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
-
     public $fillable = [
         'class_name',
         'table_name',
+        'singular',
+        'plurals',
         'description',
         'timestamps',
         'soft_delete',
@@ -53,13 +49,15 @@ class Model extends ModelE
         'id' => 'integer',
         'class_name' => 'string',
         'table_name' => 'string',
+        'singular' => 'string',
+        'plurals' => 'string',
         'description' => 'string',
         'timestamps' => 'boolean',
         'soft_delete' => 'boolean',
         'test' => 'boolean',
         'swagger' => 'boolean',
         'datatables' => 'boolean',
-        'paginate' => 'boolean'
+        'paginate' => 'integer'
     ];
 
     /**
@@ -70,12 +68,14 @@ class Model extends ModelE
     public static $rules = [
         'class_name' => 'required|string|max:255',
         'table_name' => 'required|string|max:255',
+        'singular' => 'required|string|max:255',
+        'plurals' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'timestamps' => 'required|boolean',
-        'soft_delete' => 'required|boolean',
-        'test' => 'required|boolean',
-        'swagger' => 'required|boolean',
-        'datatables' => 'required|boolean',
-        'paginate' => 'required|boolean'
+        'timestamps' => 'sometimes|boolean',
+        'soft_delete' => 'sometimes|boolean',
+        'test' => 'sometimes|boolean',
+        'swagger' => 'sometimes|boolean',
+        'datatables' => 'sometimes|boolean',
+        'paginate' => 'sometimes|integer'
     ];
 }

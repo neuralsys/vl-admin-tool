@@ -26,17 +26,7 @@ class ModelController extends Controller
      */
     public function index(ModelDataTable $modelDataTable)
     {
-        return $modelDataTable->render('models.index');
-    }
-
-    /**
-     * Show the form for creating a new Models.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('models.create');
+        return $modelDataTable->render('vl-admin-tool::models.index');
     }
 
     /**
@@ -49,12 +39,9 @@ class ModelController extends Controller
     public function store(CreateModelRequest $request)
     {
         $input = $request->all();
-
         $model = $this->modelRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/models.singular')]));
-
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.add_success'));
     }
 
     /**
@@ -69,32 +56,10 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('models/models.singular').' '.__('messages.not_found'));
-
             return redirect(route('models.index'));
         }
 
-        return view('models.show')->with('model', $model);
-    }
-
-    /**
-     * Show the form for editing the specified Models.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $model = $this->modelRepository->find($id);
-
-        if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
-            return redirect(route('models.index'));
-        }
-
-        return view('models.edit')->with('model', $model);
+        return view('vl-admin-tool::models.show')->with('model', $model);
     }
 
     /**
@@ -110,16 +75,12 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
-            return redirect(route('models.index'));
+            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
         }
 
         $model = $this->modelRepository->update($request->all(), $id);
 
-        Flash::success(__('messages.updated', ['model' => __('models/models.singular')]));
-
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.update_success'));
     }
 
     /**
@@ -134,15 +95,11 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/models.singular')]));
-
-            return redirect(route('models.index'));
+            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
         }
 
         $this->modelRepository->delete($id);
 
-        Flash::success(__('messages.deleted', ['model' => __('models/models.singular')]));
-
-        return redirect(route('models.index'));
+        return $this->success(__('vl-admin-tool-lang::crud.delete_success'));
     }
 }

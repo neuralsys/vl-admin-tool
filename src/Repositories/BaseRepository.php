@@ -30,13 +30,6 @@ abstract class BaseRepository
     }
 
     /**
-     * Get searchable fields array
-     *
-     * @return array
-     */
-    abstract public function getFieldsSearchable();
-
-    /**
      * Configure the Models
      *
      * @return string
@@ -70,56 +63,26 @@ abstract class BaseRepository
      */
     public function paginate($perPage, $columns = ['*'])
     {
-        $query = $this->allQuery();
+        $query = $this->model->newQuery();
 
         return $query->paginate($perPage, $columns);
     }
 
     /**
-     * Build a query for retrieving all records.
-     *
-     * @param array $search
-     * @param int|null $skip
-     * @param int|null $limit
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function allQuery($search = [], $skip = null, $limit = null)
-    {
-        $query = $this->model->newQuery();
-
-        if (count($search)) {
-            foreach($search as $key => $value) {
-                if (in_array($key, $this->getFieldsSearchable())) {
-                    $query->where($key, $value);
-                }
-            }
-        }
-
-        if (!is_null($skip)) {
-            $query->skip($skip);
-        }
-
-        if (!is_null($limit)) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    /**
      * Retrieve all records with given filter criteria
      *
-     * @param array $search
-     * @param int|null $skip
+     * @param array $columns
      * @param int|null $limit
      * @param array $columns
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all($search = [], $skip = null, $limit = null, $columns = ['*'])
+    public function all($columns = ['*'], $limit = null)
     {
-        $query = $this->allQuery($search, $skip, $limit);
+        $query = $this->model->newQuery();
 
+        if ($limit !== null)
+            $query->limit($limit);
         return $query->get($columns);
     }
 
@@ -189,5 +152,31 @@ abstract class BaseRepository
         $model = $query->findOrFail($id);
 
         return $model->delete();
+    }
+
+    /**
+     * Trigger static method calls to the model
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $arguments)
+    {
+        return call_user_func_array([new static(), $method], $arguments);
+    }
+
+    /**
+     * Trigger method calls to the model
+     *
+     * @param string $method
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array([$this->model, $method], $arguments);
     }
 }

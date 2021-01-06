@@ -1,0 +1,9 @@
+$TABS$<li class="nav-item has-treeview {{ $CONDITION ? 'menu-open' : '' }}">
+$TABS$    <a href="$INDEX_ROUTE" class="nav-link {{ ($CONDITION) ? 'active' : '' }}" style="padding-left: $PADDING_LEFTrem">
+$TABS$          <i class="$ICON_CLASS"></i>
+$TABS$          <p>$MENU_TITLE<i class="right fas fa-angle-left"></i></p>
+$TABS$    </a>
+$TABS$    <ul class="nav nav-treeview">
+$TABS$        $CHILDRENT_MENUS
+$TABS$    </ul>
+$TABS$</li>

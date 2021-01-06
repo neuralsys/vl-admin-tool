@@ -1,13 +1,15 @@
 <?php
 
 return array (
-  'singular' => 'Models',
+  'singular' => 'Model',
   'plural' => 'Models',
   'fields' =>
   array (
     'id' => 'Id',
-    'project_id' => 'Project Id',
     'class_name' => 'Class Name',
+    'table_name' => 'Table Name',
+    'singular' => 'Singular',
+    'plurals' => 'Plurals',
     'table_name' => 'Table Name',
     'description' => 'Description',
     'timestamps' => 'Timestamps',

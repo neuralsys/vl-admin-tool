@@ -24,46 +24,16 @@ class ControllerGenerator extends BaseGenerator
     {
         $this->commandData = $commandData;
         $this->path = $commandData->config->pathController;
-        $this->templateType = config('admin_generator.laravel_generator.templates', 'adminlte-templates');
-        $this->fileName = $this->commandData->modelName.'Controllers.php';
+        $this->templateType = config('vl_admin_tool.templates', 'adminlte-templates');
+        $this->fileName = $this->commandData->modelName.'Controller.php';
     }
 
     public function generate()
     {
-        if ($this->commandData->getAddOn('datatables')) {
-            if ($this->commandData->getOption('repositoryPattern')) {
-                $templateName = 'datatable_controller';
-            } else {
-                $templateName = 'model_datatable_controller';
-            }
+        $templateName = 'datatable_controller';
+        $templateData = get_template("scaffold.controller.$templateName", 'vl-admin-tool');
 
-            if ($this->commandData->isLocalizedTemplates()) {
-                $templateName .= '_locale';
-            }
-
-            $templateData = get_template("scaffold.controller.$templateName", 'vl-admin-tool');
-
-            $this->generateDataTable();
-        } else {
-            if ($this->commandData->getOption('repositoryPattern')) {
-                $templateName = 'controller';
-            } else {
-                $templateName = 'model_controller';
-            }
-            if ($this->commandData->isLocalizedTemplates()) {
-                $templateName .= '_locale';
-            }
-
-            $templateData = get_template("scaffold.controller.$templateName", 'vl-admin-tool');
-
-            $paginate = $this->commandData->getOption('paginate');
-
-            if ($paginate) {
-                $templateData = str_replace('$RENDER_TYPE$', 'paginate('.$paginate.')', $templateData);
-            } else {
-                $templateData = str_replace('$RENDER_TYPE$', 'all()', $templateData);
-            }
-        }
+        $this->generateDataTable();
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -76,9 +46,6 @@ class ControllerGenerator extends BaseGenerator
     private function generateDataTable()
     {
         $templateName = 'datatable';
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
 
         $templateData = get_template('scaffold.'.$templateName, 'vl-admin-tool');
 
@@ -103,9 +70,6 @@ class ControllerGenerator extends BaseGenerator
     private function generateDataTableColumns()
     {
         $templateName = 'datatable_column';
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
         $headerFieldTemplate = get_template('scaffold.views.'.$templateName, $this->templateType);
 
         $dataTableColumns = [];
@@ -114,7 +78,7 @@ class ControllerGenerator extends BaseGenerator
                 continue;
             }
 
-            if ($this->commandData->isLocalizedTemplates() && !$field->isSearchable) {
+            if (!$field->isSearchable) {
                 $headerFieldTemplate = str_replace('$SEARCHABLE$', ",'searchable' => false", $headerFieldTemplate);
             }
 
@@ -128,11 +92,7 @@ class ControllerGenerator extends BaseGenerator
             if ($field->isSearchable) {
                 $dataTableColumns[] = $fieldTemplate;
             } else {
-                if ($this->commandData->isLocalizedTemplates()) {
-                    $dataTableColumns[] = $fieldTemplate;
-                } else {
-                    $dataTableColumns[] = "'".$field->name."' => ['searchable' => false]";
-                }
+                $dataTableColumns[] = $fieldTemplate;
             }
         }
 

@@ -1,0 +1,6 @@
+$TABS$<li class="nav-item">
+$TABS$    <a href="$INDEX_ROUTE" class="nav-link {{ Request::is('$URL_PATTERN') ? 'active' : '' }}" style="padding-left: $PADDING_LEFTrem">
+$TABS$        <i class="$ICON_CLASS"></i>
+$TABS$        <p>$MENU_TITLE</p>
+$TABS$    </a>
+$TABS$</li>

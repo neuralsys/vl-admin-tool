@@ -19,7 +19,8 @@ class MenuDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'menus.datatables_actions');
+        return $dataTable
+            ->addColumn('action', 'menus.datatables_actions');
     }
 
     /**
@@ -45,19 +46,16 @@ class MenuDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => 'Bfrtip',
-                'stateSave' => true,
+                'dom'       => '<"menu-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
+                'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
+                    fnRowCallBack(nRow, aData, iDisplayIndex, menuSelectedRows);
+                 }",
                 'buttons'   => [
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'reset',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-undo"></i> ' .__('auth.app.reset').''
                     ],
                     [
                        'extend' => 'reload',
@@ -68,6 +66,8 @@ class MenuDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
+                 "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                 'select' => true
             ]);
     }
 
@@ -79,10 +79,12 @@ class MenuDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'type' => new Column(['title' => __('models/menus.fields.type'), 'data' => 'type']),
             'url_pattern' => new Column(['title' => __('models/menus.fields.url_pattern'), 'data' => 'url_pattern']),
-            'index_url' => new Column(['title' => __('models/menus.fields.index_url'), 'data' => 'index_url']),
+            'index_route_name' => new Column(['title' => __('models/menus.fields.index_route_name'), 'data' => 'index_route_name']),
             'title' => new Column(['title' => __('models/menus.fields.title'), 'data' => 'title']),
-            'parent_id' => new Column(['title' => __('models/menus.fields.parent_id'), 'data' => 'parent_id'])
+            'parent_id' => new Column(['title' => __('models/menus.fields.parent_id'), 'data' => 'parent_id']),
+            'pos' => new Column(['title' => __('models/menus.fields.pos'), 'data' => 'pos'])
         ];
     }
 

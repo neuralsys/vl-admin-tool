@@ -3,33 +3,16 @@
 namespace Vuongdq\VLAdminTool\Repositories;
 
 use Vuongdq\VLAdminTool\Models\Lang;
+use App\Repositories\BaseRepository;
 
 /**
  * Class LangRepository
- * @package App\Repositories
- * @version September 23, 2020, 11:47 am +07
+ * @package Vuongdq\VLAdminTool\Repositories
+ * @version January 6, 2021, 7:46 am UTC
 */
 
 class LangRepository extends BaseRepository
 {
-    /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'language',
-        'locale'
-    ];
-
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
-
     /**
      * Configure the Model
      **/

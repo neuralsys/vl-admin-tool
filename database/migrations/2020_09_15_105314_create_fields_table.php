@@ -17,13 +17,10 @@ class CreateFieldsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('model_id');
             $table->string('name');
-            $table->string('db_type');
             $table->string('html_type');
-            $table->boolean('primary')->default(false);
-            $table->boolean('unique')->default(false);
-            $table->boolean('auto_increment')->default(false);
-            $table->boolean('nullable')->default(false);
             $table->timestamps();
+
+            $table->foreign('model_id')->references('id')->on('models');
         });
     }
 

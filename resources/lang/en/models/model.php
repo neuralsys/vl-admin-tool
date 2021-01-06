@@ -3,21 +3,16 @@
 return array (
   'singular' => 'Model',
   'plural' => 'Models',
-  'fields' =>
+  'fields' => 
   array (
     'id' => 'Id',
     'class_name' => 'Class Name',
     'table_name' => 'Table Name',
     'singular' => 'Singular',
-    'plurals' => 'Plurals',
-    'table_name' => 'Table Name',
+    'plural' => 'Plural',
     'description' => 'Description',
     'timestamps' => 'Timestamps',
     'soft_delete' => 'Soft Delete',
-    'test' => 'Test',
-    'swagger' => 'Swagger',
-    'datatables' => 'Datatables',
-    'paginate' => 'Paginate',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
   ),

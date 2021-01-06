@@ -1,53 +1,34 @@
+<!-- Second Field Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label(null, __('models/relations.fields.second_field_id').':') !!}
+    {!! Form::number('second_field_id', null, ['class' => 'form-control', 'data-column' => 'second_field_id']) !!}
+</div>
+
+
 <!-- Type Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('type', __('models/relations.fields.type').':') !!}
-    {!! Form::text('type', null, ['class' => 'form-control']) !!}
+    {!! Form::label(null, __('models/relations.fields.type').':') !!}
+    {!! Form::text('type', null, ['class' => 'form-control', 'data-column' => 'type']) !!}
 </div>
 
-<!-- First Models Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('first_model_id', __('models/relations.fields.first_model_id').':') !!}
-    {!! Form::number('first_model_id', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- First Foreign Key Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('first_foreign_key', __('models/relations.fields.first_foreign_key').':') !!}
-    {!! Form::text('first_foreign_key', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Second Models Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('second_model_id', __('models/relations.fields.second_model_id').':') !!}
-    {!! Form::number('second_model_id', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Second Foreign Key Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('second_foreign_key', __('models/relations.fields.second_foreign_key').':') !!}
-    {!! Form::text('second_foreign_key', null, ['class' => 'form-control']) !!}
-</div>
 
 <!-- Table Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('table_name', __('models/relations.fields.table_name').':') !!}
-    {!! Form::text('table_name', null, ['class' => 'form-control']) !!}
+    {!! Form::label(null, __('models/relations.fields.table_name').':') !!}
+    {!! Form::text('table_name', null, ['class' => 'form-control', 'data-column' => 'table_name']) !!}
 </div>
 
-<!-- First Key Field -->
+
+<!-- Fk 1 Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('first_key', __('models/relations.fields.first_key').':') !!}
-    {!! Form::text('first_key', null, ['class' => 'form-control']) !!}
+    {!! Form::label(null, __('models/relations.fields.fk_1').':') !!}
+    {!! Form::text('fk_1', null, ['class' => 'form-control', 'data-column' => 'fk_1']) !!}
 </div>
 
-<!-- Second Key Field -->
+
+<!-- Fk 2 Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('second_key', __('models/relations.fields.second_key').':') !!}
-    {!! Form::text('second_key', null, ['class' => 'form-control']) !!}
+    {!! Form::label(null, __('models/relations.fields.fk_2').':') !!}
+    {!! Form::text('fk_2', null, ['class' => 'form-control', 'data-column' => 'fk_2']) !!}
 </div>
 
-<!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit(__('crud.save'), ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('relations.index') }}" class="btn btn-default">@lang('crud.cancel')</a>
-</div>

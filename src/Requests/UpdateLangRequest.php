@@ -25,8 +25,13 @@ class UpdateLangRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Lang::$rules;
-
+        $rules = [
+            'language' => 'required|string|max:255',
+                'locale' => 'required|string|max:255',
+                'created_at' => 'nullable',
+                'updated_at' => 'nullable'
+        ];
+        
         return $rules;
     }
 }

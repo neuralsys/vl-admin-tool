@@ -25,6 +25,15 @@ class CreateMenuRequest extends FormRequest
      */
     public function rules()
     {
-        return Menu::$rules;
+        return [
+            'type' => 'required|string|max:255',
+            'url_pattern' => 'nullable|string|max:255',
+            'index_route_name' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'parent_id' => 'required|integer',
+            'pos' => 'required|integer',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
     }
 }

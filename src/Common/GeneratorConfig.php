@@ -80,7 +80,6 @@ class GeneratorConfig
         'ignoreFields',
         'save',
         'primary',
-        'prefix',
         'paginate',
         'skip',
         'views',
@@ -91,6 +90,7 @@ class GeneratorConfig
         'factory',
         'seeder',
         'connection',
+        'force'
     ];
 
     public $tableName;
@@ -298,6 +298,18 @@ class GeneratorConfig
             $commandData->addDynamicVariable('$PUBLIC_PREFIX$', '');
         }
 
+        if (!empty($this->prefixes['ns_view'])) {
+            $commandData->addDynamicVariable('$NS_VIEW_PREFIX$', $this->prefixes['ns_view']);
+        } else {
+            $commandData->addDynamicVariable('$NS_VIEW_PREFIX$', '');
+        }
+
+        if (!empty($this->prefixes['ns_locale'])) {
+            $commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', $this->prefixes['ns_locale']);
+        } else {
+            $commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', '');
+        }
+
         $commandData->addDynamicVariable(
             '$API_PREFIX$',
             config('vl_admin_tool.api_prefix', 'api')
@@ -350,9 +362,20 @@ class GeneratorConfig
         $this->mHumanPlural = Str::title(str_replace('_', ' ', Str::snake($this->mSnakePlural)));
     }
 
+    public function getPrefixKeysFromConfig() {
+        return array_keys(config('vl-admin-tool.prefixes', []));
+    }
+
     public function prepareOptions(CommandData &$commandData)
     {
         foreach (self::$availableOptions as $option) {
+            $this->options[$option] = $commandData->commandObj->option($option);
+        }
+
+        # add prefix options
+        $prefixKeys = $this->getPrefixKeysFromConfig();
+        foreach ($prefixKeys as $prefixKey) {
+            $option = 'prefix_'.$prefixKey;
             $this->options[$option] = $commandData->commandObj->option($option);
         }
 
@@ -366,29 +389,33 @@ class GeneratorConfig
         $commandData->getTemplatesManager()->setUseLocale(true);
 
         $this->options['softDelete'] = config('vl_admin_tool.options.softDelete', false);
+
+        if (isset($this->options['skip'])) {
+            $this->options['skip'] = explode(",", $this->options['skip']);
+        }
     }
 
     public function preparePrefixes()
     {
+        # init prefix from config
         $this->prefixes['route'] = explode('/', config('vl_admin_tool.prefixes.route', ''));
         $this->prefixes['path'] = explode('/', config('vl_admin_tool.prefixes.path', ''));
         $this->prefixes['view'] = explode('.', config('vl_admin_tool.prefixes.view', ''));
         $this->prefixes['public'] = explode('/', config('vl_admin_tool.prefixes.public', ''));
+        $this->prefixes['ns_view'] = explode('/', config('vl_admin_tool.prefixes.ns_view', ''));
+        $this->prefixes['ns_locale'] = explode('/', config('vl_admin_tool.prefixes.ns_locale', ''));
 
-        if ($this->getOption('prefix')) {
-            $multiplePrefixes = explode('/', $this->getOption('prefix'));
+        # update prefix with CLI if exist
+        $prefixKeys = $this->getPrefixKeysFromConfig();
+        foreach ($prefixKeys as $prefixKey) {
+            $option = 'prefix_'.$prefixKey;
+            if ($this->getOption($option))
+                $this->prefixes[$prefixKey] = explode('/', $this->getOption($option));
 
-            $this->prefixes['route'] = array_merge($this->prefixes['route'], $multiplePrefixes);
-            $this->prefixes['path'] = array_merge($this->prefixes['path'], $multiplePrefixes);
-            $this->prefixes['view'] = array_merge($this->prefixes['view'], $multiplePrefixes);
-            $this->prefixes['public'] = array_merge($this->prefixes['public'], $multiplePrefixes);
+            $this->prefixes[$prefixKey] = array_diff($this->prefixes[$prefixKey], ['']);
         }
 
-        $this->prefixes['route'] = array_diff($this->prefixes['route'], ['']);
-        $this->prefixes['path'] = array_diff($this->prefixes['path'], ['']);
-        $this->prefixes['view'] = array_diff($this->prefixes['view'], ['']);
-        $this->prefixes['public'] = array_diff($this->prefixes['public'], ['']);
-
+        # build route prefix
         $routePrefix = '';
 
         foreach ($this->prefixes['route'] as $singlePrefix) {
@@ -401,6 +428,7 @@ class GeneratorConfig
 
         $this->prefixes['route'] = $routePrefix;
 
+        # build ns prefix
         $nsPrefix = '';
 
         foreach ($this->prefixes['path'] as $singlePrefix) {
@@ -413,6 +441,7 @@ class GeneratorConfig
 
         $this->prefixes['ns'] = $nsPrefix;
 
+        # build path prefix
         $pathPrefix = '';
 
         foreach ($this->prefixes['path'] as $singlePrefix) {
@@ -425,6 +454,7 @@ class GeneratorConfig
 
         $this->prefixes['path'] = $pathPrefix;
 
+        # build view prefix
         $viewPrefix = '';
 
         foreach ($this->prefixes['view'] as $singlePrefix) {
@@ -437,6 +467,7 @@ class GeneratorConfig
 
         $this->prefixes['view'] = $viewPrefix;
 
+        # build public prefix
         $publicPrefix = '';
 
         foreach ($this->prefixes['public'] as $singlePrefix) {
@@ -448,6 +479,22 @@ class GeneratorConfig
         }
 
         $this->prefixes['public'] = $publicPrefix;
+
+        # build ns view prefix
+        $nsViewPrefix = '';
+        foreach ($this->prefixes['ns_view'] as $singlePrefix) {
+            $nsViewPrefix .= $singlePrefix;
+        }
+
+        $this->prefixes['ns_view'] = $nsViewPrefix;
+
+        # build ns locale prefix
+        $nsLocalePrefix = '';
+        foreach ($this->prefixes['ns_locale'] as $singlePrefix) {
+            $nsLocalePrefix .= $singlePrefix;
+        }
+
+        $this->prefixes['ns_locale'] = $nsLocalePrefix;
     }
 
     public function overrideOptionsFromJsonFile($jsonData)

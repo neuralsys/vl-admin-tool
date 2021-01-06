@@ -19,7 +19,7 @@ class ModelController extends Controller
     }
 
     /**
-     * Display a listing of the Models.
+     * Display a listing of the Model.
      *
      * @param ModelDataTable $modelDataTable
      * @return Response
@@ -30,7 +30,7 @@ class ModelController extends Controller
     }
 
     /**
-     * Store a newly created Models in storage.
+     * Store a newly created Model in storage.
      *
      * @param CreateModelRequest $request
      *
@@ -39,13 +39,14 @@ class ModelController extends Controller
     public function store(CreateModelRequest $request)
     {
         $input = $request->all();
+
         $model = $this->modelRepository->create($input);
 
-        return $this->success(__('vl-admin-tool-lang::crud.add_success'));
+        return $this->success(__('crud.add_success'));
     }
 
     /**
-     * Display the specified Models.
+     * Display the specified Model.
      *
      * @param  int $id
      *
@@ -63,7 +64,7 @@ class ModelController extends Controller
     }
 
     /**
-     * Update the specified Models in storage.
+     * Update the specified Model in storage.
      *
      * @param  int              $id
      * @param UpdateModelRequest $request
@@ -75,16 +76,16 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
+            return $this->error(__('crud.not_found'));
         }
 
         $model = $this->modelRepository->update($request->all(), $id);
 
-        return $this->success(__('vl-admin-tool-lang::crud.update_success'));
+        return $this->success(__('crud.update_success'));
     }
 
     /**
-     * Remove the specified Models from storage.
+     * Remove the specified Model from storage.
      *
      * @param  int $id
      *
@@ -95,11 +96,11 @@ class ModelController extends Controller
         $model = $this->modelRepository->find($id);
 
         if (empty($model)) {
-            return $this->error(__('vl-admin-tool-lang::crud.not_found'));
+            return $this->error(__('crud.not_found'));
         }
 
         $this->modelRepository->delete($id);
 
-        return $this->success(__('vl-admin-tool-lang::crud.delete_success'));
+        return $this->success(__('crud.delete_success'));
     }
 }

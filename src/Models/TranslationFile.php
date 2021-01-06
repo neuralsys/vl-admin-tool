@@ -2,30 +2,26 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class TranslationFile
- * @package App\Models
- * @version September 23, 2020, 11:48 am +07
+ * @package Vuongdq\VLAdminTool\Models
+ * @version January 6, 2021, 7:46 am UTC
  *
+ * @property \Illuminate\Database\Eloquent\Collection $translations
  * @property string $filename
  */
-class TranslationFile extends Model
+class TranslationFile extends EloquentModel
 {
-
+    
     public $table = 'translation_files';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
 
     public $fillable = [
         'filename'
     ];
 
+    
     /**
      * The attributes that should be casted to native types.
      *
@@ -37,13 +33,10 @@ class TranslationFile extends Model
     ];
 
     /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'filename' => 'required|string|max:255'
-    ];
-
-
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function translations()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Translation::class, 'file_id');
+    }
 }

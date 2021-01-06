@@ -30,16 +30,6 @@ class TranslationController extends Controller
     }
 
     /**
-     * Show the form for creating a new Translation.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('translations.create');
-    }
-
-    /**
      * Store a newly created Translation in storage.
      *
      * @param CreateTranslationRequest $request
@@ -52,9 +42,7 @@ class TranslationController extends Controller
 
         $translation = $this->translationRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/translations.singular')]));
-
-        return redirect(route('translations.index'));
+        return $this->success(__('crud.add_success'));
     }
 
     /**
@@ -69,32 +57,10 @@ class TranslationController extends Controller
         $translation = $this->translationRepository->find($id);
 
         if (empty($translation)) {
-            Flash::error(__('models/translations.singular').' '.__('messages.not_found'));
-
             return redirect(route('translations.index'));
         }
 
         return view('translations.show')->with('translation', $translation);
-    }
-
-    /**
-     * Show the form for editing the specified Translation.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $translation = $this->translationRepository->find($id);
-
-        if (empty($translation)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translations.singular')]));
-
-            return redirect(route('translations.index'));
-        }
-
-        return view('translations.edit')->with('translation', $translation);
     }
 
     /**
@@ -110,16 +76,12 @@ class TranslationController extends Controller
         $translation = $this->translationRepository->find($id);
 
         if (empty($translation)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translations.singular')]));
-
-            return redirect(route('translations.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $translation = $this->translationRepository->update($request->all(), $id);
 
-        Flash::success(__('messages.updated', ['model' => __('models/translations.singular')]));
-
-        return redirect(route('translations.index'));
+        return $this->success(__('crud.update_success'));
     }
 
     /**
@@ -134,15 +96,11 @@ class TranslationController extends Controller
         $translation = $this->translationRepository->find($id);
 
         if (empty($translation)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translations.singular')]));
-
-            return redirect(route('translations.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $this->translationRepository->delete($id);
 
-        Flash::success(__('messages.deleted', ['model' => __('models/translations.singular')]));
-
-        return redirect(route('translations.index'));
+        return $this->success(__('crud.delete_success'));
     }
 }

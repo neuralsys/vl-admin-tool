@@ -2,28 +2,24 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Translation
- * @package App\Models
- * @version September 23, 2020, 11:48 am +07
+ * @package Vuongdq\VLAdminTool\Models
+ * @version January 6, 2021, 7:46 am UTC
  *
+ * @property \Vuongdq\VLAdminTool\Models\TranslationFile $file
+ * @property \Vuongdq\VLAdminTool\Models\Lang $lang
  * @property integer $file_id
  * @property integer $lang_id
  * @property string $key
  * @property string $value
  */
-class Translation extends Model
+class Translation extends EloquentModel
 {
-
+    
     public $table = 'translations';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
 
     public $fillable = [
         'file_id',
@@ -32,6 +28,7 @@ class Translation extends Model
         'value'
     ];
 
+    
     /**
      * The attributes that should be casted to native types.
      *
@@ -46,16 +43,18 @@ class Translation extends Model
     ];
 
     /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'file_id' => 'required',
-        'lang_id' => 'required',
-        'key' => 'required|string|max:255',
-        'value' => 'required|string|max:255'
-    ];
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function file()
+    {
+        return $this->belongsTo(\Vuongdq\VLAdminTool\Models\TranslationFile::class, 'file_id');
+    }
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function lang()
+    {
+        return $this->belongsTo(\Vuongdq\VLAdminTool\Models\Lang::class, 'lang_id');
+    }
 }

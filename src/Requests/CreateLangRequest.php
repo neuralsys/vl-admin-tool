@@ -25,6 +25,11 @@ class CreateLangRequest extends FormRequest
      */
     public function rules()
     {
-        return Lang::$rules;
+        return [
+            'language' => 'required|string|max:255',
+            'locale' => 'required|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
     }
 }

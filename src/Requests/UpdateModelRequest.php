@@ -25,8 +25,18 @@ class UpdateModelRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Model::$rules;
-
+        $rules = [
+            'class_name' => 'required|string|max:255',
+                'table_name' => 'required|string|max:255',
+                'singular' => 'required|string|max:255',
+                'plural' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'timestamps' => 'required|boolean',
+                'soft_delete' => 'required|boolean',
+                'created_at' => 'nullable',
+                'updated_at' => 'nullable'
+        ];
+        
         return $rules;
     }
 }

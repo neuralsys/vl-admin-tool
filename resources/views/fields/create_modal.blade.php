@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @include('fields.fields')
+                        @include('vl-admin-tool::fields.fields')
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -27,7 +27,7 @@
 
 @push('scripts')
     <script type="text/javascript">
-        var fieldCreateModal = $('#model-create-modal');
+        var fieldCreateModal = $('#field-create-modal');
         var fieldCreateForm = $('#field-create-modal #field-create-form');
     </script>
     <script type="text/javascript">

@@ -6,21 +6,23 @@
             @lang('models/translations.plural')
         </h1>
         <h1 class="float-right">
-           <a class="btn btn-primary float-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('translations.create') }}">@lang('crud.add_new')</a>
+            <button type="button" class="btn btn-block btn-primary float-right btnAddNewTranslation"
+                    style="margin-top: -10px;margin-bottom: 5px">@lang('crud.add_new')</button>
         </h1>
     </section>
     <div class="content">
         <div class="clearfix"></div>
-
-        <div class="clearfix"></div>
-        <div class="box box-primary">
-            <div class="box-body">
-                    @include('translations.table')
-            </div>
-        </div>
-        <div class="text-center">
-
-        </div>
+        @include('translations.table_with_crud_modals')
     </div>
 @endsection
 
+@push('scripts')
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.btnAddNewTranslation').on('click', (evt) => {
+                resetForm(translationCreateForm);
+                translationCreateModal.modal('show');
+            });
+        });
+    </script>
+@endpush

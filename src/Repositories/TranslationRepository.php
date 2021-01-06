@@ -3,35 +3,16 @@
 namespace Vuongdq\VLAdminTool\Repositories;
 
 use Vuongdq\VLAdminTool\Models\Translation;
+use App\Repositories\BaseRepository;
 
 /**
  * Class TranslationRepository
- * @package App\Repositories
- * @version September 23, 2020, 11:48 am +07
+ * @package Vuongdq\VLAdminTool\Repositories
+ * @version January 6, 2021, 7:46 am UTC
 */
 
 class TranslationRepository extends BaseRepository
 {
-    /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'file_id',
-        'lang_id',
-        'key',
-        'value'
-    ];
-
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
-
     /**
      * Configure the Model
      **/

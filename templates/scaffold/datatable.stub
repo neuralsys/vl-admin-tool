@@ -20,7 +20,7 @@ class $MODEL_NAME$DataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', '$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
+            ->addColumn('action', '$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
     }
 
     /**
@@ -49,7 +49,7 @@ class $MODEL_NAME$DataTable extends DataTable
                 'dom'       => '<"$MODEL_NAME_CAMEL$-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                    fnRowCallBack(nRow, aData, iDisplayIndex, $MODEL_NAME_CAMEL$SelectedRows);
                  }",
                 'buttons'   => [
                     [

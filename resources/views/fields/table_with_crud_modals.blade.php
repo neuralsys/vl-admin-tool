@@ -1,3 +1,3 @@
-@include('fields.table')
-@include('fields.create_modal')
-@include('fields.edit_modal')
+@include('vl-admin-tool::fields.table')
+@include('vl-admin-tool::fields.create_modal')
+@include('vl-admin-tool::fields.edit_modal')

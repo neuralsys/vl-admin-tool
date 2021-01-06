@@ -1,1 +1,1 @@
-@include('vl-admin-tool::models.table')
+@include('models.table')

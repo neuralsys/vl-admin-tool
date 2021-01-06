@@ -1,15 +1,15 @@
-{!! Form::open(['route' => ['relations.destroy', $id], 'method' => 'delete']) !!}
 <div class='btn-group'>
-    <a href="{{ route('relations.show', $id) }}" class='btn btn-default btn-xs'>
-        <i class="glyphicon glyphicon-eye-open"></i>
-    </a>
-    <a href="{{ route('relations.edit', $id) }}" class='btn btn-default btn-xs'>
-        <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', [
-        'type' => 'submit',
-        'class' => 'btn btn-danger btn-xs',
-        'onclick' => 'return confirm("'.__('crud.are_you_sure').'")'
-    ]) !!}
+{{--    <a href="{{ route('relations.show', $id) }}" class='btn btn-default btn-xs datatable-action'>--}}
+{{--        <i class="far fa-eye"></i>--}}
+{{--    </a>--}}
+    <button class='btn btn-primary btn-xs datatable-action' onclick="editRecord(this, relationEditForm)">
+        <i class="fas fa-edit"></i>
+    </button>
+
+    <button
+        class='btn btn-danger btn-xs datatable-action'
+        onclick="deleteRecord(this, '{{route("relations.destroy", "%s")}}', true, )"
+    >
+        <i class="fas fa-trash-alt"></i>
+    </button>
 </div>
-{!! Form::close() !!}

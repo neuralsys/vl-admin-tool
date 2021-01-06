@@ -25,6 +25,13 @@ class CreateTranslationRequest extends FormRequest
      */
     public function rules()
     {
-        return Translation::$rules;
+        return [
+            'file_id' => 'required',
+            'lang_id' => 'required',
+            'key' => 'required|string|max:255',
+            'value' => 'required|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
     }
 }

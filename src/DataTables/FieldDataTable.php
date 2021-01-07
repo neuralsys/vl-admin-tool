@@ -20,7 +20,11 @@ class FieldDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'vl-admin-tool::fields.datatables_actions');
+            ->addColumn('db_config_view', 'vl-admin-tool::fields.datatable_action_columns.db_config_column')
+            ->addColumn('dt_config_view', 'vl-admin-tool::fields.datatable_action_columns.dt_config_column')
+            ->addColumn('crud_config_view', 'vl-admin-tool::fields.datatable_action_columns.crud_config_column')
+            ->addColumn('action', 'vl-admin-tool::fields.datatables_actions')
+            ->rawColumns(['db_config_view', 'action', 'dt_config_view', 'crud_config_view']);
     }
 
     /**
@@ -31,7 +35,8 @@ class FieldDataTable extends DataTable
      */
     public function query(Field $model)
     {
-        return $model->newQuery();
+        $modelId = $this->request->input('model_id');
+        return $model->newQuery()->where('model_id', $modelId);
     }
 
     /**
@@ -79,12 +84,11 @@ class FieldDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'model_id' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.model_id'), 'data' => 'model_id'])
-,
-            'name' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.name'), 'data' => 'name'])
-,
-            'html_type' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.html_type'), 'data' => 'html_type'])
-
+            'name' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.name'), 'data' => 'name']),
+            'html_type' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.html_type'), 'data' => 'html_type']),
+            'db_config' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.plural'), 'data' => 'db_config_view']),
+            'dt_config' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.plural'), 'data' => 'dt_config_view']),
+            'crud_config' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.plural'), 'data' => 'crud_config_view']),
         ];
     }
 

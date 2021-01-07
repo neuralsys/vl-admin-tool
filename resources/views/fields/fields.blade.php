@@ -1,7 +1,7 @@
 <!-- Model Id Field -->
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-6" style="display:none;">
     {!! Form::label(null, __('vl-admin-tool-lang::models/field.fields.model_id').':') !!}
-    {!! Form::number('model_id', null, ['class' => 'form-control', 'data-column' => 'model_id']) !!}
+    {!! Form::number('model_id', $model_id, ['class' => 'form-control ignore-reset', 'data-column' => 'model_id']) !!}
 </div>
 
 

@@ -1,3 +1,3 @@
-@include('vl-admin-tool::dBConfigs.table')
-@include('vl-admin-tool::dBConfigs.create_modal')
-@include('vl-admin-tool::dBConfigs.edit_modal')
+@include('vl-admin-tool::d_b_configs.table')
+@include('vl-admin-tool::d_b_configs.create_modal')
+@include('vl-admin-tool::d_b_configs.edit_modal')

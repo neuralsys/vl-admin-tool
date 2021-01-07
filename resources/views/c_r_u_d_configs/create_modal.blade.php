@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @include('vl-admin-tool::cRUDConfigs.fields')
+                        @include('vl-admin-tool::c_r_u_d_configs.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

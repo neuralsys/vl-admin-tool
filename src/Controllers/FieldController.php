@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\FieldDataTable;
 use Vuongdq\VLAdminTool\Requests\CreateFieldRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateFieldRequest;
@@ -24,9 +25,11 @@ class FieldController extends Controller
      * @param FieldDataTable $fieldDataTable
      * @return Response
      */
-    public function index(FieldDataTable $fieldDataTable)
+    public function index(FieldDataTable $fieldDataTable, Request $request)
     {
-        return $fieldDataTable->render('vl-admin-tool::fields.index');
+        return $fieldDataTable->render('vl-admin-tool::fields.index', [
+            "model_id" => $request->input("model_id")
+        ]);
     }
 
     /**

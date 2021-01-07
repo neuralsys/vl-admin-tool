@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\DTConfigDataTable;
 use Vuongdq\VLAdminTool\Requests\CreateDTConfigRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateDTConfigRequest;
@@ -24,9 +25,11 @@ class DTConfigController extends Controller
      * @param DTConfigDataTable $dTConfigDataTable
      * @return Response
      */
-    public function index(DTConfigDataTable $dTConfigDataTable)
+    public function index(DTConfigDataTable $dTConfigDataTable, Request $request)
     {
-        return $dTConfigDataTable->render('vl-admin-tool::d_t_configs.index');
+        return $dTConfigDataTable->render('vl-admin-tool::d_t_configs.index', [
+            "field_id" => $request->input("field_id")
+        ]);
     }
 
     /**

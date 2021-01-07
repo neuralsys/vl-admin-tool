@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\CRUDConfigDataTable;
 use Vuongdq\VLAdminTool\Requests\CreateCRUDConfigRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateCRUDConfigRequest;
@@ -24,9 +25,11 @@ class CRUDConfigController extends Controller
      * @param CRUDConfigDataTable $cRUDConfigDataTable
      * @return Response
      */
-    public function index(CRUDConfigDataTable $cRUDConfigDataTable)
+    public function index(CRUDConfigDataTable $cRUDConfigDataTable, Request $request)
     {
-        return $cRUDConfigDataTable->render('vl-admin-tool::c_r_u_d_configs.index');
+        return $cRUDConfigDataTable->render('vl-admin-tool::c_r_u_d_configs.index', [
+            "field_id" => $request->input("field_id")
+        ]);
     }
 
     /**

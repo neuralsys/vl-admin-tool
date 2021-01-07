@@ -20,7 +20,9 @@ class ModelDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'vl-admin-tool::models.datatables_actions');
+            ->addColumn('field_view', 'vl-admin-tool::models.datatable_action_columns.field_column')
+            ->addColumn('action', 'vl-admin-tool::models.datatables_actions')
+            ->rawColumns(['field_view', 'action']);
     }
 
     /**
@@ -79,20 +81,14 @@ class ModelDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'class_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.class_name'), 'data' => 'class_name'])
-,
-            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'table_name'])
-,
-            'singular' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.singular'), 'data' => 'singular'])
-,
-            'plural' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.plural'), 'data' => 'plural'])
-,
-            'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description'])
-,
-            'timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'timestamps'])
-,
-            'soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'soft_delete'])
-
+            'class_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.class_name'), 'data' => 'class_name']),
+            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'table_name']),
+            'singular' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.singular'), 'data' => 'singular']),
+            'plural' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.plural'), 'data' => 'plural']),
+            'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
+            'timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'timestamps']),
+            'soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'soft_delete']),
+            'fields' => new Column(['title' => __('vl-admin-tool-lang::models/field.plural'), 'data' => 'field_view'])
         ];
     }
 

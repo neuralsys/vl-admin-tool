@@ -79,8 +79,6 @@ class CRUDConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.field_id'), 'data' => 'field_id'])
-,
             'creatable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.creatable'), 'data' => 'creatable'])
 ,
             'editable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.editable'), 'data' => 'editable'])

@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\DBConfigDataTable;
 use Vuongdq\VLAdminTool\Requests\CreateDBConfigRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateDBConfigRequest;
@@ -24,9 +25,11 @@ class DBConfigController extends Controller
      * @param DBConfigDataTable $dBConfigDataTable
      * @return Response
      */
-    public function index(DBConfigDataTable $dBConfigDataTable)
+    public function index(DBConfigDataTable $dBConfigDataTable, Request $request)
     {
-        return $dBConfigDataTable->render('vl-admin-tool::d_b_configs.index');
+        return $dBConfigDataTable->render('vl-admin-tool::d_b_configs.index', [
+            "field_id" => $request->input("field_id")
+        ]);
     }
 
     /**

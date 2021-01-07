@@ -1,7 +1,7 @@
 <!-- Field Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label(null, __('vl-admin-tool-lang::models/dTConfig.fields.field_id').':') !!}
-    {!! Form::number('field_id', null, ['class' => 'form-control', 'data-column' => 'field_id']) !!}
+<div class="form-group col-sm-6" style="display: none">
+    {!! Form::label(null, __('vl-admin-tool-lang::models/dBConfig.fields.field_id').':') !!}
+    {!! Form::number('field_id', $field_id, ['class' => 'form-control ignore-reset', 'data-column' => 'field_id']) !!}
 </div>
 
 

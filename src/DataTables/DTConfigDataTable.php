@@ -79,22 +79,13 @@ class DTConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.field_id'), 'data' => 'field_id'])
-,
-            'showable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.showable'), 'data' => 'showable'])
-,
-            'searchable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.searchable'), 'data' => 'searchable'])
-,
-            'orderable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.orderable'), 'data' => 'orderable'])
-,
-            'exportable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.exportable'), 'data' => 'exportable'])
-,
-            'printable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.printable'), 'data' => 'printable'])
-,
-            'class' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.class'), 'data' => 'class'])
-,
+            'showable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.showable'), 'data' => 'showable']),
+            'searchable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.searchable'), 'data' => 'searchable']),
+            'orderable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.orderable'), 'data' => 'orderable']),
+            'exportable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.exportable'), 'data' => 'exportable']),
+            'printable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.printable'), 'data' => 'printable']),
+            'class' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.class'), 'data' => 'class']),
             'has_footer' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.has_footer'), 'data' => 'has_footer'])
-
         ];
     }
 

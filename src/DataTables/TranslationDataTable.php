@@ -20,7 +20,7 @@ class TranslationDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'translations.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::translations.datatables_actions');
     }
 
     /**
@@ -79,10 +79,14 @@ class TranslationDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'file_id' => new Column(['title' => __('models/translations.fields.file_id'), 'data' => 'file_id']),
-            'lang_id' => new Column(['title' => __('models/translations.fields.lang_id'), 'data' => 'lang_id']),
-            'key' => new Column(['title' => __('models/translations.fields.key'), 'data' => 'key']),
-            'value' => new Column(['title' => __('models/translations.fields.value'), 'data' => 'value'])
+            'file_id' => new Column(['title' => __('vl-admin-tool-lang::models/translation.fields.file_id'), 'data' => 'file_id'])
+,
+            'lang_id' => new Column(['title' => __('vl-admin-tool-lang::models/translation.fields.lang_id'), 'data' => 'lang_id'])
+,
+            'key' => new Column(['title' => __('vl-admin-tool-lang::models/translation.fields.key'), 'data' => 'key'])
+,
+            'value' => new Column(['title' => __('vl-admin-tool-lang::models/translation.fields.value'), 'data' => 'value'])
+
         ];
     }
 

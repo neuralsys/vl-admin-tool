@@ -26,7 +26,7 @@ class CRUDConfigController extends Controller
      */
     public function index(CRUDConfigDataTable $cRUDConfigDataTable)
     {
-        return $cRUDConfigDataTable->render('c_r_u_d_configs.index');
+        return $cRUDConfigDataTable->render('vl-admin-tool::c_r_u_d_configs.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class CRUDConfigController extends Controller
             return redirect(route('c_r_u_d_configs.index'));
         }
 
-        return view('c_r_u_d_configs.show')->with('cRUDConfig', $cRUDConfig);
+        return view('vl-admin-tool::c_r_u_d_configs.show')->with('cRUDConfig', $cRUDConfig);
     }
 
     /**

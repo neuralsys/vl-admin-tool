@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @include('relations.fields')
+                        @include('vl-admin-tool::relations.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

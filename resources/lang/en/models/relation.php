@@ -3,17 +3,14 @@
 return array (
   'singular' => 'Relation',
   'plural' => 'Relations',
-  'fields' =>
+  'fields' => 
   array (
-    'id' => 'Id',
+    'first_field_id' => 'First Field Id',
+    'second_field_id' => 'Second Field Id',
     'type' => 'Type',
-    'first_model_id' => 'First Models Id',
-    'first_foreign_key' => 'First Foreign Key',
-    'second_model_id' => 'Second Models Id',
-    'second_foreign_key' => 'Second Foreign Key',
     'table_name' => 'Table Name',
-    'first_key' => 'First Key',
-    'second_key' => 'Second Key',
+    'fk_1' => 'Fk 1',
+    'fk_2' => 'Fk 2',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
   ),

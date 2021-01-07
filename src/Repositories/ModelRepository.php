@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class ModelRepository
  * @package Vuongdq\VLAdminTool\Repositories
- * @version January 6, 2021, 8:49 am UTC
+ * @version January 7, 2021, 3:18 am UTC
 */
 
 class ModelRepository extends BaseRepository

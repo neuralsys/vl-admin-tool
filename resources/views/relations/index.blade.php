@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1 class="float-left">
-            @lang('models/relations.plural')
+            @lang('vl-admin-tool-lang::models/relation.plural')
         </h1>
         <h1 class="float-right">
             <button type="button" class="btn btn-block btn-primary float-right btnAddNewRelation"
@@ -12,7 +12,7 @@
     </section>
     <div class="content">
         <div class="clearfix"></div>
-        @include('relations.table_with_crud_modals')
+        @include('vl-admin-tool::relations.table_with_crud_modals')
     </div>
 @endsection
 

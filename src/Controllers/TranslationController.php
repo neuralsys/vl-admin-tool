@@ -26,7 +26,7 @@ class TranslationController extends Controller
      */
     public function index(TranslationDataTable $translationDataTable)
     {
-        return $translationDataTable->render('translations.index');
+        return $translationDataTable->render('vl-admin-tool::translations.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class TranslationController extends Controller
             return redirect(route('translations.index'));
         }
 
-        return view('translations.show')->with('translation', $translation);
+        return view('vl-admin-tool::translations.show')->with('translation', $translation);
     }
 
     /**

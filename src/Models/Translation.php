@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * Class Translation
  * @package Vuongdq\VLAdminTool\Models
- * @version January 6, 2021, 7:46 am UTC
+ * @version January 7, 2021, 3:24 am UTC
  *
  * @property \Vuongdq\VLAdminTool\Models\TranslationFile $file
  * @property \Vuongdq\VLAdminTool\Models\Lang $lang

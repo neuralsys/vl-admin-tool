@@ -26,7 +26,7 @@ class DTConfigController extends Controller
      */
     public function index(DTConfigDataTable $dTConfigDataTable)
     {
-        return $dTConfigDataTable->render('d_t_configs.index');
+        return $dTConfigDataTable->render('vl-admin-tool::d_t_configs.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class DTConfigController extends Controller
             return redirect(route('d_t_configs.index'));
         }
 
-        return view('d_t_configs.show')->with('dTConfig', $dTConfig);
+        return view('vl-admin-tool::d_t_configs.show')->with('dTConfig', $dTConfig);
     }
 
     /**

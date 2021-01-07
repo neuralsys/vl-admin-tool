@@ -20,7 +20,7 @@ class TranslationFileDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'translation_files.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::translation_files.datatables_actions');
     }
 
     /**
@@ -79,7 +79,8 @@ class TranslationFileDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'filename' => new Column(['title' => __('models/translationFiles.fields.filename'), 'data' => 'filename'])
+            'filename' => new Column(['title' => __('vl-admin-tool-lang::models/translationFile.fields.filename'), 'data' => 'filename'])
+
         ];
     }
 

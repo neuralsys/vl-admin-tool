@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * Class Field
  * @package Vuongdq\VLAdminTool\Models
- * @version January 6, 2021, 8:48 am UTC
+ * @version January 7, 2021, 3:18 am UTC
  *
  * @property \Vuongdq\VLAdminTool\Models\Model $model
  * @property \Illuminate\Database\Eloquent\Collection $crudConfigs

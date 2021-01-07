@@ -26,7 +26,7 @@ class DBConfigController extends Controller
      */
     public function index(DBConfigDataTable $dBConfigDataTable)
     {
-        return $dBConfigDataTable->render('d_b_configs.index');
+        return $dBConfigDataTable->render('vl-admin-tool::d_b_configs.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class DBConfigController extends Controller
             return redirect(route('d_b_configs.index'));
         }
 
-        return view('d_b_configs.show')->with('dBConfig', $dBConfig);
+        return view('vl-admin-tool::d_b_configs.show')->with('dBConfig', $dBConfig);
     }
 
     /**

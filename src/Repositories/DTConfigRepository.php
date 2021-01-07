@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class DTConfigRepository
  * @package Vuongdq\VLAdminTool\Repositories
- * @version January 6, 2021, 7:43 am UTC
+ * @version January 7, 2021, 3:20 am UTC
 */
 
 class DTConfigRepository extends BaseRepository

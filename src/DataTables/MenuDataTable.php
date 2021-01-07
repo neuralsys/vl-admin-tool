@@ -20,7 +20,7 @@ class MenuDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'menus.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::menus.datatables_actions');
     }
 
     /**
@@ -79,12 +79,18 @@ class MenuDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'type' => new Column(['title' => __('models/menus.fields.type'), 'data' => 'type']),
-            'url_pattern' => new Column(['title' => __('models/menus.fields.url_pattern'), 'data' => 'url_pattern']),
-            'index_route_name' => new Column(['title' => __('models/menus.fields.index_route_name'), 'data' => 'index_route_name']),
-            'title' => new Column(['title' => __('models/menus.fields.title'), 'data' => 'title']),
-            'parent_id' => new Column(['title' => __('models/menus.fields.parent_id'), 'data' => 'parent_id']),
-            'pos' => new Column(['title' => __('models/menus.fields.pos'), 'data' => 'pos'])
+            'type' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.type'), 'data' => 'type'])
+,
+            'url_pattern' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.url_pattern'), 'data' => 'url_pattern'])
+,
+            'index_route_name' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.index_route_name'), 'data' => 'index_route_name'])
+,
+            'title' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.title'), 'data' => 'title'])
+,
+            'parent_id' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.parent_id'), 'data' => 'parent_id'])
+,
+            'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos'])
+
         ];
     }
 

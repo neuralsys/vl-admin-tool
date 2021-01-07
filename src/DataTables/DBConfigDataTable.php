@@ -20,7 +20,7 @@ class DBConfigDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'd_b_configs.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::d_b_configs.datatables_actions');
     }
 
     /**
@@ -79,12 +79,18 @@ class DBConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('models/dBConfigs.fields.field_id'), 'data' => 'field_id']),
-            'type' => new Column(['title' => __('models/dBConfigs.fields.type'), 'data' => 'type']),
-            'length' => new Column(['title' => __('models/dBConfigs.fields.length'), 'data' => 'length']),
-            'nullable' => new Column(['title' => __('models/dBConfigs.fields.nullable'), 'data' => 'nullable']),
-            'unique' => new Column(['title' => __('models/dBConfigs.fields.unique'), 'data' => 'unique']),
-            'default' => new Column(['title' => __('models/dBConfigs.fields.default'), 'data' => 'default'])
+            'field_id' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.field_id'), 'data' => 'field_id'])
+,
+            'type' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.type'), 'data' => 'type'])
+,
+            'length' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.length'), 'data' => 'length'])
+,
+            'nullable' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.nullable'), 'data' => 'nullable'])
+,
+            'unique' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.unique'), 'data' => 'unique'])
+,
+            'default' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.fields.default'), 'data' => 'default'])
+
         ];
     }
 

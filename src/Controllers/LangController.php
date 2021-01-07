@@ -26,7 +26,7 @@ class LangController extends Controller
      */
     public function index(LangDataTable $langDataTable)
     {
-        return $langDataTable->render('langs.index');
+        return $langDataTable->render('vl-admin-tool::langs.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class LangController extends Controller
             return redirect(route('langs.index'));
         }
 
-        return view('langs.show')->with('lang', $lang);
+        return view('vl-admin-tool::langs.show')->with('lang', $lang);
     }
 
     /**

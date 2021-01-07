@@ -2,7 +2,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             setTimeout(() => {
-                $("div.translationFile-toolbar").html(`@include('translationFiles.toolbar')`);
+                $("div.translationFile-toolbar").html(`@include('vl-admin-tool::translationFiles.toolbar')`);
             }, 10)
         });
     </script>

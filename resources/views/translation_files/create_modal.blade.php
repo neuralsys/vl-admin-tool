@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @include('translationFiles.fields')
+                        @include('vl-admin-tool::translationFiles.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

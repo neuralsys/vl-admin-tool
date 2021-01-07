@@ -20,7 +20,7 @@ class DTConfigDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'd_t_configs.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::d_t_configs.datatables_actions');
     }
 
     /**
@@ -79,14 +79,22 @@ class DTConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('models/dTConfigs.fields.field_id'), 'data' => 'field_id']),
-            'showable' => new Column(['title' => __('models/dTConfigs.fields.showable'), 'data' => 'showable']),
-            'searchable' => new Column(['title' => __('models/dTConfigs.fields.searchable'), 'data' => 'searchable']),
-            'orderable' => new Column(['title' => __('models/dTConfigs.fields.orderable'), 'data' => 'orderable']),
-            'exportable' => new Column(['title' => __('models/dTConfigs.fields.exportable'), 'data' => 'exportable']),
-            'printable' => new Column(['title' => __('models/dTConfigs.fields.printable'), 'data' => 'printable']),
-            'class' => new Column(['title' => __('models/dTConfigs.fields.class'), 'data' => 'class']),
-            'has_footer' => new Column(['title' => __('models/dTConfigs.fields.has_footer'), 'data' => 'has_footer'])
+            'field_id' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.field_id'), 'data' => 'field_id'])
+,
+            'showable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.showable'), 'data' => 'showable'])
+,
+            'searchable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.searchable'), 'data' => 'searchable'])
+,
+            'orderable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.orderable'), 'data' => 'orderable'])
+,
+            'exportable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.exportable'), 'data' => 'exportable'])
+,
+            'printable' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.printable'), 'data' => 'printable'])
+,
+            'class' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.class'), 'data' => 'class'])
+,
+            'has_footer' => new Column(['title' => __('vl-admin-tool-lang::models/dTConfig.fields.has_footer'), 'data' => 'has_footer'])
+
         ];
     }
 

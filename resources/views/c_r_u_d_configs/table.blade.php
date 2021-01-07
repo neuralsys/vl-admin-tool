@@ -10,7 +10,7 @@
 
 @push('scripts')
     @include('layouts.datatables_js')
-    @include('cRUDConfigs.toolbar_js')
+    @include('vl-admin-tool::cRUDConfigs.toolbar_js')
     {!! $dataTable->scripts() !!}
 
     <script type="text/javascript">

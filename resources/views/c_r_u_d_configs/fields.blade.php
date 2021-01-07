@@ -1,6 +1,6 @@
 <!-- Field Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label(null, __('models/cRUDConfigs.fields.field_id').':') !!}
+    {!! Form::label(null, __('vl-admin-tool-lang::models/cRUDConfig.fields.field_id').':') !!}
     {!! Form::number('field_id', null, ['class' => 'form-control', 'data-column' => 'field_id']) !!}
 </div>
 
@@ -9,7 +9,7 @@
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
         {!! Form::hidden('creatable', 0) !!}
-        {!! Form::checkbox('creatable', '1', null, ['data-column' => 'creatable']) !!} {{__('models/cRUDConfigs.fields.creatable')}}
+        {!! Form::checkbox('creatable', '1', null, ['data-column' => 'creatable']) !!} {{__('vl-admin-tool-lang::models/cRUDConfig.fields.creatable')}}
     </label>
 </div>
 
@@ -18,14 +18,14 @@
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
         {!! Form::hidden('editable', 0) !!}
-        {!! Form::checkbox('editable', '1', null, ['data-column' => 'editable']) !!} {{__('models/cRUDConfigs.fields.editable')}}
+        {!! Form::checkbox('editable', '1', null, ['data-column' => 'editable']) !!} {{__('vl-admin-tool-lang::models/cRUDConfig.fields.editable')}}
     </label>
 </div>
 
 
 <!-- Rules Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label(null, __('models/cRUDConfigs.fields.rules').':') !!}
+    {!! Form::label(null, __('vl-admin-tool-lang::models/cRUDConfig.fields.rules').':') !!}
     {!! Form::text('rules', null, ['class' => 'form-control', 'data-column' => 'rules']) !!}
 </div>
 

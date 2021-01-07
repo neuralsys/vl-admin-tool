@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class MenuRepository
  * @package Vuongdq\VLAdminTool\Repositories
- * @version January 6, 2021, 7:33 am UTC
+ * @version January 7, 2021, 3:19 am UTC
 */
 
 class MenuRepository extends BaseRepository

@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1 class="float-left">
-            @lang('models/fields.plural')
+            @lang('vl-admin-tool-lang::models/field.plural')
         </h1>
         <h1 class="float-right">
             <button type="button" class="btn btn-block btn-primary float-right btnAddNewField"

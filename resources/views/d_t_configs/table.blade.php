@@ -10,7 +10,7 @@
 
 @push('scripts')
     @include('layouts.datatables_js')
-    @include('dTConfigs.toolbar_js')
+    @include('vl-admin-tool::dTConfigs.toolbar_js')
     {!! $dataTable->scripts() !!}
 
     <script type="text/javascript">

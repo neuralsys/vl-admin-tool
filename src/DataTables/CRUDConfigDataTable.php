@@ -20,7 +20,7 @@ class CRUDConfigDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'c_r_u_d_configs.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::c_r_u_d_configs.datatables_actions');
     }
 
     /**
@@ -79,10 +79,14 @@ class CRUDConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('models/cRUDConfigs.fields.field_id'), 'data' => 'field_id']),
-            'creatable' => new Column(['title' => __('models/cRUDConfigs.fields.creatable'), 'data' => 'creatable']),
-            'editable' => new Column(['title' => __('models/cRUDConfigs.fields.editable'), 'data' => 'editable']),
-            'rules' => new Column(['title' => __('models/cRUDConfigs.fields.rules'), 'data' => 'rules'])
+            'field_id' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.field_id'), 'data' => 'field_id'])
+,
+            'creatable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.creatable'), 'data' => 'creatable'])
+,
+            'editable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.editable'), 'data' => 'editable'])
+,
+            'rules' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.rules'), 'data' => 'rules'])
+
         ];
     }
 

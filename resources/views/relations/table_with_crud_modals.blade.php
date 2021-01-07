@@ -1,3 +1,3 @@
-@include('relations.table')
-@include('relations.create_modal')
-@include('relations.edit_modal')
+@include('vl-admin-tool::relations.table')
+@include('vl-admin-tool::relations.create_modal')
+@include('vl-admin-tool::relations.edit_modal')

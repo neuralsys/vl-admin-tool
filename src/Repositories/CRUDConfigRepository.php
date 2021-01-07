@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CRUDConfigRepository
  * @package Vuongdq\VLAdminTool\Repositories
- * @version January 6, 2021, 7:43 am UTC
+ * @version January 7, 2021, 3:19 am UTC
 */
 
 class CRUDConfigRepository extends BaseRepository

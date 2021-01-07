@@ -26,7 +26,7 @@ class RelationController extends Controller
      */
     public function index(RelationDataTable $relationDataTable)
     {
-        return $relationDataTable->render('relations.index');
+        return $relationDataTable->render('vl-admin-tool::relations.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class RelationController extends Controller
             return redirect(route('relations.index'));
         }
 
-        return view('relations.show')->with('relation', $relation);
+        return view('vl-admin-tool::relations.show')->with('relation', $relation);
     }
 
     /**

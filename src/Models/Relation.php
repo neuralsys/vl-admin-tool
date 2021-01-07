@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * Class Relation
  * @package Vuongdq\VLAdminTool\Models
- * @version January 6, 2021, 7:44 am UTC
+ * @version January 7, 2021, 3:23 am UTC
  *
  * @property \Vuongdq\VLAdminTool\Models\Field $firstField
  * @property \Vuongdq\VLAdminTool\Models\Field $secondField

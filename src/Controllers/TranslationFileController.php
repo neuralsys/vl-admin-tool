@@ -26,7 +26,7 @@ class TranslationFileController extends Controller
      */
     public function index(TranslationFileDataTable $translationFileDataTable)
     {
-        return $translationFileDataTable->render('translation_files.index');
+        return $translationFileDataTable->render('vl-admin-tool::translation_files.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class TranslationFileController extends Controller
             return redirect(route('translation_files.index'));
         }
 
-        return view('translation_files.show')->with('translationFile', $translationFile);
+        return view('vl-admin-tool::translation_files.show')->with('translationFile', $translationFile);
     }
 
     /**

@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @include('dBConfigs.fields')
+                        @include('vl-admin-tool::dBConfigs.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

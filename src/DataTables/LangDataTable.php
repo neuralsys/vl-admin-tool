@@ -20,7 +20,7 @@ class LangDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'langs.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::langs.datatables_actions');
     }
 
     /**
@@ -79,8 +79,10 @@ class LangDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'language' => new Column(['title' => __('models/langs.fields.language'), 'data' => 'language']),
-            'locale' => new Column(['title' => __('models/langs.fields.locale'), 'data' => 'locale'])
+            'language' => new Column(['title' => __('vl-admin-tool-lang::models/lang.fields.language'), 'data' => 'language'])
+,
+            'locale' => new Column(['title' => __('vl-admin-tool-lang::models/lang.fields.locale'), 'data' => 'locale'])
+
         ];
     }
 

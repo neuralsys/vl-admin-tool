@@ -1,3 +1,3 @@
-@include('translationFiles.table')
-@include('translationFiles.create_modal')
-@include('translationFiles.edit_modal')
+@include('vl-admin-tool::translationFiles.table')
+@include('vl-admin-tool::translationFiles.create_modal')
+@include('vl-admin-tool::translationFiles.edit_modal')

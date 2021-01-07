@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1 class="float-left">
-            @lang('models/dBConfigs.plural')
+            @lang('vl-admin-tool-lang::models/dBConfig.plural')
         </h1>
         <h1 class="float-right">
             <button type="button" class="btn btn-block btn-primary float-right btnAddNewDBConfig"
@@ -12,7 +12,7 @@
     </section>
     <div class="content">
         <div class="clearfix"></div>
-        @include('d_b_configs.table_with_crud_modals')
+        @include('vl-admin-tool::d_b_configs.table_with_crud_modals')
     </div>
 @endsection
 

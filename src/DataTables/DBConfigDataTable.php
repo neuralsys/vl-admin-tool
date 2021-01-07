@@ -1,13 +1,13 @@
 <?php
 
-namespace $NAMESPACE_DATATABLES$;
+namespace Vuongdq\VLAdminTool\DataTables;
 
-use $NAMESPACE_MODEL$\$MODEL_NAME$;
+use Vuongdq\VLAdminTool\Models\DBConfig;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
 
-class $MODEL_NAME$DataTable extends DataTable
+class DBConfigDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -20,16 +20,16 @@ class $MODEL_NAME$DataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', '$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
+            ->addColumn('action', 'd_b_configs.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\$MODEL_NAME$ $model
+     * @param \App\Models\DBConfig $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query($MODEL_NAME$ $model)
+    public function query(DBConfig $model)
     {
         return $model->newQuery();
     }
@@ -46,12 +46,12 @@ class $MODEL_NAME$DataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => '<"$MODEL_NAME_CAMEL$-toolbar">Bfrtip',
+                'dom'       => '<"dBConfig-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                    fnRowCallBack(nRow, aData, iDisplayIndex, $MODEL_NAME_CAMEL$SelectedRows);
+                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
                  }",
-                'buttons'   => [q
+                'buttons'   => [
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
@@ -79,7 +79,18 @@ class $MODEL_NAME$DataTable extends DataTable
     protected function getColumns()
     {
         return [
-            $DATATABLE_COLUMNS$
+            'field_id' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.field_id'), 'data' => 'field_id'])
+,
+            'type' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.type'), 'data' => 'type'])
+,
+            'length' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.length'), 'data' => 'length'])
+,
+            'nullable' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.nullable'), 'data' => 'nullable'])
+,
+            'unique' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.unique'), 'data' => 'unique'])
+,
+            'default' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.default'), 'data' => 'default'])
+
         ];
     }
 
@@ -90,6 +101,6 @@ class $MODEL_NAME$DataTable extends DataTable
      */
     protected function filename()
     {
-        return '$MODEL_NAME_PLURAL_SNAKE$_datatable_' . time();
+        return 'd_b_configs_datatable_' . time();
     }
 }

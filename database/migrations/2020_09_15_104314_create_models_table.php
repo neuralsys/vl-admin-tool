@@ -18,14 +18,10 @@ class CreateModelsTable extends Migration
             $table->string('class_name');
             $table->string('table_name');
             $table->string('singular');
-            $table->string('plurals');
+            $table->string('plural');
             $table->text('description')->nullable();
-            $table->boolean('timestamps')->default(true);
-            $table->boolean('soft_delete')->default(true);
-            $table->boolean('test')->default(true);
-            $table->boolean('swagger')->default(false);
-            $table->boolean('datatables')->default(true);
-            $table->unsignedInteger('paginate')->default(15);
+            $table->boolean('timestamps')->default(1);
+            $table->boolean('soft_delete')->default(1);
             $table->timestamps();
         });
     }

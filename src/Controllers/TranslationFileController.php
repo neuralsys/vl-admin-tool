@@ -30,16 +30,6 @@ class TranslationFileController extends Controller
     }
 
     /**
-     * Show the form for creating a new TranslationFile.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('translation_files.create');
-    }
-
-    /**
      * Store a newly created TranslationFile in storage.
      *
      * @param CreateTranslationFileRequest $request
@@ -52,9 +42,7 @@ class TranslationFileController extends Controller
 
         $translationFile = $this->translationFileRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/translationFiles.singular')]));
-
-        return redirect(route('translationFiles.index'));
+        return $this->success(__('crud.add_success'));
     }
 
     /**
@@ -69,32 +57,10 @@ class TranslationFileController extends Controller
         $translationFile = $this->translationFileRepository->find($id);
 
         if (empty($translationFile)) {
-            Flash::error(__('models/translationFiles.singular').' '.__('messages.not_found'));
-
-            return redirect(route('translationFiles.index'));
+            return redirect(route('translation_files.index'));
         }
 
         return view('translation_files.show')->with('translationFile', $translationFile);
-    }
-
-    /**
-     * Show the form for editing the specified TranslationFile.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $translationFile = $this->translationFileRepository->find($id);
-
-        if (empty($translationFile)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translationFiles.singular')]));
-
-            return redirect(route('translationFiles.index'));
-        }
-
-        return view('translation_files.edit')->with('translationFile', $translationFile);
     }
 
     /**
@@ -110,16 +76,12 @@ class TranslationFileController extends Controller
         $translationFile = $this->translationFileRepository->find($id);
 
         if (empty($translationFile)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translationFiles.singular')]));
-
-            return redirect(route('translationFiles.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $translationFile = $this->translationFileRepository->update($request->all(), $id);
 
-        Flash::success(__('messages.updated', ['model' => __('models/translationFiles.singular')]));
-
-        return redirect(route('translationFiles.index'));
+        return $this->success(__('crud.update_success'));
     }
 
     /**
@@ -134,15 +96,11 @@ class TranslationFileController extends Controller
         $translationFile = $this->translationFileRepository->find($id);
 
         if (empty($translationFile)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/translationFiles.singular')]));
-
-            return redirect(route('translationFiles.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $this->translationFileRepository->delete($id);
 
-        Flash::success(__('messages.deleted', ['model' => __('models/translationFiles.singular')]));
-
-        return redirect(route('translationFiles.index'));
+        return $this->success(__('crud.delete_success'));
     }
 }

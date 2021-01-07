@@ -11,7 +11,7 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="row">
-                        @include('fields.fields')
+                        @include('vl-admin-tool::fields.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

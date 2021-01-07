@@ -15,6 +15,8 @@ return [
 
         'model'             => base_path('vendor/vuongdq/vl-admin-tool/src/Models/'),
 
+        'models_locale_files' => base_path('vendor/vuongdq/vl-admin-tool/resources/lang/en/models/'),
+
         'trait'             => app_path('Traits/'),
 
         'datatables'        => base_path('vendor/vuongdq/vl-admin-tool/src/DataTables/'),
@@ -148,6 +150,10 @@ return [
         'view' => '',  // using backend will create return view('backend.?.index') type the backend views directory
 
         'public' => '',
+
+        'ns_view' => 'vl-admin-tool::',
+
+        'ns_locale' => 'vl-admin-tool-lang::',
     ],
 
     /*

@@ -25,8 +25,12 @@ class UpdateTranslationFileRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = TranslationFile::$rules;
-
+        $rules = [
+            'filename' => 'required|string|max:255',
+                'created_at' => 'nullable',
+                'updated_at' => 'nullable'
+        ];
+        
         return $rules;
     }
 }

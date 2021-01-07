@@ -120,7 +120,7 @@ class BaseCommand extends Command
             $requestGenerator->generate();
         }
 
-        if (!$this->isSkip('controllers') and !$this->isSkip('scaffold_controller')) {
+        if (!$this->isSkip('controller') and !$this->isSkip('scaffold_controller')) {
             $controllerGenerator = new ControllerGenerator($this->commandData);
             $controllerGenerator->generate();
         }
@@ -151,22 +151,20 @@ class BaseCommand extends Command
             }
         }
 
-        if ($runMigration) {
-            if ($this->commandData->getOption('forceMigrate')) {
-                $this->runMigration();
-            } elseif (!$this->commandData->getOption('fromTable') and !$this->isSkip('migration')) {
-                $requestFromConsole = (php_sapi_name() == 'cli') ? true : false;
-                if ($this->commandData->getOption('jsonFromGUI') && $requestFromConsole) {
-                    $this->runMigration();
-                } elseif ($requestFromConsole && $this->confirm("\nDo you want to migrate database? [y|N]", false)) {
-                    $this->runMigration();
-                }
-            }
-        }
+//        if ($runMigration) {
+//            if ($this->commandData->getOption('forceMigrate')) {
+//                $this->runMigration();
+//            } elseif (!$this->commandData->getOption('fromTable') and !$this->isSkip('migration')) {
+//                $requestFromConsole = (php_sapi_name() == 'cli') ? true : false;
+//                if ($this->commandData->getOption('jsonFromGUI') && $requestFromConsole) {
+//                    $this->runMigration();
+//                } elseif ($requestFromConsole && $this->confirm("\nDo you want to migrate database? [y|N]", false)) {
+//                    $this->runMigration();
+//                }
+//            }
+//        }
 
-        if ($this->commandData->getOption('localized')) {
-            $this->saveLocaleFile();
-        }
+        $this->saveLocaleFile();
 
         if (!$this->isSkip('dump-autoload')) {
             $this->info('Generating autoload files');
@@ -186,7 +184,7 @@ class BaseCommand extends Command
     public function isSkip($skip)
     {
         if ($this->commandData->getOption('skip')) {
-            return in_array($skip, (array) $this->commandData->getOption('skip'));
+            return in_array($skip, $this->commandData->getOption('skip'));
         }
 
         return false;
@@ -249,9 +247,9 @@ class BaseCommand extends Command
             $locales['fields'][$field->name] = Str::title(str_replace('_', ' ', $field->name));
         }
 
-        $path = config('admin_generator.path.models_locale_files', base_path('resources/lang/en/models/'));
+        $path = config('vl_admin_tool.path.models_locale_files', base_path('resources/lang/en/models/'));
 
-        $fileName = $this->commandData->config->mCamelPlural.'.php';
+        $fileName = $this->commandData->config->mCamel.'.php';
 
         if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
             return;

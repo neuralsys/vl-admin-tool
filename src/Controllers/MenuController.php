@@ -26,17 +26,7 @@ class MenuController extends Controller
      */
     public function index(MenuDataTable $menuDataTable)
     {
-        return $menuDataTable->render('menus.index');
-    }
-
-    /**
-     * Show the form for creating a new Menu.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('menus.create');
+        return $menuDataTable->render('vl-admin-tool::menus.index');
     }
 
     /**
@@ -52,9 +42,7 @@ class MenuController extends Controller
 
         $menu = $this->menuRepository->create($input);
 
-        Flash::success(__('messages.saved', ['model' => __('models/menus.singular')]));
-
-        return redirect(route('menus.index'));
+        return $this->success(__('crud.add_success'));
     }
 
     /**
@@ -69,32 +57,10 @@ class MenuController extends Controller
         $menu = $this->menuRepository->find($id);
 
         if (empty($menu)) {
-            Flash::error(__('models/menus.singular').' '.__('messages.not_found'));
-
             return redirect(route('menus.index'));
         }
 
-        return view('menus.show')->with('menu', $menu);
-    }
-
-    /**
-     * Show the form for editing the specified Menu.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $menu = $this->menuRepository->find($id);
-
-        if (empty($menu)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/menus.singular')]));
-
-            return redirect(route('menus.index'));
-        }
-
-        return view('menus.edit')->with('menu', $menu);
+        return view('vl-admin-tool::menus.show')->with('menu', $menu);
     }
 
     /**
@@ -110,16 +76,12 @@ class MenuController extends Controller
         $menu = $this->menuRepository->find($id);
 
         if (empty($menu)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/menus.singular')]));
-
-            return redirect(route('menus.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $menu = $this->menuRepository->update($request->all(), $id);
 
-        Flash::success(__('messages.updated', ['model' => __('models/menus.singular')]));
-
-        return redirect(route('menus.index'));
+        return $this->success(__('crud.update_success'));
     }
 
     /**
@@ -134,15 +96,11 @@ class MenuController extends Controller
         $menu = $this->menuRepository->find($id);
 
         if (empty($menu)) {
-            Flash::error(__('messages.not_found', ['model' => __('models/menus.singular')]));
-
-            return redirect(route('menus.index'));
+            return $this->error(__('crud.not_found'));
         }
 
         $this->menuRepository->delete($id);
 
-        Flash::success(__('messages.deleted', ['model' => __('models/menus.singular')]));
-
-        return redirect(route('menus.index'));
+        return $this->success(__('crud.delete_success'));
     }
 }

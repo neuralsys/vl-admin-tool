@@ -12,7 +12,7 @@
     </section>
     <div class="content">
         <div class="clearfix"></div>
-        @include('fields.table_with_crud_modals')
+        @include('vl-admin-tool::fields.table_with_crud_modals')
     </div>
 @endsection
 

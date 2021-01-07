@@ -14,16 +14,17 @@ class CreateRelationsTable extends Migration
     public function up()
     {
         Schema::create('relations', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('first_field_id');
+            $table->unsignedBigInteger('second_field_id');
             $table->string('type');
-            $table->unsignedBigInteger('first_model_id');
-            $table->string('first_foreign_key');
-            $table->unsignedBigInteger('second_model_id');
-            $table->string('second_foreign_key');
             $table->string('table_name')->nullable();
-            $table->string('first_key')->nullable();
-            $table->string('second_key')->nullable();
+            $table->string('fk_1')->nullable();
+            $table->string('fk_2')->nullable();
             $table->timestamps();
+            $table->primary(['first_field_id', 'second_field_id']);
+
+            $table->foreign('first_field_id')->references('id')->on('fields');
+            $table->foreign('second_field_id')->references('id')->on('fields');
         });
     }
 

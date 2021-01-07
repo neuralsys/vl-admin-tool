@@ -19,7 +19,8 @@ class RelationDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'relations.datatables_actions');
+        return $dataTable
+            ->addColumn('action', 'relations.datatables_actions');
     }
 
     /**
@@ -45,29 +46,16 @@ class RelationDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => 'Bfrtip',
-                'stateSave' => true,
+                'dom'       => '<"relation-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
+                'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
+                    fnRowCallBack(nRow, aData, iDisplayIndex, relationSelectedRows);
+                 }",
                 'buttons'   => [
-                    [
-                       'extend' => 'create',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-plus"></i> ' .__('auth.app.create').''
-                    ],
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'print',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-print"></i> ' .__('auth.app.print').''
-                    ],
-                    [
-                       'extend' => 'reset',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-undo"></i> ' .__('auth.app.reset').''
                     ],
                     [
                        'extend' => 'reload',
@@ -78,6 +66,8 @@ class RelationDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
+                 "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                 'select' => true
             ]);
     }
 
@@ -89,14 +79,11 @@ class RelationDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'second_field_id' => new Column(['title' => __('models/relations.fields.second_field_id'), 'data' => 'second_field_id']),
             'type' => new Column(['title' => __('models/relations.fields.type'), 'data' => 'type']),
-            'first_model_id' => new Column(['title' => __('models/relations.fields.first_model_id'), 'data' => 'first_model_id']),
-            'first_foreign_key' => new Column(['title' => __('models/relations.fields.first_foreign_key'), 'data' => 'first_foreign_key']),
-            'second_model_id' => new Column(['title' => __('models/relations.fields.second_model_id'), 'data' => 'second_model_id']),
-            'second_foreign_key' => new Column(['title' => __('models/relations.fields.second_foreign_key'), 'data' => 'second_foreign_key']),
             'table_name' => new Column(['title' => __('models/relations.fields.table_name'), 'data' => 'table_name']),
-            'first_key' => new Column(['title' => __('models/relations.fields.first_key'), 'data' => 'first_key']),
-            'second_key' => new Column(['title' => __('models/relations.fields.second_key'), 'data' => 'second_key'])
+            'fk_1' => new Column(['title' => __('models/relations.fields.fk_1'), 'data' => 'fk_1']),
+            'fk_2' => new Column(['title' => __('models/relations.fields.fk_2'), 'data' => 'fk_2'])
         ];
     }
 

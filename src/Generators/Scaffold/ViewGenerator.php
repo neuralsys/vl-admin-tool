@@ -246,8 +246,6 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'fields';
 
-        $localized = true;
-
         $this->htmlFields = [];
 
         foreach ($this->commandData->fields as $field) {
@@ -275,7 +273,7 @@ class ViewGenerator extends BaseGenerator
             }
             $this->commandData->addDynamicVariable('$SIZE$', $minMaxRules);
 
-            $fieldTemplate = HTMLFieldGenerator::generateHTML($field, $this->templateType, $localized);
+            $fieldTemplate = HTMLFieldGenerator::generateHTML($field, $this->templateType);
 
             if ($field->htmlType == 'selectTable') {
                 $inputArr = explode(',', $field->htmlValues[1]);

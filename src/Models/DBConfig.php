@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * Class DBConfig
  * @package Vuongdq\VLAdminTool\Models
- * @version January 7, 2021, 3:06 am UTC
+ * @version January 6, 2021, 7:43 am UTC
  *
  * @property \Vuongdq\VLAdminTool\Models\Field $field
  * @property integer $field_id

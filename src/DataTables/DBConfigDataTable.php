@@ -49,7 +49,7 @@ class DBConfigDataTable extends DataTable
                 'dom'       => '<"dBConfig-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                    fnRowCallBack(nRow, aData, iDisplayIndex, dBConfigSelectedRows);
                  }",
                 'buttons'   => [
                     [
@@ -79,18 +79,12 @@ class DBConfigDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'field_id' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.field_id'), 'data' => 'field_id'])
-,
-            'type' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.type'), 'data' => 'type'])
-,
-            'length' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.length'), 'data' => 'length'])
-,
-            'nullable' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.nullable'), 'data' => 'nullable'])
-,
-            'unique' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.unique'), 'data' => 'unique'])
-,
-            'default' => new Column(['title' => __('$NS_LOCALE_PREFIX$models/dBConfig.fields.default'), 'data' => 'default'])
-
+            'field_id' => new Column(['title' => __('models/dBConfigs.fields.field_id'), 'data' => 'field_id']),
+            'type' => new Column(['title' => __('models/dBConfigs.fields.type'), 'data' => 'type']),
+            'length' => new Column(['title' => __('models/dBConfigs.fields.length'), 'data' => 'length']),
+            'nullable' => new Column(['title' => __('models/dBConfigs.fields.nullable'), 'data' => 'nullable']),
+            'unique' => new Column(['title' => __('models/dBConfigs.fields.unique'), 'data' => 'unique']),
+            'default' => new Column(['title' => __('models/dBConfigs.fields.default'), 'data' => 'default'])
         ];
     }
 

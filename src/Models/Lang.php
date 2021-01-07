@@ -2,32 +2,28 @@
 
 namespace Vuongdq\VLAdminTool\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class Lang
- * @package App\Models
- * @version September 23, 2020, 11:47 am +07
+ * @package Vuongdq\VLAdminTool\Models
+ * @version January 6, 2021, 7:46 am UTC
  *
+ * @property \Illuminate\Database\Eloquent\Collection $translations
  * @property string $language
  * @property string $locale
  */
-class Lang extends Model
+class Lang extends EloquentModel
 {
-
+    
     public $table = 'lang';
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-
 
     public $fillable = [
         'language',
         'locale'
     ];
 
+    
     /**
      * The attributes that should be casted to native types.
      *
@@ -40,14 +36,10 @@ class Lang extends Model
     ];
 
     /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'language' => 'required|string|max:255',
-        'locale' => 'required|string|max:255'
-    ];
-
-
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function translations()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Translation::class, 'lang_id');
+    }
 }

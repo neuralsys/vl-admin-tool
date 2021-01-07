@@ -19,7 +19,8 @@ class ModelDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'vl-admin-tool::models.datatables_actions');
+        return $dataTable
+            ->addColumn('action', 'vl-admin-tool::models.datatables_actions');
     }
 
     /**
@@ -45,24 +46,16 @@ class ModelDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
-                'dom'       => '<"model-toolbar">Bflrtip',
+                'dom'       => '<"model-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
-                                 }",
-//                'drawCallback' => 'function() {
-//                    generateFooter();
-//                }',
+                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                 }",
                 'buttons'   => [
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',
                        'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
-                    ],
-                    [
-                       'extend' => 'reset',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-undo"></i> ' .__('auth.app.reset').''
                     ],
                     [
                        'extend' => 'reload',
@@ -73,8 +66,8 @@ class ModelDataTable extends DataTable
                  'language' => [
                    'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
                  ],
-                "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                'select' => true
+                 "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                 'select' => true
             ]);
     }
 
@@ -86,15 +79,20 @@ class ModelDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'class_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.class_name'), 'data' => 'class_name']),
-            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'table_name']),
-            'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
-            'timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'timestamps']),
-            'soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'soft_delete']),
-            'test' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.test'), 'data' => 'test']),
-            'swagger' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.swagger'), 'data' => 'swagger']),
-            'datatables' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.datatables'), 'data' => 'datatables']),
-            'paginate' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.paginate'), 'data' => 'paginate'])
+            'class_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.class_name'), 'data' => 'class_name'])
+,
+            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'table_name'])
+,
+            'singular' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.singular'), 'data' => 'singular'])
+,
+            'plural' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.plural'), 'data' => 'plural'])
+,
+            'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description'])
+,
+            'timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'timestamps'])
+,
+            'soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'soft_delete'])
+
         ];
     }
 

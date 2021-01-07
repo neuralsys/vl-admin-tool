@@ -3,17 +3,18 @@
 namespace Vuongdq\VLAdminTool\Repositories;
 
 use Vuongdq\VLAdminTool\Models\Model;
+use App\Repositories\BaseRepository;
 
 /**
  * Class ModelRepository
- * @package App\Repositories
- * @version September 18, 2020, 11:16 am +07
+ * @package Vuongdq\VLAdminTool\Repositories
+ * @version January 6, 2021, 8:49 am UTC
 */
 
 class ModelRepository extends BaseRepository
 {
     /**
-     * Configure the Models
+     * Configure the Model
      **/
     public function model()
     {

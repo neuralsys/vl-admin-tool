@@ -26,7 +26,7 @@ class FieldController extends Controller
      */
     public function index(FieldDataTable $fieldDataTable)
     {
-        return $fieldDataTable->render('fields.index');
+        return $fieldDataTable->render('vl-admin-tool::fields.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class FieldController extends Controller
             return redirect(route('fields.index'));
         }
 
-        return view('fields.show')->with('field', $field);
+        return view('vl-admin-tool::fields.show')->with('field', $field);
     }
 
     /**

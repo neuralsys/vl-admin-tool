@@ -5,41 +5,35 @@ namespace Vuongdq\VLAdminTool\Models;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
- * Class Models
- * @package App\Models
- * @version September 18, 2020, 11:16 am +07
+ * Class Model
+ * @package Vuongdq\VLAdminTool\Models
+ * @version January 6, 2021, 8:49 am UTC
  *
- * @property \App\Models\Project $project
- * @property integer $project_id
+ * @property \Illuminate\Database\Eloquent\Collection $fields
  * @property string $class_name
  * @property string $table_name
+ * @property string $singular
+ * @property string $plural
  * @property string $description
  * @property boolean $timestamps
  * @property boolean $soft_delete
- * @property boolean $test
- * @property boolean $swagger
- * @property boolean $datatables
- * @property boolean $paginate
  */
 class Model extends EloquentModel
 {
-
+    
     public $table = 'models';
 
     public $fillable = [
         'class_name',
         'table_name',
         'singular',
-        'plurals',
+        'plural',
         'description',
         'timestamps',
-        'soft_delete',
-        'test',
-        'swagger',
-        'datatables',
-        'paginate'
+        'soft_delete'
     ];
 
+    
     /**
      * The attributes that should be casted to native types.
      *
@@ -50,32 +44,17 @@ class Model extends EloquentModel
         'class_name' => 'string',
         'table_name' => 'string',
         'singular' => 'string',
-        'plurals' => 'string',
+        'plural' => 'string',
         'description' => 'string',
         'timestamps' => 'boolean',
-        'soft_delete' => 'boolean',
-        'test' => 'boolean',
-        'swagger' => 'boolean',
-        'datatables' => 'boolean',
-        'paginate' => 'integer'
+        'soft_delete' => 'boolean'
     ];
 
     /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'class_name' => 'required|string|max:255',
-        'table_name' => 'required|string|max:255',
-        'singular' => 'required|string|max:255',
-        'plurals' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'timestamps' => 'sometimes|boolean',
-        'soft_delete' => 'sometimes|boolean',
-        'test' => 'sometimes|boolean',
-        'swagger' => 'sometimes|boolean',
-        'datatables' => 'sometimes|boolean',
-        'paginate' => 'sometimes|integer'
-    ];
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function fields()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Field::class, 'model_id');
+    }
 }

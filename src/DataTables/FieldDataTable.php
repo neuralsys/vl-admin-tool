@@ -20,7 +20,7 @@ class FieldDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->addColumn('action', 'fields.datatables_actions');
+            ->addColumn('action', 'vl-admin-tool::fields.datatables_actions');
     }
 
     /**
@@ -49,7 +49,7 @@ class FieldDataTable extends DataTable
                 'dom'       => '<"field-toolbar">Bfrtip',
                 'order'     => [[0, 'desc']],
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
-                    fnRowCallBack(nRow, aData, iDisplayIndex, modelSelectedRows);
+                    fnRowCallBack(nRow, aData, iDisplayIndex, fieldSelectedRows);
                  }",
                 'buttons'   => [
                     [
@@ -79,16 +79,12 @@ class FieldDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'model_id' => new Column(['title' => __('models/fields.fields.model_id'), 'data' => 'model_id']),
-            'name' => new Column(['title' => __('models/fields.fields.name'), 'data' => 'name']),
-            'db_type' => new Column(['title' => __('models/fields.fields.db_type'), 'data' => 'db_type']),
-            'html_type' => new Column(['title' => __('models/fields.fields.html_type'), 'data' => 'html_type']),
-            'primary' => new Column(['title' => __('models/fields.fields.primary'), 'data' => 'primary']),
-            'unique' => new Column(['title' => __('models/fields.fields.unique'), 'data' => 'unique']),
-            'auto_increment' => new Column(['title' => __('models/fields.fields.auto_increment'), 'data' => 'auto_increment']),
-            'nullable' => new Column(['title' => __('models/fields.fields.nullable'), 'data' => 'nullable']),
-            'creatable' => new Column(['title' => __('models/fields.fields.creatable'), 'data' => 'creatable']),
-            'editable' => new Column(['title' => __('models/fields.fields.editable'), 'data' => 'editable'])
+            'model_id' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.model_id'), 'data' => 'model_id'])
+,
+            'name' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.name'), 'data' => 'name'])
+,
+            'html_type' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.html_type'), 'data' => 'html_type'])
+
         ];
     }
 

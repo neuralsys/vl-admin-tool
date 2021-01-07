@@ -3,41 +3,18 @@
 namespace Vuongdq\VLAdminTool\Repositories;
 
 use Vuongdq\VLAdminTool\Models\Relation;
+use App\Repositories\BaseRepository;
 
 /**
  * Class RelationRepository
- * @package App\Repositories
- * @version September 18, 2020, 11:19 am +07
+ * @package Vuongdq\VLAdminTool\Repositories
+ * @version January 6, 2021, 7:44 am UTC
 */
 
 class RelationRepository extends BaseRepository
 {
     /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'type',
-        'first_model_id',
-        'first_foreign_key',
-        'second_model_id',
-        'second_foreign_key',
-        'table_name',
-        'first_key',
-        'second_key'
-    ];
-
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
-
-    /**
-     * Configure the Models
+     * Configure the Model
      **/
     public function model()
     {

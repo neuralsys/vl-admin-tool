@@ -6,11 +6,10 @@ use Vuongdq\VLAdminTool\Common\GeneratorField;
 
 class HTMLFieldGenerator
 {
-    public static function generateHTML(GeneratorField $field, $templateType, $localized = false)
+    public static function generateHTML(GeneratorField $field, $templateType)
     {
         $fieldTemplate = '';
 
-        $localized = ($localized) ? '_locale' : '';
         switch ($field->htmlType) {
             case 'text':
             case 'textarea':
@@ -19,11 +18,11 @@ class HTMLFieldGenerator
             case 'email':
             case 'password':
             case 'number':
-                $fieldTemplate = get_template('scaffold.fields.'.$field->htmlType.$localized, $templateType);
+                $fieldTemplate = get_template('scaffold.fields.'.$field->htmlType, $templateType);
                 break;
             case 'select':
             case 'enum':
-                $fieldTemplate = get_template('scaffold.fields.select'.$localized, $templateType);
+                $fieldTemplate = get_template('scaffold.fields.select', $templateType);
                 $radioLabels = GeneratorFieldsInputUtil::prepareKeyValueArrFromLabelValueStr($field->htmlValues);
 
                 $fieldTemplate = str_replace(
@@ -33,7 +32,7 @@ class HTMLFieldGenerator
                 );
                 break;
             case 'checkbox':
-                $fieldTemplate = get_template('scaffold.fields.checkbox'.$localized, $templateType);
+                $fieldTemplate = get_template('scaffold.fields.checkbox', $templateType);
                 if (count($field->htmlValues) > 0) {
                     $checkboxValue = $field->htmlValues[0];
                 } else {
@@ -42,8 +41,8 @@ class HTMLFieldGenerator
                 $fieldTemplate = str_replace('$CHECKBOX_VALUE$', $checkboxValue, $fieldTemplate);
                 break;
             case 'radio':
-                $fieldTemplate = get_template('scaffold.fields.radio_group'.$localized, $templateType);
-                $radioTemplate = get_template('scaffold.fields.radio'.$localized, $templateType);
+                $fieldTemplate = get_template('scaffold.fields.radio_group', $templateType);
+                $radioTemplate = get_template('scaffold.fields.radio', $templateType);
 
                 $radioLabels = GeneratorFieldsInputUtil::prepareKeyValueArrFromLabelValueStr($field->htmlValues);
 
@@ -56,7 +55,7 @@ class HTMLFieldGenerator
                 $fieldTemplate = str_replace('$RADIO_BUTTONS$', implode("\n", $radioButtons), $fieldTemplate);
                 break;
             case 'toggle-switch':
-                $fieldTemplate = get_template('scaffold.fields.toggle-switch'.$localized, $templateType);
+                $fieldTemplate = get_template('scaffold.fields.toggle-switch', $templateType);
                 break;
         }
 

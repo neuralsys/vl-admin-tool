@@ -9,6 +9,12 @@ Route::group(['middleware' => $middleware], function () {
 
     Route::resource('fields', 'FieldController')->parameter('fields', 'id');
 
+    Route::resource('dBConfigs', 'DBConfigController');
+
+    Route::resource('cRUDConfigs', 'CRUDConfigController');
+
+    Route::resource('dTConfigs', 'DTConfigController');
+
     Route::resource('relations', 'RelationController')->parameter('relations', 'id');
 
     Route::resource('menus', 'MenuController')->parameter('menus', 'id');

@@ -20,6 +20,9 @@ class CreateTranslationTable extends Migration
             $table->string('key');
             $table->string('value');
             $table->timestamps();
+
+            $table->foreign('file_id')->references('id')->on('translation_files');
+            $table->foreign('lang_id')->references('id')->on('lang');
         });
     }
 

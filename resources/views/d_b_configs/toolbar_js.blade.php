@@ -2,7 +2,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             setTimeout(() => {
-                $("div.dBConfig-toolbar").html(`@include('$NS_VIEW_PREFIX$dBConfigs.toolbar')`);
+                $("div.dBConfig-toolbar").html(`@include('dBConfigs.toolbar')`);
             }, 10)
         });
     </script>

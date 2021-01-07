@@ -7,19 +7,17 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * Class Field
  * @package Vuongdq\VLAdminTool\Models
- * @version December 31, 2020, 9:19 am UTC
+ * @version January 6, 2021, 8:48 am UTC
  *
  * @property \Vuongdq\VLAdminTool\Models\Model $model
+ * @property \Illuminate\Database\Eloquent\Collection $crudConfigs
+ * @property \Illuminate\Database\Eloquent\Collection $dbConfigs
+ * @property \Illuminate\Database\Eloquent\Collection $dtConfigs
+ * @property \Vuongdq\VLAdminTool\Models\Relation $relation
+ * @property \Illuminate\Database\Eloquent\Collection $relation1s
  * @property integer $model_id
  * @property string $name
- * @property string $db_type
  * @property string $html_type
- * @property boolean $primary
- * @property boolean $unique
- * @property boolean $auto_increment
- * @property boolean $nullable
- * @property boolean $creatable
- * @property boolean $editable
  */
 class Field extends EloquentModel
 {
@@ -29,14 +27,7 @@ class Field extends EloquentModel
     public $fillable = [
         'model_id',
         'name',
-        'db_type',
-        'html_type',
-        'primary',
-        'unique',
-        'auto_increment',
-        'nullable',
-        'creatable',
-        'editable'
+        'html_type'
     ];
 
     
@@ -49,14 +40,7 @@ class Field extends EloquentModel
         'id' => 'integer',
         'model_id' => 'integer',
         'name' => 'string',
-        'db_type' => 'string',
-        'html_type' => 'string',
-        'primary' => 'boolean',
-        'unique' => 'boolean',
-        'auto_increment' => 'boolean',
-        'nullable' => 'boolean',
-        'creatable' => 'boolean',
-        'editable' => 'boolean'
+        'html_type' => 'string'
     ];
 
     /**
@@ -65,5 +49,45 @@ class Field extends EloquentModel
     public function model()
     {
         return $this->belongsTo(\Vuongdq\VLAdminTool\Models\Model::class, 'model_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function crudConfigs()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\CrudConfig::class, 'field_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function dbConfigs()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DbConfig::class, 'field_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function dtConfigs()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DtConfig::class, 'field_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function relation()
+    {
+        return $this->hasOne(\Vuongdq\VLAdminTool\Models\Relation::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function relation1s()
+    {
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Relation::class, 'second_field_id');
     }
 }

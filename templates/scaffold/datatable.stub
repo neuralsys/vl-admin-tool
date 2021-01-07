@@ -51,7 +51,7 @@ class $MODEL_NAME$DataTable extends DataTable
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
                     fnRowCallBack(nRow, aData, iDisplayIndex, $MODEL_NAME_CAMEL$SelectedRows);
                  }",
-                'buttons'   => [
+                'buttons'   => [q
                     [
                        'extend' => 'export',
                        'className' => 'btn btn-default btn-sm no-corner',

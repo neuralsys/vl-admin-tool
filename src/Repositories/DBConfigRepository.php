@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class DBConfigRepository
  * @package Vuongdq\VLAdminTool\Repositories
- * @version January 6, 2021, 7:43 am UTC
+ * @version January 7, 2021, 3:06 am UTC
 */
 
 class DBConfigRepository extends BaseRepository

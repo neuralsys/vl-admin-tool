@@ -28,10 +28,10 @@ class CreateDBConfigRequest extends FormRequest
         return [
             'field_id' => 'required',
             'type' => 'required|string|max:45',
-            'length' => 'nullable|integer',
-            'nullable' => 'required|boolean',
-            'unique' => 'required|boolean',
-            'default' => 'nullable|string|max:255'
+            'length' => 'sometimes|nullable|integer',
+            'nullable' => 'sometimes|nullable|integer|in:0,1',
+            'unique' => 'sometimes|nullable|integer|in:0,1',
+            'default' => 'sometimes|nullable|string|max:255'
         ];
     }
 }

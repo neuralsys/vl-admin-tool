@@ -28,8 +28,8 @@
 
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('description', __('vl-admin-tool-lang::models/model.fields.description').':') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
+    {!! Form::label(null, __('vl-admin-tool-lang::models/model.fields.description').':') !!}
+    {!! Form::textarea('description', null, ['class' => 'form-control', 'data-column' => 'description']) !!}
 </div>
 
 

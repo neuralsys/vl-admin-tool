@@ -1,26 +1,27 @@
 <?php
 
-namespace Vuongdq\VLAdminTool\Commands\Common;
+namespace Vuongdq\VLAdminTool\Commands;
 
-use Vuongdq\VLAdminTool\Commands\BaseCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Vuongdq\VLAdminTool\Common\CommandData;
 use Vuongdq\VLAdminTool\Generators\ModelGenerator;
 
-class ModelGeneratorCommand extends BaseCommand
+class GenerateModelCommand extends BaseCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'vlat:model';
+    protected $name = 'vlat.generate:model';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create model command';
+    protected $description = 'Create Model from datatables';
 
     /**
      * Create a new command instance.
@@ -29,7 +30,7 @@ class ModelGeneratorCommand extends BaseCommand
     {
         parent::__construct();
 
-        $this->commandData = new CommandData($this, CommandData::$COMMAND_TYPE_API);
+        $this->commandData = new CommandData($this, CommandData::$COMMAND_TYPE_SCAFFOLD);
     }
 
     /**
@@ -43,8 +44,6 @@ class ModelGeneratorCommand extends BaseCommand
 
         $modelGenerator = new ModelGenerator($this->commandData);
         $modelGenerator->generate();
-
-        $this->performPostActions();
     }
 
     /**

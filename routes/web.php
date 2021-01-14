@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 $middleware = config('vl_admin_tool.admin_middleware', 'admin.user');
 
 Route::group(['middleware' => $middleware], function () {
+    Route::post('models/generate/{id}', 'ModelController@generate')->name('models.generate');
     Route::resource('models', 'ModelController')->parameter('models', 'id');
 
     Route::resource('fields', 'FieldController')->parameter('fields', 'id');

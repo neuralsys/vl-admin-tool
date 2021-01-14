@@ -1,0 +1,82 @@
+<?php
+
+namespace Vuongdq\VLAdminTool\Repositories;
+
+/**
+ * Class DBTypeRepository
+ * @package Vuongdq\VLAdminTool\Repositories
+ * @version January 7, 2021, 3:19 am UTC
+ */
+class DBTypeRepository {
+    public function getDBTypes() {
+        return [
+            "id",
+            "increments",
+            "integerIncrements",
+            "tinyIncrements",
+            "smallIncrements",
+            "mediumIncrements",
+            "bigIncrements",
+            "char",
+            "string",
+            "text",
+            "mediumText",
+            "longText",
+            "integer",
+            "tinyInteger",
+            "smallInteger",
+            "mediumInteger",
+            "bigInteger",
+            "unsignedInteger",
+            "unsignedTinyInteger",
+            "unsignedSmallInteger",
+            "unsignedMediumInteger",
+            "unsignedBigInteger",
+            "foreignId",
+            "float",
+            "double",
+            "decimal",
+            "unsignedFloat",
+            "unsignedDouble",
+            "unsignedDecimal",
+            "boolean",
+            "enum",
+            "set",
+            "json",
+            "jsonb",
+            "date",
+            "dateTime",
+            "dateTimeTz",
+            "time",
+            "timeTz",
+            "timestamp",
+            "timestampTz",
+            "timestamps",
+            "nullableTimestamps",
+            "timestampsTz",
+            "softDeletes",
+            "softDeletesTz",
+            "year",
+            "binary",
+            "uuid",
+            "foreignUuid",
+            "ipAddress",
+            "macAddress",
+            "geometry",
+            "point",
+            "lineString",
+            "polygon",
+            "geometryCollection",
+            "multiPoint",
+            "multiLineString",
+            "multiPolygon",
+            "multiPolygonZ",
+            "computed",
+            "morphs",
+            "nullableMorphs",
+            "uuidMorphs",
+            "nullableUuidMorphs",
+            "rememberToken",
+        ];
+    }
+}

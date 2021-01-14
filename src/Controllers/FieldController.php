@@ -5,6 +5,7 @@ namespace Vuongdq\VLAdminTool\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\FieldDataTable;
+use Vuongdq\VLAdminTool\Repositories\ViewTemplateRepository;
 use Vuongdq\VLAdminTool\Requests\CreateFieldRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateFieldRequest;
 use Vuongdq\VLAdminTool\Repositories\FieldRepository;
@@ -13,10 +14,18 @@ class FieldController extends Controller
 {
     /** @var  FieldRepository */
     private $fieldRepository;
+    /**
+     * @var ViewTemplateRepository
+     */
+    private $viewTemplateRepository;
 
-    public function __construct(FieldRepository $fieldRepo)
+    public function __construct(
+        FieldRepository $fieldRepo,
+        ViewTemplateRepository $viewTemplateRepository
+    )
     {
         $this->fieldRepository = $fieldRepo;
+        $this->viewTemplateRepository = $viewTemplateRepository;
     }
 
     /**
@@ -27,8 +36,14 @@ class FieldController extends Controller
      */
     public function index(FieldDataTable $fieldDataTable, Request $request)
     {
+        $fieldTypes = $this->viewTemplateRepository->getFieldTypes();
+        $fieldTypesSelector = [];
+        foreach ($fieldTypes as $fieldType)
+            $fieldTypesSelector[$fieldType] = $fieldType;
+
         return $fieldDataTable->render('vl-admin-tool::fields.index', [
-            "model_id" => $request->input("model_id")
+            "model_id" => $request->input("model_id"),
+            'fieldTypes' => $fieldTypesSelector
         ]);
     }
 

@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class DBConfig extends EloquentModel
 {
-    
+
     public $table = 'db_configs';
 
     public $fillable = [
@@ -31,7 +31,7 @@ class DBConfig extends EloquentModel
         'default'
     ];
 
-    
+
     public $timestamps = false;
 
     /**
@@ -44,8 +44,8 @@ class DBConfig extends EloquentModel
         'field_id' => 'integer',
         'type' => 'string',
         'length' => 'integer',
-        'nullable' => 'boolean',
-        'unique' => 'boolean',
+        'nullable' => 'integer',
+        'unique' => 'integer',
         'default' => 'string'
     ];
 

@@ -18,8 +18,8 @@ class CreateDbConfigsTable extends Migration
             $table->unsignedBigInteger('field_id');
             $table->string('type', 45);
             $table->integer('length')->nullable();
-            $table->boolean('nullable')->default(0);
-            $table->boolean('unique')->default(0);
+            $table->boolean('nullable')->nullable();
+            $table->boolean('unique')->nullable();
             $table->string('default')->nullable();
 
             $table->foreign('field_id')->references('id')->on('fields');

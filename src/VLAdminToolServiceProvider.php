@@ -9,38 +9,34 @@ use Vuongdq\VLAdminTool\Commands\API\APIRequestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\API\TestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\APIScaffoldGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\MigrationGeneratorCommand;
-use Vuongdq\VLAdminTool\Commands\Common\ModelGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\RepositoryGeneratorCommand;
+use Vuongdq\VLAdminTool\Commands\GenerateModelCommand;
 use Vuongdq\VLAdminTool\Commands\InstallCommand;
 use Vuongdq\VLAdminTool\Commands\Menu\GenerateMenuCommand;
 use Vuongdq\VLAdminTool\Commands\Menu\InsertAdminMenuCommand;
 use Vuongdq\VLAdminTool\Commands\MigrateCommand;
 use Vuongdq\VLAdminTool\Commands\Publish\GeneratorPublishCommand;
 use Vuongdq\VLAdminTool\Commands\Publish\LayoutPublishCommand;
-use Vuongdq\VLAdminTool\Commands\Publish\PublishTemplateCommand;
 use Vuongdq\VLAdminTool\Commands\Publish\PublishUserCommand;
 use Vuongdq\VLAdminTool\Commands\RollbackGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ControllerGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\RequestsGeneratorCommand;
-use Vuongdq\VLAdminTool\Commands\Scaffold\ScaffoldGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\GenerateCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ViewsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\SeedingCommand;
 use Vuongdq\VLAdminTool\Commands\UninstallCommand;
 use Vuongdq\VLAdminTool\Middleware\VLAdminToolMiddleware;
 
-class VLAdminToolServiceProvider extends ServiceProvider
-{
+class VLAdminToolServiceProvider extends ServiceProvider {
     /**
      * Bootstrap the application services.
      *
      * @param Router $router
      * @return void
      */
-    public function boot(Router $router)
-    {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'vl-admin-tool');
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'vl-admin-tool-lang');
+    public function boot(Router $router) {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'vl-admin-tool');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'vl-admin-tool-lang');
 
         # config
         $configPath = __DIR__ . '/../config/vl_admin_tool.php';
@@ -63,8 +59,7 @@ class VLAdminToolServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         $this->app->singleton('vlat.publish', function ($app) {
             return new GeneratorPublishCommand();
         });
@@ -81,37 +76,28 @@ class VLAdminToolServiceProvider extends ServiceProvider
             return new InsertAdminMenuCommand();
         });
 
-        $this->app->singleton('vlat.menu.generate', function ($app) {
-            return new GenerateMenuCommand();
-        });
-
         $this->app->singleton('vlat.generate', function ($app) {
             return new GenerateCommand();
         });
 
-        //
-        $this->app->singleton('vlat.scaffold', function ($app) {
-            return new ScaffoldGeneratorCommand();
+        $this->app->singleton('vlat.generate.menu', function ($app) {
+            return new GenerateMenuCommand();
         });
 
         $this->app->singleton('vlat.publish.layout', function ($app) {
             return new LayoutPublishCommand();
         });
 
-        $this->app->singleton('vlat.publish.templates', function ($app) {
-            return new PublishTemplateCommand();
-        });
-
         $this->app->singleton('vlat.api_scaffold', function ($app) {
             return new APIScaffoldGeneratorCommand();
         });
 
-        $this->app->singleton('vlat.migration', function ($app) {
-            return new MigrationGeneratorCommand();
-        });
+//        $this->app->singleton('vlat.migration', function ($app) {
+//            return new MigrationGeneratorCommand();
+//        });
 
-        $this->app->singleton('vlat.model', function ($app) {
-            return new ModelGeneratorCommand();
+        $this->app->singleton('vlat.generate.model', function ($app) {
+            return new GenerateModelCommand();
         });
 
         $this->app->singleton('vlat.repository', function ($app) {
@@ -156,20 +142,17 @@ class VLAdminToolServiceProvider extends ServiceProvider
             'vlat.seed',
 
             'vlat.menu.insert',
-            'vlat.menu.generate',
 
             'vlat.generate',
-//            'vlat.generate:model',
+            'vlat.generate.menu',
+            'vlat.generate.model',
 //            'vlat.generate:controller',
 //            'vlat.generate:request',
 //            'vlat.generate:views',
 
-            'vlat.scaffold',
             'vlat.api_scaffold',
             'vlat.publish.layout',
-            'vlat.publish.templates',
-            'vlat.migration',
-            'vlat.model',
+//            'vlat.migration',
             'vlat.repository',
             'vlat.api.controller',
             'vlat.api.requests',

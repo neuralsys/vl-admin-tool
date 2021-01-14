@@ -19,6 +19,17 @@
     </script>
 
     <script type="text/javascript">
+        const showGenerateModal = (ele) => {
+            let table = $(ele).closest('table').DataTable();
+            let row = $(ele).closest('tr');
+            let data = table.row(row).data();
+            let templateAction = modelGenerateForm.data('templateAction');
+            modelGenerateForm.attr('action', templateAction.format(data.id));
+
+            resetForm(modelGenerateModal);
+            modelGenerateModal.modal('show');
+        }
+
         $(document).ready(function() {
             initDatatableEvent('#model-datatable', modelSelectedRows);
         });

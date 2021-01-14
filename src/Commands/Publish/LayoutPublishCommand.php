@@ -34,8 +34,8 @@ class LayoutPublishCommand extends PublishBaseCommand
 
     private function copyView()
     {
-        $viewsPath = config('admin_generator.path.views', resource_path('views/'));
-        $templateType = config('admin_generator.templates', 'adminlte-templates');
+        $viewsPath = config('vl_admin_tool.path.views', resource_path('views/'));
+        $templateType = config('vl_admin_tool.templates', 'adminlte-templates');
 
         $this->createDirectories($viewsPath);
 

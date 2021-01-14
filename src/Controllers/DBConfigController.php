@@ -5,6 +5,7 @@ namespace Vuongdq\VLAdminTool\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\DBConfigDataTable;
+use Vuongdq\VLAdminTool\Repositories\DBTypeRepository;
 use Vuongdq\VLAdminTool\Requests\CreateDBConfigRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateDBConfigRequest;
 use Vuongdq\VLAdminTool\Repositories\DBConfigRepository;
@@ -13,22 +14,37 @@ class DBConfigController extends Controller
 {
     /** @var  DBConfigRepository */
     private $dBConfigRepository;
+    /**
+     * @var DBTypeRepository
+     */
+    private $DBTypeRepository;
 
-    public function __construct(DBConfigRepository $dBConfigRepo)
+    public function __construct(
+        DBConfigRepository $dBConfigRepo,
+        DBTypeRepository $DBTypeRepository
+    )
     {
         $this->dBConfigRepository = $dBConfigRepo;
+        $this->DBTypeRepository = $DBTypeRepository;
     }
 
     /**
      * Display a listing of the DBConfig.
      *
      * @param DBConfigDataTable $dBConfigDataTable
+     * @param Request $request
      * @return Response
      */
     public function index(DBConfigDataTable $dBConfigDataTable, Request $request)
     {
+        $dbTypes = $this->DBTypeRepository->getDBTypes();
+        $dbTypesSelector = [];
+        foreach ($dbTypes as $dbType)
+            $dbTypesSelector[$dbType] = $dbType;
+
         return $dBConfigDataTable->render('vl-admin-tool::d_b_configs.index', [
-            "field_id" => $request->input("field_id")
+            "fieldId" => $request->input("field_id"),
+            "dbTypes" => $dbTypesSelector
         ]);
     }
 

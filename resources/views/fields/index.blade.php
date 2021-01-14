@@ -19,6 +19,10 @@
 @push('scripts')
     <script type="text/javascript">
         $( document ).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            });
+
             $('.btnAddNewField').on('click', (evt) => {
                 resetForm(fieldCreateForm);
                 fieldCreateModal.modal('show');

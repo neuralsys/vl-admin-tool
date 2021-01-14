@@ -40,8 +40,8 @@ class PublishUserCommand extends PublishBaseCommand
 
     private function copyViews()
     {
-        $viewsPath = config('admin_generator.laravel_generator.path.views', resource_path('views/'));
-        $templateType = config('admin_generator.laravel_generator.templates', 'adminlte-templates');
+        $viewsPath = config('vl_admin_tool.laravel_generator.path.views', resource_path('views/'));
+        $templateType = config('vl_admin_tool.laravel_generator.templates', 'adminlte-templates');
 
         $this->createDirectories($viewsPath.'users');
 
@@ -88,8 +88,8 @@ class PublishUserCommand extends PublishBaseCommand
 
     private function updateMenu()
     {
-        $viewsPath = config('admin_generator.laravel_generator.path.views', resource_path('views/'));
-        $templateType = config('admin_generator.laravel_generator.templates', 'adminlte-templates');
+        $viewsPath = config('vl_admin_tool.laravel_generator.path.views', resource_path('views/'));
+        $templateType = config('vl_admin_tool.laravel_generator.templates', 'adminlte-templates');
         $path = $viewsPath.'layouts/menu.blade.php';
         $menuContents = file_get_contents($path);
         $sourceFile = file_get_contents(get_template_file_path('scaffold/users/menu', $templateType));

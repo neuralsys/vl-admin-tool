@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Common;
 
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Commands\BaseCommand;
 
 class GeneratorConfig
 {
@@ -72,26 +73,7 @@ class GeneratorConfig
     private $commandData;
 
     /* Command Options */
-    public static $availableOptions = [
-        'fieldsFile',
-        'jsonFromGUI',
-        'tableName',
-        'fromTable',
-        'ignoreFields',
-        'save',
-        'primary',
-        'paginate',
-        'skip',
-        'views',
-        'relations',
-        'plural',
-        'softDelete',
-        'forceMigrate',
-        'factory',
-        'seeder',
-        'connection',
-        'force'
-    ];
+    public $availableOptions;
 
     public $tableName;
 
@@ -104,7 +86,9 @@ class GeneratorConfig
     public function init(CommandData &$commandData, $options = null)
     {
         if (!empty($options)) {
-            self::$availableOptions = $options;
+            $this->availableOptions = $options;
+        } else {
+            $this->availableOptions = $this->getAvailableOptions();
         }
 
         $this->mName = $commandData->modelName;
@@ -368,7 +352,7 @@ class GeneratorConfig
 
     public function prepareOptions(CommandData &$commandData)
     {
-        foreach (self::$availableOptions as $option) {
+        foreach ($this->availableOptions as $option) {
             $this->options[$option] = $commandData->commandObj->option($option);
         }
 
@@ -499,7 +483,7 @@ class GeneratorConfig
 
     public function overrideOptionsFromJsonFile($jsonData)
     {
-        $options = self::$availableOptions;
+        $options = $this->availableOptions;
 
         foreach ($options as $option) {
             if (isset($jsonData['options'][$option])) {
@@ -553,5 +537,13 @@ class GeneratorConfig
         $this->addOns['tests'] = config('vl_admin_tool.add_on.tests', false);
         $this->addOns['menu.enabled'] = config('vl_admin_tool.add_on.menu.enabled', false);
         $this->addOns['menu.menu_file'] = config('vl_admin_tool.add_on.menu.menu_file', 'layouts.menu');
+    }
+
+    private function getAvailableOptions() {
+        $options = (new BaseCommand())->getOptions();
+        $res = [];
+        foreach ($options as $option)
+            $res[] = $option[0];
+        return $res;
     }
 }

@@ -8,7 +8,7 @@
 <!-- Creatable Field -->
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
-        {!! Form::hidden('creatable', 0) !!}
+        {!! Form::hidden('creatable', 0, ['class' => 'ignore-reset']) !!}
         {!! Form::checkbox('creatable', '1', null, ['data-column' => 'creatable']) !!} {{__('vl-admin-tool-lang::models/cRUDConfig.fields.creatable')}}
     </label>
 </div>
@@ -17,7 +17,7 @@
 <!-- Editable Field -->
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
-        {!! Form::hidden('editable', 0) !!}
+        {!! Form::hidden('editable', 0, ['class' => 'ignore-reset']) !!}
         {!! Form::checkbox('editable', '1', null, ['data-column' => 'editable']) !!} {{__('vl-admin-tool-lang::models/cRUDConfig.fields.editable')}}
     </label>
 </div>

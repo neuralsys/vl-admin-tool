@@ -3,7 +3,9 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\ModelDataTable;
+use Vuongdq\VLAdminTool\Repositories\ViewTemplateRepository;
 use Vuongdq\VLAdminTool\Requests\CreateModelRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateModelRequest;
 use Vuongdq\VLAdminTool\Repositories\ModelRepository;
@@ -46,24 +48,6 @@ class ModelController extends Controller
     }
 
     /**
-     * Display the specified Model.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        $model = $this->modelRepository->find($id);
-
-        if (empty($model)) {
-            return redirect(route('models.index'));
-        }
-
-        return view('vl-admin-tool::models.show')->with('model', $model);
-    }
-
-    /**
      * Update the specified Model in storage.
      *
      * @param  int              $id
@@ -102,5 +86,9 @@ class ModelController extends Controller
         $this->modelRepository->delete($id);
 
         return $this->success(__('crud.delete_success'));
+    }
+
+    public function generate($id, Request $request) {
+        $skips = $request->all();
     }
 }

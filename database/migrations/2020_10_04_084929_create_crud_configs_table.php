@@ -18,7 +18,7 @@ class CreateCrudConfigsTable extends Migration
             $table->unsignedBigInteger('field_id');
             $table->boolean('creatable')->default(1);
             $table->boolean('editable')->default(1);
-            $table->string('rules');
+            $table->string('rules')->nullable();
 
             $table->foreign('field_id')->references('id')->on('fields');
         });

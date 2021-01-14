@@ -19,6 +19,10 @@
 @push('scripts')
     <script type="text/javascript">
         $( document ).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            });
+
             $('.btnAddNewDBConfig').on('click', (evt) => {
                 resetForm(dBConfigCreateForm);
                 dBConfigCreateModal.modal('show');

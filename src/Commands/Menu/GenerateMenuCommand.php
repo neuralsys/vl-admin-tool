@@ -12,7 +12,7 @@ class GenerateMenuCommand extends BaseCommand {
      *
      * @var string
      */
-    protected $name = 'vlat.menu:generate';
+    protected $name = 'vlat.generate:menu';
 
     /**
      * The console command description.

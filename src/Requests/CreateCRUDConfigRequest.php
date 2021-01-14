@@ -29,7 +29,7 @@ class CreateCRUDConfigRequest extends FormRequest
             'field_id' => 'required',
             'creatable' => 'required|boolean',
             'editable' => 'required|boolean',
-            'rules' => 'required|string|max:255'
+            'rules' => 'sometimes|nullable|string|max:255'
         ];
     }
 }

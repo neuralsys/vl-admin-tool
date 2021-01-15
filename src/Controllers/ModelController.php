@@ -5,10 +5,10 @@ namespace Vuongdq\VLAdminTool\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\ModelDataTable;
-use Vuongdq\VLAdminTool\Repositories\ViewTemplateRepository;
 use Vuongdq\VLAdminTool\Requests\CreateModelRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateModelRequest;
 use Vuongdq\VLAdminTool\Repositories\ModelRepository;
+use Illuminate\Support\Facades\Artisan;
 
 class ModelController extends Controller
 {
@@ -90,5 +90,19 @@ class ModelController extends Controller
 
     public function generate($id, Request $request) {
         $skips = $request->all();
+        $skipComponents = [];
+        foreach ($skips as $component => $isSkip) {
+            if ($isSkip)
+                $skipComponents[] = $component;
+        }
+        $skipOptionValue = implode(",", $skipComponents);
+        $model = $this->modelRepository->find($id);
+        if (empty($model))
+            return $this->error("Model not found!");
+
+        # generate model
+        $modelName = $model->class_name;
+        $exitCode = Artisan::call("vlat:generate $modelName --skip=$skipOptionValue");
+        dd($exitCode);
     }
 }

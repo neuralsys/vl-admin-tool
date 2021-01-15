@@ -59,10 +59,7 @@ class GenerateCommand extends BaseCommand
      */
     public function getOptions()
     {
-        return [
-            ['fromTable', null, InputOption::VALUE_NONE, 'Generate from existing table'],
-            ['table', null, InputOption::VALUE_NONE, "Table Name for generating"]
-        ];
+        return array_merge(parent::getOptions(), []);
     }
 
     /**
@@ -73,7 +70,7 @@ class GenerateCommand extends BaseCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Singular Model Name or Model File Name'],
+            ['model', InputArgument::REQUIRED, 'Singular Model Name'],
         ];
     }
 

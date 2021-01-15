@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Model extends EloquentModel
 {
-    
+
     public $table = 'models';
 
     public $fillable = [
@@ -29,11 +29,11 @@ class Model extends EloquentModel
         'singular',
         'plural',
         'description',
-        'timestamps',
-        'soft_delete'
+        'use_timestamps',
+        'use_soft_delete'
     ];
 
-    
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -46,8 +46,8 @@ class Model extends EloquentModel
         'singular' => 'string',
         'plural' => 'string',
         'description' => 'string',
-        'timestamps' => 'boolean',
-        'soft_delete' => 'boolean'
+        'use_timestamps' => 'boolean',
+        'use_soft_delete' => 'boolean'
     ];
 
     /**

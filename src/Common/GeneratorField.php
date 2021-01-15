@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Common;
 
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Models\Field;
 
 class GeneratorField
 {
@@ -44,6 +45,21 @@ class GeneratorField
         if (!is_null($column)) {
             $this->dbInput = ($column->getLength() > 0) ? $this->dbInput.','.$column->getLength() : $this->dbInput;
             $this->dbInput = (!$column->getNotnull()) ? $this->dbInput.':nullable' : $this->dbInput;
+        }
+        $this->prepareMigrationText();
+    }
+
+    /**
+     * @param Field $column
+     * @param $dbInput
+     */
+    public function parseDBTypeFromModel($dbInput, Field $column)
+    {
+        $this->dbInput = $dbInput;
+        $dbConfig = $column->dbConfigs[0];
+        if (!is_null($column)) {
+            $this->dbInput = (!is_null($dbConfig->length) && $dbConfig->length > 0) ? $this->dbInput.','.$dbConfig->length : $this->dbInput;
+            $this->dbInput = ($dbConfig->nullable) ? $this->dbInput.':nullable' : $this->dbInput;
         }
         $this->prepareMigrationText();
     }

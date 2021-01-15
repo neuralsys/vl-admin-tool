@@ -5,14 +5,19 @@ namespace Vuongdq\VLAdminTool\Common;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\GeneratorFieldsInputUtil;
 use Vuongdq\VLAdminTool\Utils\TableFieldsGenerator;
+use Vuongdq\VLAdminTool\Utils\TableFieldsGeneratorFromModel;
 
 class CommandData
 {
     public static $COMMAND_TYPE_API = 'api';
     public static $COMMAND_TYPE_SCAFFOLD = 'scaffold';
     public static $COMMAND_TYPE_API_SCAFFOLD = 'api_scaffold';
+
+    /** @var Model */
+    public $modelObject;
 
     /** @var string */
     public $modelName;
@@ -100,9 +105,9 @@ class CommandData
         $this->commandObj->info($message);
     }
 
-    public function initCommandData()
+    public function initCommandData($options = null)
     {
-        $this->config->init($this);
+        $this->config->init($this, $options);
     }
 
     public function getOption($option)
@@ -134,8 +139,19 @@ class CommandData
         } elseif ($this->getOption('fromTable')) {
             $this->getInputFromTable();
         } else {
-            $this->getInputFromConsole();
+            $this->getInputFromModel();
         }
+    }
+
+    private function getInputFromModel() {
+        $tableName = $this->dynamicVars['$TABLE_NAME$'];
+
+        $tableFieldsGenerator = new TableFieldsGeneratorFromModel($this->modelObject);
+        $tableFieldsGenerator->prepareFieldsFromModel();
+//        $tableFieldsGenerator->prepareRelations();
+
+        $this->fields = $tableFieldsGenerator->fields;
+//        $this->relations = $tableFieldsGenerator->relations;
     }
 
     private function getInputFromConsole()

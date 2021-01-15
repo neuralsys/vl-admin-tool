@@ -31,12 +31,12 @@ class UpdateModelRequest extends FormRequest
                 'singular' => 'required|string|max:255',
                 'plural' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'timestamps' => 'required|boolean',
-                'soft_delete' => 'required|boolean',
+                'use_timestamps' => 'required|boolean',
+                'use_soft_delete' => 'required|boolean',
                 'created_at' => 'nullable',
                 'updated_at' => 'nullable'
         ];
-        
+
         return $rules;
     }
 }

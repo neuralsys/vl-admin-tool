@@ -85,27 +85,26 @@ class GeneratorConfig
 
     public function init(CommandData &$commandData, $options = null)
     {
+        $this->commandData = &$commandData;
+
         if (!empty($options)) {
             $this->availableOptions = $options;
         } else {
             $this->availableOptions = $this->getAvailableOptions();
         }
 
-        $this->mName = $commandData->modelName;
-
         $this->prepareAddOns();
-        $this->prepareOptions($commandData);
+        $this->prepareOptions();
         $this->prepareModelNames();
         $this->preparePrefixes();
         $this->loadPaths();
         $this->prepareTableName();
         $this->preparePrimaryName();
-        $this->loadNamespaces($commandData);
-        $commandData = $this->loadDynamicVariables($commandData);
-        $this->commandData = &$commandData;
+        $this->loadNamespaces();
+        $this->loadDynamicVariables();
     }
 
-    public function loadNamespaces(CommandData &$commandData)
+    public function loadNamespaces()
     {
         $prefix = $this->prefixes['ns'];
 
@@ -113,7 +112,7 @@ class GeneratorConfig
             $prefix = '\\'.$prefix;
         }
 
-        $this->nsApp = $commandData->commandObj->getLaravel()->getNamespace();
+        $this->nsApp = $this->commandData->commandObj->getLaravel()->getNamespace();
         $this->nsApp = substr($this->nsApp, 0, strlen($this->nsApp) - 1);
         $this->nsRepository = config('vl_admin_tool.namespace.repository', 'App\Repositories').$prefix;
         $this->nsModel = config('vl_admin_tool.namespace.model', 'App\Models').$prefix;
@@ -210,130 +209,115 @@ class GeneratorConfig
         );
     }
 
-    public function loadDynamicVariables(CommandData &$commandData)
+    public function loadDynamicVariables()
     {
-        $commandData->addDynamicVariable('$NAMESPACE_APP$', $this->nsApp);
-        $commandData->addDynamicVariable('$NAMESPACE_REPOSITORY$', $this->nsRepository);
-        $commandData->addDynamicVariable('$NAMESPACE_MODEL$', $this->nsModel);
-        $commandData->addDynamicVariable('$NAMESPACE_DATATABLES$', $this->nsDataTables);
-        $commandData->addDynamicVariable('$NAMESPACE_MODEL_EXTEND$', $this->nsModelExtend);
+        $this->commandData->addDynamicVariable('$NAMESPACE_APP$', $this->nsApp);
+        $this->commandData->addDynamicVariable('$NAMESPACE_REPOSITORY$', $this->nsRepository);
+        $this->commandData->addDynamicVariable('$NAMESPACE_MODEL$', $this->nsModel);
+        $this->commandData->addDynamicVariable('$NAMESPACE_DATATABLES$', $this->nsDataTables);
+        $this->commandData->addDynamicVariable('$NAMESPACE_MODEL_EXTEND$', $this->nsModelExtend);
 
-        $commandData->addDynamicVariable('$NAMESPACE_API_CONTROLLER$', $this->nsApiController);
-        $commandData->addDynamicVariable('$NAMESPACE_API_REQUEST$', $this->nsApiRequest);
+        $this->commandData->addDynamicVariable('$NAMESPACE_API_CONTROLLER$', $this->nsApiController);
+        $this->commandData->addDynamicVariable('$NAMESPACE_API_REQUEST$', $this->nsApiRequest);
 
-        $commandData->addDynamicVariable('$NAMESPACE_BASE_CONTROLLER$', $this->nsBaseController);
-        $commandData->addDynamicVariable('$NAMESPACE_CONTROLLER$', $this->nsController);
-        $commandData->addDynamicVariable('$NAMESPACE_REQUEST$', $this->nsRequest);
-        $commandData->addDynamicVariable('$NAMESPACE_REQUEST_BASE$', $this->nsRequestBase);
+        $this->commandData->addDynamicVariable('$NAMESPACE_BASE_CONTROLLER$', $this->nsBaseController);
+        $this->commandData->addDynamicVariable('$NAMESPACE_CONTROLLER$', $this->nsController);
+        $this->commandData->addDynamicVariable('$NAMESPACE_REQUEST$', $this->nsRequest);
+        $this->commandData->addDynamicVariable('$NAMESPACE_REQUEST_BASE$', $this->nsRequestBase);
 
-        $commandData->addDynamicVariable('$NAMESPACE_API_TESTS$', $this->nsApiTests);
-        $commandData->addDynamicVariable('$NAMESPACE_REPOSITORIES_TESTS$', $this->nsRepositoryTests);
-        $commandData->addDynamicVariable('$NAMESPACE_TESTS$', $this->nsTests);
+        $this->commandData->addDynamicVariable('$NAMESPACE_API_TESTS$', $this->nsApiTests);
+        $this->commandData->addDynamicVariable('$NAMESPACE_REPOSITORIES_TESTS$', $this->nsRepositoryTests);
+        $this->commandData->addDynamicVariable('$NAMESPACE_TESTS$', $this->nsTests);
 
-        $commandData->addDynamicVariable('$TABLE_NAME$', $this->tableName);
-        $commandData->addDynamicVariable('$TABLE_NAME_TITLE$', Str::studly($this->tableName));
-        $commandData->addDynamicVariable('$PRIMARY_KEY_NAME$', $this->primaryName);
+        $this->commandData->addDynamicVariable('$TABLE_NAME$', $this->tableName);
+        $this->commandData->addDynamicVariable('$TABLE_NAME_TITLE$', Str::studly($this->tableName));
+        $this->commandData->addDynamicVariable('$PRIMARY_KEY_NAME$', $this->primaryName);
 
-        $commandData->addDynamicVariable('$MODEL_NAME$', $this->mName);
-        $commandData->addDynamicVariable('$MODEL_NAME_CAMEL$', $this->mCamel);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL$', $this->mPlural);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_CAMEL$', $this->mCamelPlural);
-        $commandData->addDynamicVariable('$MODEL_NAME_SNAKE$', $this->mSnake);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_SNAKE$', $this->mSnakePlural);
-        $commandData->addDynamicVariable('$MODEL_NAME_DASHED$', $this->mDashed);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_DASHED$', $this->mDashedPlural);
-        $commandData->addDynamicVariable('$MODEL_NAME_SLASH$', $this->mSlash);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_SLASH$', $this->mSlashPlural);
-        $commandData->addDynamicVariable('$MODEL_NAME_HUMAN$', $this->mHuman);
-        $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_HUMAN$', $this->mHumanPlural);
-        $commandData->addDynamicVariable('$FILES$', '');
+        $this->commandData->addDynamicVariable('$MODEL_NAME$', $this->mName);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_CAMEL$', $this->mCamel);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL$', $this->mPlural);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL_CAMEL$', $this->mCamelPlural);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_SNAKE$', $this->mSnake);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL_SNAKE$', $this->mSnakePlural);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_DASHED$', $this->mDashed);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL_DASHED$', $this->mDashedPlural);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_SLASH$', $this->mSlash);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL_SLASH$', $this->mSlashPlural);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_HUMAN$', $this->mHuman);
+        $this->commandData->addDynamicVariable('$MODEL_NAME_PLURAL_HUMAN$', $this->mHumanPlural);
+        $this->commandData->addDynamicVariable('$FILES$', '');
 
         $connectionText = '';
         if ($connection = $this->getOption('connection')) {
             $this->connection = $connection;
             $connectionText = infy_tab(4).'public $connection = "'.$connection.'";';
         }
-        $commandData->addDynamicVariable('$CONNECTION$', $connectionText);
+        $this->commandData->addDynamicVariable('$CONNECTION$', $connectionText);
 
         if (!empty($this->prefixes['route'])) {
-            $commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', $this->prefixes['route'].'.');
-            $commandData->addDynamicVariable('$ROUTE_PREFIX$', str_replace('.', '/', $this->prefixes['route']).'/');
-            $commandData->addDynamicVariable('$RAW_ROUTE_PREFIX$', $this->prefixes['route']);
+            $this->commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', $this->prefixes['route'].'.');
+            $this->commandData->addDynamicVariable('$ROUTE_PREFIX$', str_replace('.', '/', $this->prefixes['route']).'/');
+            $this->commandData->addDynamicVariable('$RAW_ROUTE_PREFIX$', $this->prefixes['route']);
         } else {
-            $commandData->addDynamicVariable('$ROUTE_PREFIX$', '');
-            $commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$ROUTE_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', '');
         }
 
         if (!empty($this->prefixes['ns'])) {
-            $commandData->addDynamicVariable('$PATH_PREFIX$', $this->prefixes['ns'].'\\');
+            $this->commandData->addDynamicVariable('$PATH_PREFIX$', $this->prefixes['ns'].'\\');
         } else {
-            $commandData->addDynamicVariable('$PATH_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$PATH_PREFIX$', '');
         }
 
         if (!empty($this->prefixes['view'])) {
-            $commandData->addDynamicVariable('$VIEW_PREFIX$', str_replace('/', '.', $this->prefixes['view']).'.');
+            $this->commandData->addDynamicVariable('$VIEW_PREFIX$', str_replace('/', '.', $this->prefixes['view']).'.');
         } else {
-            $commandData->addDynamicVariable('$VIEW_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$VIEW_PREFIX$', '');
         }
 
         if (!empty($this->prefixes['public'])) {
-            $commandData->addDynamicVariable('$PUBLIC_PREFIX$', $this->prefixes['public']);
+            $this->commandData->addDynamicVariable('$PUBLIC_PREFIX$', $this->prefixes['public']);
         } else {
-            $commandData->addDynamicVariable('$PUBLIC_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$PUBLIC_PREFIX$', '');
         }
 
         if (!empty($this->prefixes['ns_view'])) {
-            $commandData->addDynamicVariable('$NS_VIEW_PREFIX$', $this->prefixes['ns_view']);
+            $this->commandData->addDynamicVariable('$NS_VIEW_PREFIX$', $this->prefixes['ns_view']);
         } else {
-            $commandData->addDynamicVariable('$NS_VIEW_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$NS_VIEW_PREFIX$', '');
         }
 
         if (!empty($this->prefixes['ns_locale'])) {
-            $commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', $this->prefixes['ns_locale']);
+            $this->commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', $this->prefixes['ns_locale']);
         } else {
-            $commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', '');
+            $this->commandData->addDynamicVariable('$NS_LOCALE_PREFIX$', '');
         }
 
-        $commandData->addDynamicVariable(
+        $this->commandData->addDynamicVariable(
             '$API_PREFIX$',
             config('vl_admin_tool.api_prefix', 'api')
         );
 
-        $commandData->addDynamicVariable(
+        $this->commandData->addDynamicVariable(
             '$API_VERSION$',
             config('vl_admin_tool.api_version', 'v1')
         );
-
-        $commandData->addDynamicVariable('$SEARCHABLE$', '');
-
-        return $commandData;
     }
 
     public function prepareTableName()
     {
-        if ($this->getOption('tableName')) {
-            $this->tableName = $this->getOption('tableName');
-        } else {
-            $this->tableName = $this->mSnakePlural;
-        }
+        $this->tableName = $this->commandData->modelObject->getAttribute('table_name');
     }
 
     public function preparePrimaryName()
     {
-        if ($this->getOption('primary')) {
-            $this->primaryName = $this->getOption('primary');
-        } else {
-            $this->primaryName = 'id';
-        }
+        $this->primaryName = 'id';
     }
 
     public function prepareModelNames()
     {
-        if ($this->getOption('plural')) {
-            $this->mPlural = $this->getOption('plural');
-        } else {
-            $this->mPlural = Str::plural($this->mName);
-        }
+        $this->mName = $this->commandData->modelName;
+        $this->mPlural = $this->commandData->modelObject->plural;
         $this->mCamel = Str::camel($this->mName);
         $this->mCamelPlural = Str::camel($this->mPlural);
         $this->mSnake = Str::snake($this->mName);
@@ -350,29 +334,22 @@ class GeneratorConfig
         return array_keys(config('vl-admin-tool.prefixes', []));
     }
 
-    public function prepareOptions(CommandData &$commandData)
+    public function prepareOptions()
     {
         foreach ($this->availableOptions as $option) {
-            $this->options[$option] = $commandData->commandObj->option($option);
+            $this->options[$option] = $this->commandData->commandObj->option($option);
         }
-
         # add prefix options
         $prefixKeys = $this->getPrefixKeysFromConfig();
         foreach ($prefixKeys as $prefixKey) {
             $option = 'prefix_'.$prefixKey;
-            $this->options[$option] = $commandData->commandObj->option($option);
+            $this->options[$option] = $this->commandData->commandObj->option($option);
         }
 
-        if (isset($options['fromTable']) and $this->options['fromTable']) {
-            if (!$this->options['tableName']) {
-                $commandData->commandError('tableName required with fromTable option.');
-                exit;
-            }
-        }
+        # Todo: Remove
+        $this->commandData->getTemplatesManager()->setUseLocale(true);
 
-        $commandData->getTemplatesManager()->setUseLocale(true);
-
-        $this->options['softDelete'] = config('vl_admin_tool.options.softDelete', false);
+        $this->options['softDelete'] = $this->commandData->modelObject->use_soft_delete;
 
         if (isset($this->options['skip'])) {
             $this->options['skip'] = explode(",", $this->options['skip']);

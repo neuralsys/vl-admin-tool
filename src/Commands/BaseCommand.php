@@ -20,6 +20,7 @@ use Vuongdq\VLAdminTool\Generators\Scaffold\RequestGenerator;
 use Vuongdq\VLAdminTool\Generators\Scaffold\RoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\Scaffold\ViewGenerator;
 use Vuongdq\VLAdminTool\Generators\SeederGenerator;
+use Vuongdq\VLAdminTool\Repositories\ModelRepository;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,14 +52,20 @@ class BaseCommand extends Command
     public function handle()
     {
         $this->commandData->modelName = $this->argument('model');
+        $this->commandData->modelObject = app(ModelRepository::class)->where('class_name', $this->commandData->modelName)->first();
 
-        $this->commandData->initCommandData();
+        $options = $this->getOptions();
+        $res = [];
+        foreach ($options as $option)
+            $res[] = $option[0];
+
+        $this->commandData->initCommandData($res);
         $this->commandData->getFields();
     }
 
     public function generateCommonItems()
     {
-        if (!$this->commandData->getOption('fromTable') and !$this->isSkip('migration')) {
+        if (!$this->isSkip('migration')) {
             $migrationGenerator = new MigrationGenerator($this->commandData);
             $migrationGenerator->generate();
         }
@@ -277,6 +284,10 @@ class BaseCommand extends Command
         return $this->confirm($prompt, false);
     }
 
+    public function getPrefixKeysFromConfig() {
+        return array_keys(config('vl-admin-tool.prefixes', []));
+    }
+
     /**
      * Get the console command options.
      *
@@ -284,11 +295,20 @@ class BaseCommand extends Command
      */
     public function getOptions()
     {
-        return [
+        $finalOptions = [
             # common options
-            ['skip', null, InputOption::VALUE_REQUIRED, 'Skip Specific Items to Generate (migration,model,controllers,api_controller,scaffold_controller,repository,requests,api_requests,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload)'],
+            ['skip', null, InputOption::VALUE_OPTIONAL, 'Skip Specific Items to Generate (migration,model,controllers,api_controller,scaffold_controller,repository,requests,api_requests,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload)'],
             ['force', null, InputOption::VALUE_NONE, 'Force update'],
         ];
+
+        $prefixKeys = $this->getPrefixKeysFromConfig();
+        foreach ($prefixKeys as $prefixKey) {
+            $optionString = 'prefix_' . $prefixKey;
+            $option = [$optionString, null, InputOption::VALUE_OPTIONAL, "Set Prefix For $prefixKey"];
+            $finalOptions[] = $option;
+        }
+
+        return $finalOptions;
     }
 
     /**

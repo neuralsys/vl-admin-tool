@@ -36,8 +36,8 @@
 <!-- Timestamps Field -->
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
-        {!! Form::hidden('timestamps', 0) !!}
-        {!! Form::checkbox('timestamps', '1', null, ['data-column' => 'timestamps']) !!} {{__('vl-admin-tool-lang::models/model.fields.timestamps')}}
+        {!! Form::hidden('use_timestamps', 0) !!}
+        {!! Form::checkbox('use_timestamps', '1', null, ['data-column' => 'use_timestamps']) !!} {{__('vl-admin-tool-lang::models/model.fields.use_timestamps')}}
     </label>
 </div>
 
@@ -45,8 +45,8 @@
 <!-- Soft Delete Field -->
 <div class="form-group col-sm-6">
     <label class="checkbox-inline">
-        {!! Form::hidden('soft_delete', 0) !!}
-        {!! Form::checkbox('soft_delete', '1', null, ['data-column' => 'soft_delete']) !!} {{__('vl-admin-tool-lang::models/model.fields.soft_delete')}}
+        {!! Form::hidden('use_soft_delete', 0) !!}
+        {!! Form::checkbox('use_soft_delete', '1', null, ['data-column' => 'use_soft_delete']) !!} {{__('vl-admin-tool-lang::models/model.fields.use_soft_delete')}}
     </label>
 </div>
 

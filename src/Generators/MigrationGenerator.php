@@ -46,16 +46,18 @@ class MigrationGenerator extends BaseGenerator
         $foreignKeys = [];
         $createdAtField = null;
         $updatedAtField = null;
+        $softDeleteField = null;
 
         foreach ($this->commandData->fields as $field) {
             if ($field->name == 'created_at') {
                 $createdAtField = $field;
                 continue;
-            } else {
-                if ($field->name == 'updated_at') {
-                    $updatedAtField = $field;
-                    continue;
-                }
+            } elseif ($field->name == 'updated_at') {
+                $updatedAtField = $field;
+                continue;
+            } elseif ($field->name == 'deleted_at') {
+                $softDeleteField = $field;
+                continue;
             }
 
             $fields[] = $field->migrationText;
@@ -75,7 +77,7 @@ class MigrationGenerator extends BaseGenerator
             }
         }
 
-        if ($this->commandData->getOption('softDelete')) {
+        if ($softDeleteField) {
             $fields[] = '$table->softDeletes();';
         }
 

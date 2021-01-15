@@ -13,25 +13,25 @@ return [
 
         'migration'         => database_path('migrations/'),
 
-        'model'             => base_path('vendor/vuongdq/vl-admin-tool/src/Models/'),
+        'model'             => app_path('Models/'),
 
-        'models_locale_files' => base_path('vendor/vuongdq/vl-admin-tool/resources/lang/en/models/'),
+        'models_locale_files' => base_path('resources/lang/en/models/'),
 
         'trait'             => app_path('Traits/'),
 
-        'datatables'        => base_path('vendor/vuongdq/vl-admin-tool/src/DataTables/'),
+        'datatables'        => app_path('DataTables/'),
 
-        'repository'        => base_path('vendor/vuongdq/vl-admin-tool/src/Repositories/'),
+        'repository'        => app_path('Repositories/'),
 
         'routes'            => base_path('routes/web.php'),
 
         'api_routes'        => base_path('routes/api.php'),
 
-        'request'           => base_path('vendor/vuongdq/vl-admin-tool/src/Requests/'),
+        'request'           => app_path('Requests/'),
 
-        'api_request'       => app_path('Http/Requests/API/'),
+        'api_request'       => app_path('Requests/API/'),
 
-        'controller'        => base_path('vendor/vuongdq/vl-admin-tool/src/Controllers/'),
+        'controller'        => app_path('Http/Controllers/'),
 
         'api_controller'    => app_path('Http/Controllers/API/'),
 
@@ -41,7 +41,7 @@ return [
 
         'tests'             => base_path('tests/'),
 
-        'views'             => base_path('vendor/vuongdq/vl-admin-tool/resources/views/'),
+        'views'             => resource_path('views/'),
 
         'schema_files'      => resource_path('model_schemas/'),
 
@@ -65,19 +65,19 @@ return [
 
     'namespace' => [
 
-        'model'             => 'Vuongdq\VLAdminTool\Models',
+        'model'             => 'App\Models',
 
-        'datatables'        => 'Vuongdq\VLAdminTool\DataTables',
+        'datatables'        => 'App\DataTables',
 
-        'repository'        => 'Vuongdq\VLAdminTool\Repositories',
+        'repository'        => 'App\Repositories',
 
-        'controller'        => 'Vuongdq\VLAdminTool\Controllers',
+        'controller'        => 'App\Controllers',
 
         'api_controller'    => 'App\Http\Controllers\API',
 
-        'request'           => 'Vuongdq\VLAdminTool\Requests',
+        'request'           => 'App\Requests',
 
-        'api_request'       => 'App\Http\Requests\API',
+        'api_request'       => 'App\Requests\API',
 
         'repository_test'   => 'Tests\Repositories',
 
@@ -85,7 +85,7 @@ return [
 
         'tests'             => 'Tests',
 
-        'traits'            => 'Vuongdq\VLAdminTool\Traits'
+        'traits'            => 'App\Traits'
     ],
 
     /*
@@ -151,9 +151,9 @@ return [
 
         'public' => '',
 
-        'ns_view' => 'vl-admin-tool::',
+        'ns_view' => '',
 
-        'ns_locale' => 'vl-admin-tool-lang::',
+        'ns_locale' => '',
     ],
 
     /*

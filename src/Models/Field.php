@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Field extends EloquentModel
 {
-    
+
     public $table = 'fields';
 
     public $fillable = [
@@ -30,7 +30,7 @@ class Field extends EloquentModel
         'html_type'
     ];
 
-    
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -62,32 +62,24 @@ class Field extends EloquentModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function dbConfigs()
+    public function dBConfigs()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DbConfig::class, 'field_id');
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DBConfig::class, 'field_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function dtConfigs()
+    public function dTConfigs()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DtConfig::class, 'field_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     **/
-    public function relation()
-    {
-        return $this->hasOne(\Vuongdq\VLAdminTool\Models\Relation::class);
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DTConfig::class, 'field_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function relation1s()
+    public function relations()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Relation::class, 'second_field_id');
+        return $this->hasMany(\Vuongdq\VLAdminTool\Models\Relation::class, 'first_field_id');
     }
 }

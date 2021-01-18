@@ -5,22 +5,12 @@ namespace Vuongdq\VLAdminTool\Generators;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Common\CommandData;
 use Vuongdq\VLAdminTool\Common\GeneratorFieldRelation;
+use Vuongdq\VLAdminTool\Repositories\DBTypeRepository;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
 use Vuongdq\VLAdminTool\Utils\TableFieldsGenerator;
 
 class ModelGenerator extends BaseGenerator
 {
-    /**
-     * Fields not included in the generator by default.
-     *
-     * @var array
-     */
-    protected $excluded_fields = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /** @var CommandData */
     private $commandData;
 
@@ -107,21 +97,27 @@ class ModelGenerator extends BaseGenerator
 
     private function fillSoftDeletes($templateData)
     {
-        if (!$this->commandData->getOption('softDelete') || !$this->commandData->isUseSoftDelete()) {
+        if (!$this->commandData->isUseSoftDelete()) {
             $templateData = str_replace('$SOFT_DELETE_IMPORT$', '', $templateData);
             $templateData = str_replace('$SOFT_DELETE$', '', $templateData);
             $templateData = str_replace('$SOFT_DELETE_DATES$', '', $templateData);
+            $templateData = str_replace('$SOFT_DELETE_COLUMN$', '', $templateData);
         } else {
             $templateData = str_replace(
                 '$SOFT_DELETE_IMPORT$',
                 "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n",
                 $templateData
             );
-            $templateData = str_replace('$SOFT_DELETE$', infy_tab()."use SoftDeletes;\n", $templateData);
+            $templateData = str_replace('$SOFT_DELETE$', "use SoftDeletes;\n", $templateData);
             $deletedAtTimestamp = config('vl_admin_tool.timestamps.deleted_at', 'deleted_at');
             $templateData = str_replace(
                 '$SOFT_DELETE_DATES$',
                 infy_nl_tab()."protected \$dates = ['".$deletedAtTimestamp."'];\n",
+                $templateData
+            );
+            $templateData = str_replace(
+                '$SOFT_DELETE_COLUMN$',
+                "const DELETED_AT = '$deletedAtTimestamp';\n",
                 $templateData
             );
         }
@@ -246,18 +242,36 @@ class ModelGenerator extends BaseGenerator
     private function fillTimestamps($templateData)
     {
         $isUseTimestamps = $this->commandData->isUseTimestamps();
+        $timestamps = (new TableFieldsGenerator($this->commandData->modelObject))->getTimestampFieldNames();
         $replace = '';
         if (!$isUseTimestamps) {
             $replace = infy_nl_tab()."public \$timestamps = false;\n";
-        }
+            $templateData = str_replace('$USE_TIMESTAMPS$', $replace, $templateData);
+            return str_replace('$TIMESTAMPS$', "", $templateData);
+        } else {
+            $templateData = str_replace('$USE_TIMESTAMPS$', $replace, $templateData);
 
-        return str_replace('$USE_TIMESTAMPS$', $replace, $templateData);
+            list($created_at, $updated_at) = collect($timestamps)->map(function ($field) {
+                return !empty($field) ? "'$field'" : 'null';
+            });
+            $replace = infy_nl_tab()."const CREATED_AT = $created_at;";
+            $replace .= infy_nl_tab()."const UPDATED_AT = $updated_at;\n";
+
+            return str_replace('$TIMESTAMPS$', $replace, $templateData);
+        }
     }
 
     public function generateRules()
     {
-        $dont_require_fields = config('vl_admin_tool.options.hidden_fields', [])
-                + config('vl_admin_tool.options.excluded_fields', $this->excluded_fields);
+        $tableGenerator = new TableFieldsGenerator($this->commandData->modelObject);
+        $timestampFields =  $tableGenerator->getTimestampFieldNames();
+        $softDeleteField = $tableGenerator->getSoftDeleteFieldName();
+
+        $dont_require_fields = array_merge(
+            $timestampFields,
+            (is_null($softDeleteField) ? [] : [$softDeleteField]),
+            [$tableGenerator->getPrimaryKeyOfTable()]
+        );
 
         $rules = [];
 
@@ -265,47 +279,6 @@ class ModelGenerator extends BaseGenerator
             if (!$field->isPrimary && !in_array($field->name, $dont_require_fields)) {
                 if ($field->isNotNull && empty($field->validations)) {
                     $field->validations = 'required';
-                }
-
-                /**
-                 * Generate some sane defaults based on the field type if we
-                 * are generating from a database table.
-                 */
-                if ($this->commandData->getOption('fromTable')) {
-                    $rule = empty($field->validations) ? [] : explode('|', $field->validations);
-
-                    if (!$field->isNotNull) {
-                        $rule[] = 'nullable';
-                    }
-
-                    switch ($field->fieldType) {
-                        case 'integer':
-                            $rule[] = 'integer';
-                            break;
-                        case 'boolean':
-                            $rule[] = 'boolean';
-                            break;
-                        case 'float':
-                        case 'double':
-                        case 'decimal':
-                            $rule[] = 'numeric';
-                            break;
-                        case 'string':
-                            $rule[] = 'string';
-
-                            // Enforce a maximum string length if possible.
-                            foreach (explode(':', $field->dbInput) as $key => $value) {
-                                if (preg_match('/string,(\d+)/', $value, $matches)) {
-                                    $rule[] = 'max:'.$matches[1];
-                                }
-                            }
-                            break;
-                        case 'text':
-                            $rule[] = 'string';
-                            break;
-                    }
-
-                    $field->validations = implode('|', array_unique($rule));
                 }
             }
 
@@ -346,7 +319,7 @@ class ModelGenerator extends BaseGenerator
     {
         $casts = [];
 
-        $timestamps = TableFieldsGenerator::getTimestampFieldNames();
+        $timestamps = (new TableFieldsGenerator($this->commandData->modelObject))->getTimestampFieldNames();
 
         foreach ($this->commandData->fields as $field) {
             if (in_array($field->name, $timestamps)) {
@@ -354,44 +327,10 @@ class ModelGenerator extends BaseGenerator
             }
 
             $rule = "'".$field->name."' => ";
-
-            switch (strtolower($field->fieldType)) {
-                case 'integer':
-                case 'increments':
-                case 'smallinteger':
-                case 'long':
-                case 'biginteger':
-                    $rule .= "'integer'";
-                    break;
-                case 'double':
-                    $rule .= "'double'";
-                    break;
-                case 'decimal':
-                    $rule .= sprintf("'decimal:%d'", $field->numberDecimalPoints);
-                    break;
-                case 'float':
-                    $rule .= "'float'";
-                    break;
-                case 'boolean':
-                    $rule .= "'boolean'";
-                    break;
-                case 'datetime':
-                case 'datetimetz':
-                    $rule .= "'datetime'";
-                    break;
-                case 'date':
-                    $rule .= "'date'";
-                    break;
-                case 'enum':
-                case 'string':
-                case 'char':
-                case 'text':
-                    $rule .= "'string'";
-                    break;
-                default:
-                    $rule = '';
-                    break;
-            }
+            $castType = app(DBTypeRepository::class)->getRuleByDBType($field->fieldType);
+            if ($castType == 'decimal')
+                $rule .= sprintf("'decimal:%d'", $field->numberDecimalPoints);
+            else $rule .= "'$castType'";
 
             if (!empty($rule)) {
                 $casts[] = $rule;

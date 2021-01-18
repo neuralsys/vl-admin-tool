@@ -60,6 +60,8 @@ class GeneratorField
         if (!is_null($column)) {
             $this->dbInput = (!is_null($dbConfig->length) && $dbConfig->length > 0) ? $this->dbInput.','.$dbConfig->length : $this->dbInput;
             $this->dbInput = ($dbConfig->nullable) ? $this->dbInput.':nullable' : $this->dbInput;
+            $this->dbInput = ($dbConfig->unique) ? $this->dbInput.':unique' : $this->dbInput;
+            $this->dbInput = ($dbConfig->default) ? $this->dbInput.':default,'.$dbConfig->default : $this->dbInput;
         }
         $this->prepareMigrationText();
     }
@@ -131,17 +133,8 @@ class GeneratorField
         $this->fieldType = array_shift($fieldTypeParams);
         $this->migrationText .= $this->fieldType."('".$this->name."'";
 
-        if ($this->fieldType == 'enum') {
-            $this->migrationText .= ', [';
-            foreach ($fieldTypeParams as $param) {
-                $this->migrationText .= "'".$param."',";
-            }
-            $this->migrationText = substr($this->migrationText, 0, strlen($this->migrationText) - 1);
-            $this->migrationText .= ']';
-        } else {
-            foreach ($fieldTypeParams as $param) {
-                $this->migrationText .= ', '.$param;
-            }
+        foreach ($fieldTypeParams as $param) {
+            $this->migrationText .= ', '.$param;
         }
 
         $this->migrationText .= ')';

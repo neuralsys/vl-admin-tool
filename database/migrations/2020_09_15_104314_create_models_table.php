@@ -20,8 +20,8 @@ class CreateModelsTable extends Migration
             $table->string('singular');
             $table->string('plural');
             $table->text('description')->nullable();
-            $table->boolean('timestamps')->default(1);
-            $table->boolean('soft_delete')->default(1);
+            $table->boolean('use_timestamps')->default(1);
+            $table->boolean('use_soft_delete')->default(1);
             $table->timestamps();
         });
     }

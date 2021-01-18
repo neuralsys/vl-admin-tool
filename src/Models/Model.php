@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * @property string $singular
  * @property string $plural
  * @property string $description
- * @property boolean $timestamps
- * @property boolean $soft_delete
+ * @property boolean $use_timestamps
+ * @property boolean $use_soft_delete
  */
 class Model extends EloquentModel
 {

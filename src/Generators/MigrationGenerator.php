@@ -3,6 +3,8 @@
 namespace Vuongdq\VLAdminTool\Generators;
 
 use File;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Common\CommandData;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
@@ -19,7 +21,7 @@ class MigrationGenerator extends BaseGenerator
     public function __construct($commandData)
     {
         $this->commandData = $commandData;
-        $this->path = config('admin_generator.path.migration', database_path('migrations/'));
+        $this->path = config('vl_admin_tool.path.migration', database_path('migrations/'));
     }
 
     public function generate()
@@ -32,13 +34,59 @@ class MigrationGenerator extends BaseGenerator
 
         $tableName = $this->commandData->dynamicVars['$TABLE_NAME$'];
 
-        $fileName = date('Y_m_d_His').'_'.'create_'.strtolower($tableName).'_table.php';
-
-        FileUtil::createFile($this->path, $fileName, $templateData);
+        $fileName = $this->updateOrCreateFileName('create_'.strtolower($tableName).'_table.php', $templateData);
 
         $this->commandData->commandComment("\nMigration created: ");
         $this->commandData->commandInfo($fileName);
     }
+
+    private function updateOrCreateFileName(string $mainText, $templateData) {
+        $migrationFile = $this->getMigrationFile([$this->path], $mainText);
+        if ($migrationFile) {
+            $fileName = pathinfo($migrationFile)['filename'].'.php';
+            FileUtil::deleteFile($this->path, $fileName);
+        }
+        else $fileName = date('Y_m_d_His').'_'.$mainText;
+        FileUtil::createFile($this->path, $fileName, $templateData);
+        return $fileName;
+    }
+
+    /**
+     * Get all of the migration files in a given path.
+     *
+     * @param string|array $paths
+     * @param string $mainText
+     * @return mixed
+     */
+    public function getMigrationFile($paths, string $mainText)
+    {
+        return Collection::make($paths)
+            ->flatMap(function ($path) {
+                return Str::endsWith($path, ".php") ? [$path] : glob($path.'*_*.php');
+            })
+            ->filter( function ($path) use ($mainText) {
+                return Str::endsWith($path, $mainText);
+            })
+            ->values()->keyBy(function ($file) {
+                return $this->getMigrationName($file);
+            })
+            ->sortBy(function ($file, $key) {
+                return $key;
+            })
+            ->first();
+    }
+
+    /**
+     * Get the name of the migration.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function getMigrationName($path)
+    {
+        return str_replace('.php', '', basename($path));
+    }
+
 
     private function generateFields()
     {

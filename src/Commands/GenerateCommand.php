@@ -39,7 +39,8 @@ class GenerateCommand extends BaseCommand
      */
     public function handle()
     {
-        parent::handle();
+        $exitCode = parent::handle();
+        if ($exitCode) return;
 
         if ($this->checkIsThereAnyDataToGenerate()) {
             $this->generateCommonItems();

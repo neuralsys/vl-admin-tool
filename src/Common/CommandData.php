@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\GeneratorFieldsInputUtil;
 use Vuongdq\VLAdminTool\Utils\TableFieldsGenerator;
-use Vuongdq\VLAdminTool\Utils\TableFieldsGeneratorFromModel;
 
 class CommandData
 {
@@ -134,19 +133,11 @@ class CommandData
     {
         $this->fields = [];
 
-        if ($this->getOption('fieldsFile') or $this->getOption('jsonFromGUI')) {
-            $this->getInputFromFileOrJson();
-        } elseif ($this->getOption('fromTable')) {
-            $this->getInputFromTable();
-        } else {
-            $this->getInputFromModel();
-        }
+        $this->getInputFromModel();
     }
 
     private function getInputFromModel() {
-        $tableName = $this->dynamicVars['$TABLE_NAME$'];
-
-        $tableFieldsGenerator = new TableFieldsGeneratorFromModel($this->modelObject);
+        $tableFieldsGenerator = new TableFieldsGenerator($this->modelObject);
         $tableFieldsGenerator->prepareFieldsFromModel();
 //        $tableFieldsGenerator->prepareRelations();
 
@@ -320,20 +311,10 @@ class CommandData
     }
 
     public function isUseTimestamps() {
-        $timestamps = TableFieldsGenerator::getTimestampFieldNames();
-        foreach ($this->fields as $field) {
-            if (in_array($field->name, $timestamps)) return true;
-        }
-
-        return false;
+        return $this->modelObject->use_timestamps;
     }
 
     public function isUseSoftDelete() {
-        $deletedAtName = TableFieldsGenerator::getSoftDeleteFieldName();
-        foreach ($this->fields as $field) {
-            if ($field->name == $deletedAtName) return true;
-        }
-
-        return false;
+        return $this->modelObject->use_soft_delete;
     }
 }

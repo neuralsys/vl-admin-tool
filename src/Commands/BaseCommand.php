@@ -54,6 +54,11 @@ class BaseCommand extends Command
         $this->commandData->modelName = $this->argument('model');
         $this->commandData->modelObject = app(ModelRepository::class)->where('class_name', $this->commandData->modelName)->first();
 
+        if (is_null($this->commandData->modelObject)) {
+            $this->commandData->commandError("Model " . $this->commandData->modelName . " not found!");
+            return 1;
+        }
+
         $options = $this->getOptions();
         $res = [];
         foreach ($options as $option)
@@ -75,17 +80,17 @@ class BaseCommand extends Command
             $modelGenerator->generate();
         }
 
-        $repositoryGenerator = new RepositoryGenerator($this->commandData);
-        $repositoryGenerator->generate();
+        if (!$this->isSkip('repository')) {
+            $repositoryGenerator = new RepositoryGenerator($this->commandData);
+            $repositoryGenerator->generate();
+        }
 
-        if ($this->commandData->getOption('factory') || (
-            !$this->isSkip('tests') and $this->commandData->getAddOn('tests')
-        )) {
+        if (!$this->isSkip('factory')) {
             $factoryGenerator = new FactoryGenerator($this->commandData);
             $factoryGenerator->generate();
         }
 
-        if ($this->commandData->getOption('seeder')) {
+        if (!$this->isSkip('seeder')) {
             $seederGenerator = new SeederGenerator($this->commandData);
             $seederGenerator->generate();
             $seederGenerator->updateMainSeeder();
@@ -122,12 +127,12 @@ class BaseCommand extends Command
 
     public function generateScaffoldItems()
     {
-        if (!$this->isSkip('requests') and !$this->isSkip('scaffold_requests')) {
+        if (!$this->isSkip('requests')) {
             $requestGenerator = new RequestGenerator($this->commandData);
             $requestGenerator->generate();
         }
 
-        if (!$this->isSkip('controller') and !$this->isSkip('scaffold_controller')) {
+        if (!$this->isSkip('controller')) {
             $controllerGenerator = new ControllerGenerator($this->commandData);
             $controllerGenerator->generate();
         }
@@ -137,7 +142,7 @@ class BaseCommand extends Command
             $viewGenerator->generate();
         }
 
-        if (!$this->isSkip('routes') and !$this->isSkip('scaffold_routes')) {
+        if (!$this->isSkip('routes')) {
             $routeGenerator = new RoutesGenerator($this->commandData);
             $routeGenerator->generate();
         }

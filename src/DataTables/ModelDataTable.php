@@ -86,8 +86,8 @@ class ModelDataTable extends DataTable
             'singular' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.singular'), 'data' => 'singular']),
             'plural' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.plural'), 'data' => 'plural']),
             'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
-            'use_timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.timestamps'), 'data' => 'use_timestamps']),
-            'use_soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.soft_delete'), 'data' => 'use_soft_delete']),
+            'use_timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_timestamps'), 'data' => 'use_timestamps']),
+            'use_soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_soft_delete'), 'data' => 'use_soft_delete']),
             'fields' => new Column(['title' => __('vl-admin-tool-lang::models/field.plural'), 'data' => 'field_view'])
         ];
     }

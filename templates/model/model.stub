@@ -8,6 +8,11 @@ $DOCS$
 class $MODEL_NAME$ extends EloquentModel
 {
     $SOFT_DELETE$
+
+    $TIMESTAMPS$
+    $SOFT_DELETE_COLUMN$
+    $SOFT_DELETE_DATES$
+
     public $table = '$TABLE_NAME$';
 
     public $fillable = [

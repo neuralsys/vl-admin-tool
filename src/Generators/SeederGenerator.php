@@ -26,7 +26,7 @@ class SeederGenerator extends BaseGenerator
     {
         $this->commandData = $commandData;
         $this->path = $commandData->config->pathSeeder;
-        $this->fileName = $this->commandData->config->mPlural.'TableSeeder.php';
+        $this->fileName = $this->commandData->config->mName.'TableSeeder.php';
     }
 
     public function generate()
@@ -45,7 +45,7 @@ class SeederGenerator extends BaseGenerator
     {
         $mainSeederContent = file_get_contents($this->commandData->config->pathDatabaseSeeder);
 
-        $newSeederStatement = '\$this->call('.$this->commandData->config->mPlural.'TableSeeder::class);';
+        $newSeederStatement = '$this->call('.$this->commandData->config->mName.'TableSeeder::class);';
 
         if (strpos($mainSeederContent, $newSeederStatement) != false) {
             $this->commandData->commandObj->info($this->commandData->config->mPlural.'TableSeeder entry found in DatabaseSeeder. Skipping Adjustment.');

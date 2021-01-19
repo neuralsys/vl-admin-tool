@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         var cRUDConfigSelectedRows = [];
-        var cRUDConfigTable = $('#cRUDConfig-datatable').DataTable();
+        var cRUDConfigTable = null;
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            cRUDConfigTable = $('#cRUDConfig-datatable').DataTable();
             initDatatableEvent('#cRUDConfig-datatable', cRUDConfigSelectedRows);
         });
     </script>

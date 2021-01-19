@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         var menuSelectedRows = [];
-        var menuTable = $('#menu-datatable').DataTable();
+        var menuTable = null;
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            menuTable = $('#menu-datatable').DataTable();
             initDatatableEvent('#menu-datatable', menuSelectedRows);
         });
     </script>

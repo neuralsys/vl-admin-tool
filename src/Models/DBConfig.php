@@ -44,8 +44,8 @@ class DBConfig extends EloquentModel
         'field_id' => 'integer',
         'type' => 'string',
         'length' => 'integer',
-        'nullable' => 'integer',
-        'unique' => 'integer',
+        'nullable' => 'boolean',
+        'unique' => 'boolean',
         'default' => 'string'
     ];
 

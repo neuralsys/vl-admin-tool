@@ -10,8 +10,36 @@
                 </div>
                 @method('PUT')
                 <div class="modal-body">
+                    <h1 class="float-left">
+                        Basic
+                    </h1>
+                    <div class="clearfix"></div>
                     <div class="row">
                         @include('vl-admin-tool::fields.fields')
+                    </div>
+
+                    <h1 class="float-left">
+                        DB Config
+                    </h1>
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        @include('vl-admin-tool::d_b_configs.fields')
+                    </div>
+
+                    <h1 class="float-left">
+                        DT Config
+                    </h1>
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        @include('vl-admin-tool::d_t_configs.fields')
+                    </div>
+
+                    <h1 class="float-left">
+                        CRUD Config
+                    </h1>
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        @include('vl-admin-tool::c_r_u_d_configs.fields')
                     </div>
                 </div>
                 <div class="modal-footer">

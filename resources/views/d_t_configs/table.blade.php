@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         var dTConfigSelectedRows = [];
-        var dTConfigTable = $('#dTConfig-datatable').DataTable();
+        var dTConfigTable = null;
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            dTConfigTable = $('#dTConfig-datatable').DataTable();
             initDatatableEvent('#dTConfig-datatable', dTConfigSelectedRows);
         });
     </script>

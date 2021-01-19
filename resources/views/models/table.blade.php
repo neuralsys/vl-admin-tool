@@ -15,7 +15,7 @@
 
     <script type="text/javascript">
         var modelSelectedRows = [];
-        var modelTable = $('#model-datatable').DataTable();
+        var modelTable = null;
     </script>
 
     <script type="text/javascript">
@@ -31,6 +31,7 @@
         }
 
         $(document).ready(function() {
+            modelTable = $("#model-datatable").DataTable();
             initDatatableEvent('#model-datatable', modelSelectedRows);
         });
     </script>

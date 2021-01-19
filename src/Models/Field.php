@@ -54,25 +54,25 @@ class Field extends EloquentModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function crudConfigs()
+    public function crudConfig()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\CrudConfig::class, 'field_id');
+        return $this->hasOne(\Vuongdq\VLAdminTool\Models\CRUDConfig::class, 'field_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function dBConfigs()
+    public function dbConfig()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DBConfig::class, 'field_id');
+        return $this->hasOne(\Vuongdq\VLAdminTool\Models\DBConfig::class, 'field_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function dTConfigs()
+    public function dtConfig()
     {
-        return $this->hasMany(\Vuongdq\VLAdminTool\Models\DTConfig::class, 'field_id');
+        return $this->hasOne(\Vuongdq\VLAdminTool\Models\DTConfig::class, 'field_id');
     }
 
     /**
@@ -81,5 +81,17 @@ class Field extends EloquentModel
     public function relations()
     {
         return $this->hasMany(\Vuongdq\VLAdminTool\Models\Relation::class, 'first_field_id');
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        //while creating/inserting item into db
+        static::deleting(function (Field $item) {
+            $item->crudConfig->delete();
+            $item->dbConfig->delete();
+            $item->dtConfig->delete();
+            $item->relations()->delete();
+        });
     }
 }

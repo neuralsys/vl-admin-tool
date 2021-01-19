@@ -4,7 +4,12 @@ namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Vuongdq\VLAdminTool\DataTables\FieldDataTable;
+use Vuongdq\VLAdminTool\Repositories\CRUDConfigRepository;
+use Vuongdq\VLAdminTool\Repositories\DBConfigRepository;
+use Vuongdq\VLAdminTool\Repositories\DTConfigRepository;
+use Vuongdq\VLAdminTool\Repositories\DBTypeRepository;
 use Vuongdq\VLAdminTool\Repositories\ViewTemplateRepository;
 use Vuongdq\VLAdminTool\Requests\CreateFieldRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateFieldRequest;
@@ -19,13 +24,38 @@ class FieldController extends Controller
      */
     private $viewTemplateRepository;
 
+    /**
+     * @var DBTypeRepository
+     */
+    private $dBTypeRepository;
+    /**
+     * @var DBConfigRepository
+     */
+    private $dBConfigRepository;
+    /**
+     * @var DTConfigRepository
+     */
+    private $dTConfigRepository;
+    /**
+     * @var CRUDConfigRepository
+     */
+    private $cRUDConfigRepository;
+
     public function __construct(
         FieldRepository $fieldRepo,
-        ViewTemplateRepository $viewTemplateRepository
+        ViewTemplateRepository $viewTemplateRepository,
+        DBTypeRepository $DBTypeRepository,
+        DBConfigRepository $dBConfigRepository,
+        DTConfigRepository $dTConfigRepository,
+        CRUDConfigRepository $CRUDConfigRepository
     )
     {
         $this->fieldRepository = $fieldRepo;
         $this->viewTemplateRepository = $viewTemplateRepository;
+        $this->dBTypeRepository = $DBTypeRepository;
+        $this->dBConfigRepository = $dBConfigRepository;
+        $this->dTConfigRepository = $dTConfigRepository;
+        $this->cRUDConfigRepository = $CRUDConfigRepository;
     }
 
     /**
@@ -41,9 +71,15 @@ class FieldController extends Controller
         foreach ($fieldTypes as $fieldType)
             $fieldTypesSelector[$fieldType] = $fieldType;
 
+        $dbTypes = $this->dBTypeRepository->getDBTypes();
+        $dbTypesSelector = [];
+        foreach ($dbTypes as $dbType)
+            $dbTypesSelector[$dbType] = $dbType;
+
         return $fieldDataTable->render('vl-admin-tool::fields.index', [
             "model_id" => $request->input("model_id"),
-            'fieldTypes' => $fieldTypesSelector
+            'fieldTypes' => $fieldTypesSelector,
+            "dbTypes" => $dbTypesSelector,
         ]);
     }
 
@@ -56,11 +92,28 @@ class FieldController extends Controller
      */
     public function store(CreateFieldRequest $request)
     {
-        $input = $request->all();
+        try {
+            DB::beginTransaction();
+            $fieldData = $request->only($this->fieldRepository->getFillable());
+            $field = $this->fieldRepository->create($fieldData);
 
-        $field = $this->fieldRepository->create($input);
+            $dbConfigData = $request->only($this->dBConfigRepository->getFillable());
+            $dbConfigData['field_id'] = $field->id;
+            $dbConfigData = $this->dBConfigRepository->create($dbConfigData);
 
-        return $this->success(__('crud.add_success'));
+            $dtConfigData = $request->only($this->dTConfigRepository->getFillable());
+            $dtConfigData['field_id'] = $field->id;
+            $dtConfigData = $this->dTConfigRepository->create($dtConfigData);
+
+            $crudConfigData = $request->only($this->cRUDConfigRepository->getFillable());
+            $crudConfigData['field_id'] = $field->id;
+            $crudConfigData = $this->cRUDConfigRepository->create($crudConfigData);
+            DB::commit();
+            return $this->success(__('crud.add_success'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -97,9 +150,25 @@ class FieldController extends Controller
             return $this->error(__('crud.not_found'));
         }
 
-        $field = $this->fieldRepository->update($request->all(), $id);
+        try {
+            DB::beginTransaction();
+            $fieldData = $request->only($this->fieldRepository->getFillable());
+            $this->fieldRepository->update($fieldData, $id);
 
-        return $this->success(__('crud.update_success'));
+            $dbConfigData = $request->only($this->dBConfigRepository->getFillable());
+            $this->dBConfigRepository->update($dbConfigData, $field->dbConfig->id);
+
+            $dtConfigData = $request->only($this->dTConfigRepository->getFillable());
+            $this->dTConfigRepository->update($dtConfigData, $field->dtConfig->id);
+
+            $crudConfigData = $request->only($this->cRUDConfigRepository->getFillable());
+            $this->cRUDConfigRepository->update($crudConfigData, $field->crudConfig->id);
+            DB::commit();
+            return $this->success(__('crud.update_success'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage());
+        }
     }
 
     /**

@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         var fieldSelectedRows = [];
-        var fieldTable = $('#field-datatable').DataTable();
+        var fieldTable = null;
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            fieldTable = $('#field-datatable').DataTable();
             initDatatableEvent('#field-datatable', fieldSelectedRows);
         });
     </script>

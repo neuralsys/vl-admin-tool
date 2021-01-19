@@ -29,8 +29,27 @@ class CreateFieldRequest extends FormRequest
             'model_id' => 'required',
             'name' => 'required|string|max:255',
             'html_type' => 'required|string|max:255',
-            'created_at' => 'nullable',
-            'updated_at' => 'nullable'
+
+            # db
+            'type' => 'required|string|max:45',
+            'length' => 'sometimes|nullable|integer',
+            'nullable' => 'sometimes|nullable|integer|in:0,1',
+            'unique' => 'sometimes|nullable|integer|in:0,1',
+            'default' => 'sometimes|nullable|string|max:255',
+
+            # dt
+            'showable' => 'required|boolean',
+            'searchable' => 'required|boolean',
+            'orderable' => 'required|boolean',
+            'exportable' => 'required|boolean',
+            'printable' => 'required|boolean',
+            'class' => 'nullable|string|max:255',
+            'has_footer' => 'required|boolean',
+
+            # crud
+            'creatable' => 'required|boolean',
+            'editable' => 'required|boolean',
+            'rules' => 'sometimes|nullable|string|max:255'
         ];
     }
 }

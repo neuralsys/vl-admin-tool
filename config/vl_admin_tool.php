@@ -47,9 +47,9 @@ return [
 
         'templates_dir'     => resource_path('vl-admin-tool/templates/'),
 
-        'seeder'            => database_path('seeds/'),
+        'seeder'            => database_path('Seeds/'),
 
-        'database_seeder'   => database_path('seeds/DatabaseSeeder.php'),
+        'database_seeder'   => database_path('Seeds/DatabaseSeeder.php'),
 
         'factory'           => database_path('factories/'),
 

@@ -1,17 +1,15 @@
 <?php
-
-namespace Vuongdq\VLAdminTool\Database;
+namespace Vuongdq\VLAdminTool\Database\Seeds;
 use Illuminate\Database\Seeder;
 
-class TranslationsTableSeeder extends Seeder
+class VLATSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database Seeds.
      *
      * @return void
      */
     public function run()
     {
-
     }
 }

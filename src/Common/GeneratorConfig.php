@@ -196,8 +196,8 @@ class GeneratorConfig
             resource_path('views/')
         ).$viewPrefix.$this->mSnakePlural.'/';
 
-        $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('seeds/'));
-        $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
+        $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('Seeds/'));
+        $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('Seeds/DatabaseSeeder.php'));
         $this->pathViewProvider = config(
             'vl_admin_tool.path.view_provider',
             app_path('Providers/ViewServiceProvider.php')

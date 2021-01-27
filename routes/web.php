@@ -6,23 +6,43 @@ $middleware = config('vl_admin_tool.admin_middleware', 'admin.user');
 
 Route::group(['middleware' => $middleware], function () {
     Route::post('models/generate/{id}', 'ModelController@generate')->name('models.generate');
-    Route::resource('models', 'ModelController')->parameter('models', 'id');
+    Route::resource('models', 'ModelController')
+        ->except('create', 'edit', 'show')
+        ->parameter('models', 'id');
 
-    Route::resource('fields', 'FieldController')->parameter('fields', 'id');
+    Route::resource('fields', 'FieldController')
+        ->except('create', 'edit', 'show')
+        ->parameter('fields', 'id');
 
-    Route::resource('dBConfigs', 'DBConfigController');
+    Route::resource('dBConfigs', 'DBConfigController')
+        ->except('create', 'edit', 'show')
+        ->parameter('dBConfigs', 'id');
 
-    Route::resource('cRUDConfigs', 'CRUDConfigController');
+    Route::resource('cRUDConfigs', 'CRUDConfigController')
+        ->except('create', 'edit', 'show')
+        ->parameter('cRUDConfigs', 'id');
 
-    Route::resource('dTConfigs', 'DTConfigController');
+    Route::resource('dTConfigs', 'DTConfigController')
+        ->except('create', 'edit', 'show')
+        ->parameter('dTConfigs', 'id');
 
-    Route::resource('relations', 'RelationController')->parameter('relations', 'id');
+    Route::resource('relations', 'RelationController')
+        ->except('create', 'edit', 'show')
+        ->parameter('relations', 'id');
 
-    Route::resource('menus', 'MenuController')->parameter('menus', 'id');
+    Route::resource('menus', 'MenuController')
+        ->except('create', 'edit', 'show')
+        ->parameter('menus', 'id');
 
-    Route::resource('langs', 'LangController')->parameter('langs', 'id');
+    Route::resource('langs', 'LangController')
+        ->except('create', 'edit', 'show')
+        ->parameter('langs', 'id');
 
-    Route::resource('translationFiles', 'TranslationFileController')->parameter('translationFiles', 'id');
+    Route::resource('translationFiles', 'TranslationFileController')
+        ->except('create', 'edit', 'show')
+        ->parameter('translationFiles', 'id');
 
-    Route::resource('translations', 'TranslationController')->parameter('translations', 'id');
+    Route::resource('translations', 'TranslationController')
+        ->except('create', 'edit', 'show')
+        ->parameter('translations', 'id');
 });

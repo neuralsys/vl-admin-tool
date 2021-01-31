@@ -102,7 +102,15 @@ class ModelController extends Controller
 
         # generate model
         $modelName = $model->class_name;
-        $exitCode = Artisan::call("vlat:generate $modelName --skip=$skipOptionValue");
-        dd($exitCode);
+        try {
+            $exitCode = Artisan::call("vlat:generate $modelName --skip=$skipOptionValue --force");
+            if ($exitCode === 0) {
+                return $this->success("Generate $modelName successfully!");
+            } else {
+                return $this->error("Generate $modelName failed, exit code=$exitCode!");
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

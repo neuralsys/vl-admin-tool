@@ -20,4 +20,19 @@ class MenuRepository extends BaseRepository
     {
         return Menu::class;
     }
+
+    public function getMenuTypes() {
+        $templateType = 'vl-admin-tool';
+        $fieldTypesPath = get_templates_package_path($templateType).'/templates/menu';
+        $res = [];
+        foreach(glob($fieldTypesPath.'/*.stub') as $file) {
+            $fileInfo = pathinfo($file);
+            $res[] = $fileInfo['filename'];
+        }
+
+        return $res;
+    }
 }
+
+
+

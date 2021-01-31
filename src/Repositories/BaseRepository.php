@@ -179,4 +179,22 @@ abstract class BaseRepository
     {
         return call_user_func_array([$this->model, $method], $arguments);
     }
+
+    /**
+     * Get all
+     * @param $valueAttr
+     * @param null $where
+     * @param string $keyAttr
+     * @return array
+     */
+    public function getToForm($valueAttr, $where=null, $keyAttr='id') {
+        $res = [];
+        $query = $this->model->newQuery();
+        if ($where !== null) $query->where($where);
+        $objs = $query->select($keyAttr, $valueAttr)->get();
+        foreach ($objs as $obj) {
+            $res[$obj->$keyAttr] = $obj->$valueAttr;
+        }
+        return $res;
+    }
 }

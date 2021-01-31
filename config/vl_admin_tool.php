@@ -71,7 +71,7 @@ return [
 
         'repository'        => 'App\Repositories',
 
-        'controller'        => 'App\Controllers',
+        'controller'        => 'App\Http\Controllers',
 
         'api_controller'    => 'App\Http\Controllers\API',
 

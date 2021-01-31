@@ -338,8 +338,8 @@ class BaseCommand extends Command
     }
 
     public function getPackagePath() {
-        $basePath = base_path('') . '/';
-        $fullPath = dirname(realpath(__DIR__.'/../'));
+        $basePath = str_replace("\\", "/", base_path('') . '/');
+        $fullPath = str_replace("\\", "/", dirname(realpath(__DIR__.'/../')));
         $relativePath = str_replace($basePath, '', $fullPath);
         return $relativePath;
     }

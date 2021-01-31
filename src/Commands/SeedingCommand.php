@@ -50,7 +50,7 @@ class SeedingCommand extends BaseCommand
 
     public function getOptions() {
         return [
-            ['class', null, InputOption::VALUE_OPTIONAL, 'Class run seeding', 'Vuongdq\\VLAdminTool\\Database\\Seeder\\VLATSeeder']
+            ['class', null, InputOption::VALUE_OPTIONAL, 'Class run seeding', 'Vuongdq\\VLAdminTool\\Database\\Seeds\\VLATSeeder']
         ];
     }
 }

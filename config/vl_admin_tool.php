@@ -49,7 +49,7 @@ return [
 
         'seeder'            => database_path('Seeds/'),
 
-        'database_seeder'   => database_path('Seeds/DatabaseSeeder.php'),
+        'database_seeder'   => database_path('seeds/DatabaseSeeder.php'),
 
         'factory'           => database_path('factories/'),
 

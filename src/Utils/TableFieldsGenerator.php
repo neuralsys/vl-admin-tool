@@ -82,7 +82,7 @@ class TableFieldsGenerator
             $htmlType = $column->html_type;
             if ($htmlType == 'checkbox') $htmlType .= ',1';
 
-            $field = $this->generateField($column, $column->dbConfigs[0]->type, $htmlType);
+            $field = $this->generateField($column, $column->dbConfig->type, $htmlType);
 
             if (in_array($field->name, array_merge($this->timestamps, is_null($this->softDelete) ? [] : [$this->softDelete]))) {
                 $field->isSearchable = false;
@@ -91,7 +91,7 @@ class TableFieldsGenerator
                 $field->inIndex = false;
                 $field->inView = false;
             }
-            $field->isNotNull = !$column->dbConfigs[0]->nullable;
+            $field->isNotNull = !$column->dbConfig->nullable;
             $field->description = '';
 
             $this->fields[] = $field;
@@ -106,7 +106,7 @@ class TableFieldsGenerator
     public function getPrimaryKeyOfTable()
     {
         foreach ($this->columns as $column)
-            if ($column->dbConfigs[0]->type === 'id')
+            if ($column->dbConfig->type === 'id')
                 return $column->name;
     }
 
@@ -203,7 +203,7 @@ class TableFieldsGenerator
         $field->parseHtmlInput($htmlType);
 
         # rules
-        $crudConfig = $column->crudConfigs->first();
+        $crudConfig = $column->crudConfig;
 
         $field->validations = isset($fieldInput['validations']) ? $fieldInput['validations'] : '';
         $field->isSearchable = isset($fieldInput['searchable']) ? $fieldInput['searchable'] : false;

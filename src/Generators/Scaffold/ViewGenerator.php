@@ -95,7 +95,7 @@ class ViewGenerator extends BaseGenerator
     }
 
     private function generateDataTableToolbar() {
-        $templateData = get_template('scaffold.views.toolbar', $this->templateType);
+        $templateData = get_template('views.toolbar', $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -104,7 +104,7 @@ class ViewGenerator extends BaseGenerator
         $this->commandData->commandInfo('toolbar.blade.php created');
 
         // js file
-        $templateData = get_template('scaffold.views.toolbar_js', $this->templateType);
+        $templateData = get_template('views.toolbar_js', $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -114,7 +114,7 @@ class ViewGenerator extends BaseGenerator
     }
 
     private function generateTableTypes() {
-        $templateData = get_template('scaffold.views.table_with_crud_modals', $this->templateType);
+        $templateData = get_template('views.table_with_crud_modals', $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -123,7 +123,7 @@ class ViewGenerator extends BaseGenerator
         $this->commandData->commandInfo('table_with_crud_modals.blade.php created');
 
         // only view
-        $templateData = get_template('scaffold.views.table_only_view', $this->templateType);
+        $templateData = get_template('views.table_only_view', $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -134,7 +134,7 @@ class ViewGenerator extends BaseGenerator
 
     private function generateDataTableBody()
     {
-        $templateData = get_template('scaffold.views.datatable_body', $this->templateType);
+        $templateData = get_template('views.datatable_body', $this->templateType);
 
         return fill_template($this->commandData->dynamicVars, $templateData);
     }
@@ -143,7 +143,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'datatables_actions';
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -160,13 +160,13 @@ class ViewGenerator extends BaseGenerator
             $templateName .= '_locale';
         }
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
         $templateData = str_replace('$FIELD_HEADERS$', $this->generateTableHeaderFields(), $templateData);
 
-        $cellFieldTemplate = get_template('scaffold.views.table_cell', $this->templateType);
+        $cellFieldTemplate = get_template('views.table_cell', $this->templateType);
 
         $tableBodyFields = [];
 
@@ -198,7 +198,7 @@ class ViewGenerator extends BaseGenerator
             $localized = true;
         }
 
-        $headerFieldTemplate = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $headerFieldTemplate = get_template('views.'.$templateName, $this->templateType);
 
         $headerFields = [];
 
@@ -231,7 +231,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'index';
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -312,7 +312,7 @@ class ViewGenerator extends BaseGenerator
             }
         }
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
         $templateData = str_replace('$FIELDS$', implode("\n\n", $this->htmlFields), $templateData);
@@ -323,7 +323,7 @@ class ViewGenerator extends BaseGenerator
 
     private function generateViewComposer($tableName, $variableName, $columns, $selectTable, $modelName = null)
     {
-        $templateName = 'scaffold.fields.select';
+        $templateName = 'fields.select';
         $fieldTemplate = get_template($templateName, $this->templateType);
 
         $viewServiceProvider = new ViewServiceProviderGenerator($this->commandData);
@@ -343,7 +343,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'create_modal';
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -355,7 +355,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'edit_modal';
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
@@ -366,7 +366,7 @@ class ViewGenerator extends BaseGenerator
     private function generateShowFields()
     {
         $templateName = 'show_field';
-        $fieldTemplate = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $fieldTemplate = get_template('views.'.$templateName, $this->templateType);
 
         $fieldsStr = '';
 
@@ -393,7 +393,7 @@ class ViewGenerator extends BaseGenerator
     {
         $templateName = 'show';
 
-        $templateData = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $templateData = get_template('views.'.$templateName, $this->templateType);
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 

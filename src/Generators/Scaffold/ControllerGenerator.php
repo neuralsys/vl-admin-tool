@@ -70,7 +70,7 @@ class ControllerGenerator extends BaseGenerator
     private function generateDataTableColumns()
     {
         $templateName = 'datatable_column';
-        $headerFieldTemplate = get_template('scaffold.views.'.$templateName, $this->templateType);
+        $headerFieldTemplate = get_template('views.'.$templateName, $this->templateType);
 
         $dataTableColumns = [];
         foreach ($this->commandData->fields as $field) {

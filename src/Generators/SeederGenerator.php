@@ -31,7 +31,7 @@ class SeederGenerator extends BaseGenerator
 
     public function generate()
     {
-        $templateData = get_template('Seeds.model_seeder', 'vl-admin-tool');
+        $templateData = get_template('seeds.model_seeder', 'vl-admin-tool');
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 

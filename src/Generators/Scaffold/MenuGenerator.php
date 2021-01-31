@@ -40,7 +40,7 @@ class MenuGenerator extends BaseGenerator
         }
 
         $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' menu added.');
-        Artisan::call('vlat.menu:generate', []);
+        Artisan::call('vlat.generate:menu', []);
     }
 
     public function rollback()

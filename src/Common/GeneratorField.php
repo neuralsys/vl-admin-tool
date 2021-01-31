@@ -56,7 +56,7 @@ class GeneratorField
     public function parseDBTypeFromModel($dbInput, Field $column)
     {
         $this->dbInput = $dbInput;
-        $dbConfig = $column->dbConfigs[0];
+        $dbConfig = $column->dbConfig;
         if (!is_null($column)) {
             $this->dbInput = (!is_null($dbConfig->length) && $dbConfig->length > 0) ? $this->dbInput.','.$dbConfig->length : $this->dbInput;
             $this->dbInput = ($dbConfig->nullable) ? $this->dbInput.':nullable' : $this->dbInput;

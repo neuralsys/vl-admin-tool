@@ -2,6 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Commands\Menu;
 
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use Vuongdq\VLAdminTool\Commands\BaseCommand;
 use Vuongdq\VLAdminTool\Repositories\MenuRepository;

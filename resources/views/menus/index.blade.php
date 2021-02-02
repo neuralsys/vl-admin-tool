@@ -18,11 +18,16 @@
 
 @push('scripts')
     <script type="text/javascript">
-        $( document ).ready(function() {
+        $(document).ready(function () {
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            });
+
             $('.btnAddNewMenu').on('click', (evt) => {
                 resetForm(menuCreateForm);
                 menuCreateModal.modal('show');
             });
         });
+
     </script>
 @endpush

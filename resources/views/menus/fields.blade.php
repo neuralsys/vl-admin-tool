@@ -1,9 +1,8 @@
 <!-- Type Field -->
 <div class="form-group col-sm-6">
     {!! Form::label(null, __('vl-admin-tool-lang::models/menu.fields.type').':') !!}
-    {!! Form::text('type', null, ['class' => 'form-control', 'data-column' => 'type']) !!}
+    {!! Form::select('type',$menuTypes, null, ['placeholder' => 'Choose Type', 'class' => 'form-control select2', 'data-column' => 'type', 'style' => "width: 100%"]) !!}
 </div>
-
 
 <!-- Url Pattern Field -->
 <div class="form-group col-sm-6">
@@ -29,7 +28,7 @@
 <!-- Parent Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label(null, __('vl-admin-tool-lang::models/menu.fields.parent_id').':') !!}
-    {!! Form::number('parent_id', null, ['class' => 'form-control', 'data-column' => 'parent_id']) !!}
+    {!! Form::select('parent_id', $parents, 0, ['class' => 'form-control select2', 'data-column' => 'parent_id', 'data-default-value' => '0', 'style' => "width: 100%"]) !!}
 </div>
 
 

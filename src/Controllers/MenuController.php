@@ -26,7 +26,21 @@ class MenuController extends Controller
      */
     public function index(MenuDataTable $menuDataTable)
     {
-        return $menuDataTable->render('vl-admin-tool::menus.index');
+        $menuTypes = $this->menuRepository->getMenuTypes();
+        $menuTypesSelector = [];
+        foreach ($menuTypes as $menuType)
+            $menuTypesSelector[$menuType] = $menuType;
+
+        $parent = $this->menuRepository->getToForm('title', [
+            ['type', '=', 'has-child']
+        ]);
+
+        $parent = [0 => 'Choose Parent'] + $parent;
+
+        return $menuDataTable->render('vl-admin-tool::menus.index', [
+            'menuTypes' => $menuTypesSelector,
+            'parents' => $parent,
+        ]);
     }
 
     /**
@@ -48,7 +62,7 @@ class MenuController extends Controller
     /**
      * Display the specified Menu.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -66,7 +80,7 @@ class MenuController extends Controller
     /**
      * Update the specified Menu in storage.
      *
-     * @param  int              $id
+     * @param int $id
      * @param UpdateMenuRequest $request
      *
      * @return Response
@@ -87,7 +101,7 @@ class MenuController extends Controller
     /**
      * Remove the specified Menu from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -103,4 +117,6 @@ class MenuController extends Controller
 
         return $this->success(__('crud.delete_success'));
     }
+
 }
+

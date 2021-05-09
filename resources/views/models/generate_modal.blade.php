@@ -14,7 +14,7 @@
                         <div class="form-group col-sm-6">
                             <label class="checkbox-inline">
                                 {!! Form::hidden('migration', '0', ['class' => 'ignore-reset']) !!}
-                                {!! Form::checkbox('migration', '1', null, ['data-column' => 'migration']) !!} Migration
+                                {!! Form::checkbox('migration', '1', 1, ['data-column' => 'migration']) !!} Migration
                             </label>
                         </div>
                     </div>

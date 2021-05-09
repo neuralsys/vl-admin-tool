@@ -11,7 +11,7 @@
     </button>
 
     <button
-        class='btn btn-danger btn-xs datatable-action'
+        class='btn btn-primary btn-xs datatable-action'
         onclick="showGenerateModal(this)"
     >
         <i class="fas fa-cog"></i>

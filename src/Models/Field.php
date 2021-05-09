@@ -30,7 +30,6 @@ class Field extends EloquentModel
         'html_type'
     ];
 
-
     /**
      * The attributes that should be casted to native types.
      *

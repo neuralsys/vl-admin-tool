@@ -11,5 +11,9 @@ class VLATSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(MenuTableSeeder::class);
+        $this->call(LangTableSeeder::class);
+        $this->call(TranslationFileTableSeeder::class);
+        $this->call(TranslationTableSeeder::class);
     }
 }

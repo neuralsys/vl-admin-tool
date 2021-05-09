@@ -72,10 +72,6 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new SeedingCommand();
         });
 
-        $this->app->singleton('vlat.menu.insert', function ($app) {
-            return new InsertAdminMenuCommand();
-        });
-
         $this->app->singleton('vlat.generate', function ($app) {
             return new GenerateCommand();
         });
@@ -140,8 +136,6 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             'vlat.publish',
             'vlat.migrate',
             'vlat.seed',
-
-            'vlat.menu.insert',
 
             'vlat.generate',
             'vlat.generate.menu',

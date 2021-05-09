@@ -67,10 +67,43 @@ class TableFieldsGenerator
         $this->primaryKey = $this->getPrimaryKeyOfTable();
         $this->timestamps = $this->getTimestampFieldNames();
         $this->softDelete = $this->getSoftDeleteFieldName();
+        $this->fields = [];
     }
 
     public function getTableColumns() {
         return $this->modelObject->fields;
+    }
+
+    public function generateTimestampField($columnName) {
+        $field = new GeneratorField();
+        $field->name = $columnName;
+        $field->parseDBTypeFromModel("timestamp", null);
+
+        # crud rules
+        $field->validations = '';
+        $field->isCreatable = false;
+        $field->isEditable = false;
+
+        # datatables rules
+        $field->isShowable = false;
+        $field->isSearchable = false;
+        $field->isOrderable = false;
+        $field->isExportable = false;
+        $field->isPrintable = false;
+        $field->cssClasses = "";
+        return $field;
+    }
+
+    public function generateSoftDeleteFields() {
+        $field = $this->generateTimestampField($this->softDelete);
+        $this->fields[] = $field;
+    }
+
+    public function generateTimestampFields() {
+        foreach ($this->timestamps as $columnName) {
+            $field = $this->generateTimestampField($columnName);
+            $this->fields[] = $field;
+        }
     }
 
     /**
@@ -78,24 +111,27 @@ class TableFieldsGenerator
      */
     public function prepareFieldsFromModel()
     {
+        $datetimeColumns = array_merge($this->timestamps, is_null($this->softDelete) ? [] : [$this->softDelete]);
+
         foreach ($this->columns as $column) {
             $htmlType = $column->html_type;
             if ($htmlType == 'checkbox') $htmlType .= ',1';
 
             $field = $this->generateField($column, $column->dbConfig->type, $htmlType);
 
-            if (in_array($field->name, array_merge($this->timestamps, is_null($this->softDelete) ? [] : [$this->softDelete]))) {
+            if (in_array($field->name, $datetimeColumns)) {
                 $field->isSearchable = false;
-                $field->isFillable = false;
-                $field->inForm = false;
-                $field->inIndex = false;
-                $field->inView = false;
+//                $field->isCreatable = false;
+//                $field->inEditable = false;
             }
             $field->isNotNull = !$column->dbConfig->nullable;
             $field->description = '';
 
             $this->fields[] = $field;
         }
+
+        $this->generateTimestampFields();
+        $this->generateSoftDeleteFields();
     }
 
     /**
@@ -176,11 +212,7 @@ class TableFieldsGenerator
     {
         if ($field->name == $this->primaryKey) {
             $field->isPrimary = true;
-            $field->isFillable = false;
             $field->isSearchable = false;
-            $field->inIndex = false;
-            $field->inForm = false;
-            $field->inView = false;
         }
 
         return $field;
@@ -202,16 +234,20 @@ class TableFieldsGenerator
         $field->parseDBTypeFromModel($dbType, $column);
         $field->parseHtmlInput($htmlType);
 
-        # rules
+        # crud rules
         $crudConfig = $column->crudConfig;
+        $field->validations = $crudConfig->rules ?? '';
+        $field->isCreatable = $crudConfig->creatable ?? true;
+        $field->isEditable = $crudConfig->editable ?? true;
 
-        $field->validations = isset($fieldInput['validations']) ? $fieldInput['validations'] : '';
-        $field->isSearchable = isset($fieldInput['searchable']) ? $fieldInput['searchable'] : false;
-        $field->isFillable = isset($fieldInput['fillable']) ? $fieldInput['fillable'] : true;
-        $field->isPrimary = isset($fieldInput['primary']) ? $fieldInput['primary'] : false;
-        $field->inForm = isset($fieldInput['inForm']) ? $fieldInput['inForm'] : true;
-        $field->inIndex = isset($fieldInput['inIndex']) ? $fieldInput['inIndex'] : true;
-        $field->inView = isset($fieldInput['inView']) ? $fieldInput['inView'] : true;
+        # datatables rules
+        $dtConfig = $column->dtConfig;
+        $field->isShowable = $dtConfig->showable ?? false;
+        $field->isSearchable = $dtConfig->searchable ?? false;
+        $field->isOrderable = $dtConfig->orderable ?? true;
+        $field->isExportable = $dtConfig->exportable ?? false;
+        $field->isPrintable = $dtConfig->printable ?? true;
+        $field->cssClasses = $dtConfig->class ?? "";
 
         return $this->checkForPrimary($field);
     }

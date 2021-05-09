@@ -171,10 +171,6 @@ class ViewGenerator extends BaseGenerator
         $tableBodyFields = [];
 
         foreach ($this->commandData->fields as $field) {
-            if (!$field->inIndex) {
-                continue;
-            }
-
             $tableBodyFields[] = fill_template_with_field_data(
                 $this->commandData->dynamicVars,
                 $this->commandData->fieldNamesMapping,
@@ -203,10 +199,6 @@ class ViewGenerator extends BaseGenerator
         $headerFields = [];
 
         foreach ($this->commandData->fields as $field) {
-            if (!$field->inIndex) {
-                continue;
-            }
-
             if ($localized) {
                 $headerFields[] = $fieldTemplate = fill_template_with_field_data_locale(
                     $this->commandData->dynamicVars,
@@ -249,7 +241,7 @@ class ViewGenerator extends BaseGenerator
         $this->htmlFields = [];
 
         foreach ($this->commandData->fields as $field) {
-            if (!$field->inForm) {
+            if (!$field->isCreatable && !$field->isEditable) {
                 continue;
             }
 

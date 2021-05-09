@@ -28,7 +28,12 @@ class MenuDataTable extends DataTable {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Menu $model) {
-        return $model->newQuery();
+        return $model
+            ->newQuery()
+            ->leftJoin('menus as p', 'p.id', 'menus.parent_id')
+            ->select('menus.*', 'p.title as parent_menu')
+            ->orderBy('parent_id')
+            ->orderBy('pos');
     }
 
     /**
@@ -43,7 +48,7 @@ class MenuDataTable extends DataTable {
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
                 'dom' => '<"menu-toolbar">Bfrtip',
-                'order' => [[0, 'desc']],
+                "ordering" => false,
                 'rowCallback' => "function( nRow, aData, iDisplayIndex ) {
                     fnRowCallBack(nRow, aData, iDisplayIndex, menuSelectedRows);
                  }",
@@ -74,18 +79,13 @@ class MenuDataTable extends DataTable {
      */
     protected function getColumns() {
         return [
-            'type' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.type'), 'data' => 'type'])
-            ,
-            'url_pattern' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.url_pattern'), 'data' => 'url_pattern'])
-            ,
-            'index_route_name' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.index_route_name'), 'data' => 'index_route_name'])
-            ,
-            'title' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.title'), 'data' => 'title'])
-            ,
-            'parent_id' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.parent_id'), 'data' => 'parent_id'])
-            ,
-            'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos'])
-
+            'type' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.type'), 'data' => 'type']),
+            'url_pattern' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.url_pattern'), 'data' => 'url_pattern']),
+            'index_route_name' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.index_route_name'), 'data' => 'index_route_name']),
+            'title' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.title'), 'data' => 'title']),
+            'parent_id' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.parent_id'), 'data' => 'parent_id']),
+            'parent_menu' => new Column(['title' => __('vl-admin-tool-lang::models/menu.parent'), 'data' => 'parent_menu']),
+            'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos']),
         ];
     }
 

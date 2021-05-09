@@ -50,9 +50,9 @@ class GeneratorPublishCommand extends PublishBaseCommand
      */
     private function fillTemplate($templateData)
     {
-        $apiVersion = config('admin_generator.laravel_generator.api_version', 'v1');
-        $apiPrefix = config('admin_generator.laravel_generator.api_prefix', 'api');
-        $traitNameSpace = config('admin_generator.namespace.traits', 'App\Traits');
+        $apiVersion = config('vl_admin_tool.api_version', 'v1');
+        $apiPrefix = config('vl_admin_tool.api_prefix', 'api');
+        $traitNameSpace = config('vl_admin_tool.namespace.traits', 'App\Traits');
 
         $templateData = str_replace('$API_VERSION$', $apiVersion, $templateData);
         $templateData = str_replace('$API_PREFIX$', $apiPrefix, $templateData);
@@ -67,10 +67,10 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishTestCases()
     {
-        $testsPath = config('admin_generator.laravel_generator.path.tests', base_path('tests/'));
-        $testsNameSpace = config('admin_generator.laravel_generator.namespace.tests', 'Tests');
-        $createdAtField = config('admin_generator.laravel_generator.timestamps.created_at', 'created_at');
-        $updatedAtField = config('admin_generator.laravel_generator.timestamps.updated_at', 'updated_at');
+        $testsPath = config('vl_admin_tool.path.tests', base_path('tests/'));
+        $testsNameSpace = config('vl_admin_tool.namespace.tests', 'Tests');
+        $createdAtField = config('vl_admin_tool.timestamps.created_at', 'created_at');
+        $updatedAtField = config('vl_admin_tool.timestamps.updated_at', 'updated_at');
 
         $templateData = get_template('test.api_test_trait', 'vl-admin-tool');
 
@@ -86,13 +86,13 @@ class GeneratorPublishCommand extends PublishBaseCommand
         FileUtil::createFile($testsPath, $fileName, $templateData);
         $this->info('ApiTestTrait created');
 
-        $testAPIsPath = config('admin_generator.laravel_generator.path.api_test', base_path('tests/APIs/'));
+        $testAPIsPath = config('vl_admin_tool.path.api_test', base_path('tests/APIs/'));
         if (!file_exists($testAPIsPath)) {
             FileUtil::createDirectoryIfNotExist($testAPIsPath);
             $this->info('APIs Tests directory created');
         }
 
-        $testRepositoriesPath = config('admin_generator.laravel_generator.path.repository_test', base_path('tests/Repositories/'));
+        $testRepositoriesPath = config('vl_admin_tool.path.repository_test', base_path('tests/Repositories/'));
         if (!file_exists($testRepositoriesPath)) {
             FileUtil::createDirectoryIfNotExist($testRepositoriesPath);
             $this->info('Repositories Tests directory created');
@@ -173,12 +173,12 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishTraits() {
         $templateData = get_template('traits.json_response_trait', 'vl-admin-tool');
-        $traitNameSpace = config('admin_generator.namespace.traits', 'App\Traits');
+        $traitNameSpace = config('vl_admin_tool.namespace.traits', 'App\Traits');
 
         $templateData = str_replace('$NAMESPACE$', $traitNameSpace, $templateData);
 
         $fileName = 'JsonResponse.php';
-        $traitPath = config('admin_generator.path.trait', app_path('Traits/'));
+        $traitPath = config('vl_admin_tool.path.trait', app_path('Traits/'));
         if (file_exists($traitPath.$fileName) && !$this->confirmOverwrite($fileName)) {
             return;
         }
@@ -197,7 +197,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $files = $this->getLocaleViews();
 
         foreach ($files as $stub => $blade) {
-            $sourceFile = get_template_file_path('scaffold/'.$stub, $templateType);
+            $sourceFile = get_template_file_path($stub, $templateType);
             $destinationFile = $viewsPath.$blade;
             $this->publishFile($sourceFile, $destinationFile, $blade);
         }
@@ -215,17 +215,17 @@ class GeneratorPublishCommand extends PublishBaseCommand
     private function getLocaleViews()
     {
         return [
-            'layouts/app_locale'        => 'layouts/app.blade.php',
-            'layouts/sidebar_locale'    => 'layouts/sidebar.blade.php',
+            'layouts/app'        => 'layouts/app.blade.php',
+            'layouts/sidebar'    => 'layouts/sidebar.blade.php',
             'layouts/datatables_css'    => 'layouts/datatables_css.blade.php',
             'layouts/datatables_js'     => 'layouts/datatables_js.blade.php',
             'layouts/menu'              => 'layouts/menu.blade.php',
             'layouts/home'              => 'home.blade.php',
-            'auth/login_locale'         => 'auth/login.blade.php',
-            'auth/register_locale'      => 'auth/register.blade.php',
-            'auth/email_locale'         => 'auth/passwords/email.blade.php',
-            'auth/reset_locale'         => 'auth/passwords/reset.blade.php',
-            'emails/password_locale'    => 'auth/emails/password.blade.php',
+            'auth/login'         => 'auth/login.blade.php',
+            'auth/register'      => 'auth/register.blade.php',
+            'auth/email'         => 'auth/passwords/email.blade.php',
+            'auth/reset'         => 'auth/passwords/reset.blade.php',
+            'emails/password'    => 'auth/emails/password.blade.php',
         ];
     }
 

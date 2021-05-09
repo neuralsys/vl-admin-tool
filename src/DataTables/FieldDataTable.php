@@ -82,7 +82,11 @@ class FieldDataTable extends DataTable {
      */
     protected function getColumns() {
         return [
-            'id' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.id'), 'data' => 'id', 'searchable' => false]),
+            'id' => new Column([
+                'title' => __('vl-admin-tool-lang::models/field.fields.id'),
+                'data' => 'id',
+                'searchable' => false
+            ]),
             'name' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.name'), 'data' => 'name']),
             'html_type' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.html_type'), 'data' => 'html_type', 'searchable' => false, 'orderable' => false]),
 //            'db_config' => new Column(['title' => __('vl-admin-tool-lang::models/dBConfig.plural'), 'data' => 'db_config_view']),

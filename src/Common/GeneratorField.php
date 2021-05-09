@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Common;
 
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\Nullable;
 use Vuongdq\VLAdminTool\Models\Field;
 
 class GeneratorField
@@ -22,15 +23,18 @@ class GeneratorField
     public $migrationText;
     public $foreignKeyText;
     public $validations;
+    public $cssClasses;
 
     /** @var bool */
-    public $isSearchable = true;
-    public $isFillable = true;
     public $isPrimary = false;
-    public $inForm = true;
-    public $inIndex = true;
-    public $inView = true;
-    public $isNotNull = false;
+    public $isSearchable = true;
+    public $isOrderable = true;
+    public $isExportable = true;
+    public $isPrintable = true;
+    public $isNotNull = true;
+    public $isCreatable = true;
+    public $isEditable = true;
+    public $isShowable = true;
 
     /** @var int */
     public $numberDecimalPoints = 2;
@@ -50,14 +54,14 @@ class GeneratorField
     }
 
     /**
-     * @param Field $column
+     * @param mixed $column
      * @param $dbInput
      */
-    public function parseDBTypeFromModel($dbInput, Field $column)
+    public function parseDBTypeFromModel($dbInput, $column)
     {
         $this->dbInput = $dbInput;
-        $dbConfig = $column->dbConfig;
         if (!is_null($column)) {
+            $dbConfig = $column->dbConfig;
             $this->dbInput = (!is_null($dbConfig->length) && $dbConfig->length > 0) ? $this->dbInput.','.$dbConfig->length : $this->dbInput;
             $this->dbInput = ($dbConfig->nullable) ? $this->dbInput.':nullable' : $this->dbInput;
             $this->dbInput = ($dbConfig->unique) ? $this->dbInput.':unique' : $this->dbInput;
@@ -105,23 +109,23 @@ class GeneratorField
             // if field is primary key, then its not searchable, fillable, not in index & form
             $this->isPrimary = true;
             $this->isSearchable = false;
-            $this->isFillable = false;
-            $this->inForm = false;
-            $this->inIndex = false;
-            $this->inView = false;
+//            $this->isFillable = false;
+//            $this->inForm = false;
+//            $this->inIndex = false;
+//            $this->inView = false;
         }
-        if (in_array('f', $optionsArr)) {
-            $this->isFillable = false;
-        }
-        if (in_array('if', $optionsArr)) {
-            $this->inForm = false;
-        }
-        if (in_array('ii', $optionsArr)) {
-            $this->inIndex = false;
-        }
-        if (in_array('iv', $optionsArr)) {
-            $this->inView = false;
-        }
+//        if (in_array('f', $optionsArr)) {
+//            $this->isFillable = false;
+//        }
+//        if (in_array('if', $optionsArr)) {
+//            $this->inForm = false;
+//        }
+//        if (in_array('ii', $optionsArr)) {
+//            $this->inIndex = false;
+//        }
+//        if (in_array('iv', $optionsArr)) {
+//            $this->inView = false;
+//        }
     }
 
     private function prepareMigrationText()
@@ -172,11 +176,11 @@ class GeneratorField
         $field->parseHtmlInput(isset($fieldInput['htmlType']) ? $fieldInput['htmlType'] : '');
         $field->validations = isset($fieldInput['validations']) ? $fieldInput['validations'] : '';
         $field->isSearchable = isset($fieldInput['searchable']) ? $fieldInput['searchable'] : false;
-        $field->isFillable = isset($fieldInput['fillable']) ? $fieldInput['fillable'] : true;
+//        $field->isFillable = isset($fieldInput['fillable']) ? $fieldInput['fillable'] : true;
         $field->isPrimary = isset($fieldInput['primary']) ? $fieldInput['primary'] : false;
-        $field->inForm = isset($fieldInput['inForm']) ? $fieldInput['inForm'] : true;
-        $field->inIndex = isset($fieldInput['inIndex']) ? $fieldInput['inIndex'] : true;
-        $field->inView = isset($fieldInput['inView']) ? $fieldInput['inView'] : true;
+//        $field->inForm = isset($fieldInput['inForm']) ? $fieldInput['inForm'] : true;
+//        $field->inIndex = isset($fieldInput['inIndex']) ? $fieldInput['inIndex'] : true;
+//        $field->inView = isset($fieldInput['inView']) ? $fieldInput['inView'] : true;
 
         return $field;
     }

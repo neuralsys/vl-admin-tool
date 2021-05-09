@@ -3,7 +3,7 @@
 namespace Vuongdq\VLAdminTool\Database\Seeds;
 use Illuminate\Database\Seeder;
 
-class TranslationFilesTableSeeder extends Seeder
+class TranslationTableSeeder extends Seeder
 {
     /**
      * Run the database Seeds.

@@ -66,6 +66,7 @@ class BaseCommand extends Command
 
         $this->commandData->initCommandData($res);
         $this->commandData->getFields();
+        return 0;
     }
 
     public function generateCommonItems()
@@ -153,28 +154,41 @@ class BaseCommand extends Command
         }
     }
 
-    public function performPostActions($runMigration = false)
+    public function findOldMigration() {
+        $tableName = $this->commandData->dynamicVars['$TABLE_NAME$'];
+        $mainText = 'create_'.strtolower($tableName).'_table.php';
+        $rootPath = base_path();
+        $migrationFolder = $rootPath.'/database/migrations';
+        $files = scandir($migrationFolder);
+        foreach ($files as $file) {
+            if (strpos( $file, $mainText ) !== false)
+                return str_replace($rootPath."/", '', $migrationFolder.'/'.$file);
+        }
+        return null;
+    }
+
+    public function performPreActions()
     {
-        if ($this->commandData->getOption('save')) {
-            $this->saveSchemaFile();
-            if ($this->option('migration')) {
-                $migrationGenerator = new MigrationGenerator($this->commandData);
-                $migrationGenerator->generate();
+        if (!$this->isSkip('migration')) {
+            $migrationFile = $this->findOldMigration();
+            if ($migrationFile !== null) {
+                $this->call("migrate:refresh --seed", ['--force' => true]);
             }
         }
+    }
 
-//        if ($runMigration) {
-//            if ($this->commandData->getOption('forceMigrate')) {
-//                $this->runMigration();
-//            } elseif (!$this->commandData->getOption('fromTable') and !$this->isSkip('migration')) {
-//                $requestFromConsole = (php_sapi_name() == 'cli') ? true : false;
-//                if ($this->commandData->getOption('jsonFromGUI') && $requestFromConsole) {
-//                    $this->runMigration();
-//                } elseif ($requestFromConsole && $this->confirm("\nDo you want to migrate database? [y|N]", false)) {
-//                    $this->runMigration();
-//                }
-//            }
-//        }
+    public function performPostActions($runMigration = false)
+    {
+        if ($runMigration) {
+            $requestFromConsole = (php_sapi_name() == 'cli') ? true : false;
+            if ($requestFromConsole) {
+                if ($this->confirm("\nDo you want to migrate database? [y|N]", false)) {
+                    $this->runMigration();
+                }
+            } else {
+                $this->runMigration();
+            }
+        }
 
         $this->saveLocaleFile();
 
@@ -186,7 +200,7 @@ class BaseCommand extends Command
 
     public function runMigration()
     {
-        $migrationPath = config('admin_generator.laravel_generator.path.migration', database_path('migrations/'));
+        $migrationPath = config('vl_admin_tool.path.migration', database_path('migrations/'));
         $path = Str::after($migrationPath, base_path()); // get path after base_path
         $this->call('migrate', ['--path' => $path, '--force' => true]);
 
@@ -200,6 +214,11 @@ class BaseCommand extends Command
         }
 
         return false;
+    }
+
+    public function performPreActionsWithMigration()
+    {
+        $this->performPreActions();
     }
 
     public function performPostActionsWithMigration()

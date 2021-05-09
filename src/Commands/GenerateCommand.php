@@ -5,6 +5,7 @@ namespace Vuongdq\VLAdminTool\Commands;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Vuongdq\VLAdminTool\Common\CommandData;
+use function Couchbase\defaultDecoder;
 
 class GenerateCommand extends BaseCommand
 {
@@ -35,21 +36,30 @@ class GenerateCommand extends BaseCommand
     /**
      * Execute the command.
      *
-     * @return void
+     * @return int
+     * @throws \Exception
      */
     public function handle()
     {
         $exitCode = parent::handle();
-        if ($exitCode) return;
+        if ($exitCode) return $exitCode;
 
         if ($this->checkIsThereAnyDataToGenerate()) {
-            $this->generateCommonItems();
+            try {
+                $this->performPreActionsWithMigration();
 
-            $this->generateScaffoldItems();
+                $this->generateCommonItems();
 
-            $this->performPostActionsWithMigration();
+                $this->generateScaffoldItems();
+
+                $this->performPostActionsWithMigration();
+                return 0;
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage()."\n".$e->getFile()."\n".$e->getLine());
+            }
         } else {
-            $this->commandData->commandInfo('There are not enough input fields for scaffold generation.');
+            $this->commandData->commandInfo('There are not enough input fields for generation.');
+            throw new \Exception('There are not enough input fields for generation.', 1);
         }
     }
 
@@ -82,7 +92,7 @@ class GenerateCommand extends BaseCommand
      */
     protected function checkIsThereAnyDataToGenerate()
     {
-        if (count($this->commandData->fields) > 1) {
+        if (isset($this->commandData->fields) && count($this->commandData->fields) > 1) {
             return true;
         }
     }

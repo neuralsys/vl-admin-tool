@@ -53,7 +53,7 @@ class ControllerGenerator extends BaseGenerator
 
         $templateData = str_replace(
             '$DATATABLE_COLUMNS$',
-            implode(','.infy_nl_tab(1, 3), $this->generateDataTableColumns()),
+            implode(','.infy_nl_tab(1, 3), $this->generateDataTableColumns(3)),
             $templateData
         );
 
@@ -67,33 +67,29 @@ class ControllerGenerator extends BaseGenerator
         $this->commandData->commandInfo($fileName);
     }
 
-    private function generateDataTableColumns()
+    private function generateDataTableColumns(int $tabs)
     {
         $templateName = 'datatable_column';
         $headerFieldTemplate = get_template('views.'.$templateName, $this->templateType);
-
+        $headerFieldTemplate = trim($headerFieldTemplate, "\n");
         $dataTableColumns = [];
         foreach ($this->commandData->fields as $field) {
-            if (!$field->inIndex) {
-                continue;
-            }
-
-            if (!$field->isSearchable) {
-                $headerFieldTemplate = str_replace('$SEARCHABLE$', ",'searchable' => false", $headerFieldTemplate);
-            }
+            if (!$field->isShowable) continue;
+            $fieldColumn = str_replace('$SEARCHABLE$', $field->isSearchable ? "true" : "false", $headerFieldTemplate);
+            $fieldColumn = str_replace('$ORDERABLE$', $field->isOrderable ? "true" : "false", $fieldColumn);
+            $fieldColumn = str_replace('$EXPORTABLE$', $field->isExportable ? "true" : "false", $fieldColumn);
+            $fieldColumn = str_replace('$PRINTABLE$', $field->isPrintable ? "true" : "false", $fieldColumn);
+            $fieldColumn = str_replace('$CSS_CLASS$', $field->cssClasses, $fieldColumn);
+            $fieldColumn = str_replace('$TABS$', infy_tabs($tabs), $fieldColumn);
 
             $fieldTemplate = fill_template_with_field_data(
                 $this->commandData->dynamicVars,
                 $this->commandData->fieldNamesMapping,
-                $headerFieldTemplate,
+                $fieldColumn,
                 $field
             );
 
-            if ($field->isSearchable) {
-                $dataTableColumns[] = $fieldTemplate;
-            } else {
-                $dataTableColumns[] = $fieldTemplate;
-            }
+            $dataTableColumns[] = $fieldTemplate;
         }
 
         return $dataTableColumns;

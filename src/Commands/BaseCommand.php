@@ -52,7 +52,9 @@ class BaseCommand extends Command
     public function handle()
     {
         $this->commandData->modelName = $this->argument('model');
-        $this->commandData->modelObject = app(ModelRepository::class)->where('class_name', $this->commandData->modelName)->first();
+        $this->commandData->modelObject = app(ModelRepository::class)
+            ->where('class_name', $this->commandData->modelName)
+            ->first();
 
         if (is_null($this->commandData->modelObject)) {
             $this->commandData->commandError("Model " . $this->commandData->modelName . " not found!");
@@ -71,10 +73,10 @@ class BaseCommand extends Command
 
     public function generateCommonItems()
     {
-        if (!$this->isSkip('migration')) {
-            $migrationGenerator = new MigrationGenerator($this->commandData);
-            $migrationGenerator->generate();
-        }
+//        if (!$this->isSkip('migration')) {
+//            $migrationGenerator = new MigrationGenerator($this->commandData);
+//            $migrationGenerator->generate();
+//        }
 
         if (!$this->isSkip('model')) {
             $modelGenerator = new ModelGenerator($this->commandData);
@@ -179,17 +181,6 @@ class BaseCommand extends Command
 
     public function performPostActions($runMigration = false)
     {
-        if ($runMigration) {
-            $requestFromConsole = (php_sapi_name() == 'cli') ? true : false;
-            if ($requestFromConsole) {
-                if ($this->confirm("\nDo you want to migrate database? [y|N]", false)) {
-                    $this->runMigration();
-                }
-            } else {
-                $this->runMigration();
-            }
-        }
-
         $this->saveLocaleFile();
 
         if (!$this->isSkip('dump-autoload')) {
@@ -361,5 +352,20 @@ class BaseCommand extends Command
         $fullPath = str_replace("\\", "/", dirname(realpath(__DIR__.'/../')));
         $relativePath = str_replace($basePath, '', $fullPath);
         return $relativePath;
+    }
+
+    public function getAdminTableNames() {
+        return [
+            'models',
+            'crud_configs',
+            'db_configs',
+            'dt_configs',
+            'fields',
+            'lang',
+            'menus',
+            'relations',
+            'translations',
+            'translation_files',
+        ];
     }
 }

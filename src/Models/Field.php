@@ -87,9 +87,9 @@ class Field extends EloquentModel
 
         //while creating/inserting item into db
         static::deleting(function (Field $item) {
-            $item->crudConfig->delete();
-            $item->dbConfig->delete();
-            $item->dtConfig->delete();
+            $item->crudConfig()->delete();
+            $item->dbConfig()->delete();
+            $item->dtConfig()->delete();
             $item->relations()->delete();
         });
     }

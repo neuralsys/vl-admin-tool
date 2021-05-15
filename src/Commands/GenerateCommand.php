@@ -46,8 +46,6 @@ class GenerateCommand extends BaseCommand
 
         if ($this->checkIsThereAnyDataToGenerate()) {
             try {
-                $this->performPreActionsWithMigration();
-
                 $this->generateCommonItems();
 
                 $this->generateScaffoldItems();

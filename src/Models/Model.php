@@ -57,4 +57,16 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\Vuongdq\VLAdminTool\Models\Field::class, 'model_id');
     }
+
+    public static function boot() {
+        parent::boot();
+
+        //while creating/inserting item into db
+        static::deleting(function (Model $item) {
+            $fields = $item->fields;
+            foreach ($fields as $field) {
+                $field->delete();
+            }
+        });
+    }
 }

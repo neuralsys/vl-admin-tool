@@ -15,8 +15,8 @@ class CreateModelsTable extends Migration
     {
         Schema::create('models', function (Blueprint $table) {
             $table->id();
-            $table->string('class_name');
-            $table->string('table_name');
+            $table->string('class_name')->unique();
+            $table->string('table_name')->unique();
             $table->string('singular');
             $table->string('plural');
             $table->text('description')->nullable();

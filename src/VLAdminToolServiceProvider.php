@@ -10,6 +10,7 @@ use Vuongdq\VLAdminTool\Commands\API\TestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\APIScaffoldGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\MigrationGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\RepositoryGeneratorCommand;
+use Vuongdq\VLAdminTool\Commands\DBSyncCommand;
 use Vuongdq\VLAdminTool\Commands\GenerateModelCommand;
 use Vuongdq\VLAdminTool\Commands\InstallCommand;
 use Vuongdq\VLAdminTool\Commands\Menu\GenerateMenuCommand;
@@ -70,6 +71,10 @@ class VLAdminToolServiceProvider extends ServiceProvider {
 
         $this->app->singleton('vlat.seed', function ($app) {
             return new SeedingCommand();
+        });
+
+        $this->app->singleton('vlat.sync', function ($app) {
+            return new DBSyncCommand();
         });
 
         $this->app->singleton('vlat.generate', function ($app) {
@@ -133,12 +138,17 @@ class VLAdminToolServiceProvider extends ServiceProvider {
         });
 
         $this->commands([
+            # should run first time with install command
             'vlat.publish',
             'vlat.migrate',
             'vlat.seed',
+            'vlat.sync',
 
-            'vlat.generate',
+            # run specific cases
             'vlat.generate.menu',
+
+            # generate model with elements
+            'vlat.generate',
             'vlat.generate.model',
 //            'vlat.generate:controller',
 //            'vlat.generate:request',

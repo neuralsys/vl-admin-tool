@@ -113,4 +113,17 @@ class ModelController extends Controller
             return $this->error($e->getMessage());
         }
     }
+
+    public function sync() {
+        try {
+            $exitCode = Artisan::call("vlat:sync");
+            if ($exitCode === 0) {
+                return $this->success("Sync database successfully!");
+            } else {
+                return $this->error("Sync database failed, exit code=$exitCode!");
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
+    }
 }

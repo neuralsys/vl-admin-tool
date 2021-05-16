@@ -14,6 +14,6 @@
         class='btn btn-primary btn-xs datatable-action'
         onclick="showGenerateModal(this)"
     >
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-sync"></i>
     </button>
 </div>

@@ -6,6 +6,7 @@ $middleware = config('vl_admin_tool.admin_middleware', 'admin.user');
 
 Route::group(['middleware' => $middleware], function () {
     Route::post('models/generate/{id}', 'ModelController@generate')->name('models.generate');
+    Route::post('models/sync', 'ModelController@sync')->name('models.syncDB');
     Route::resource('models', 'ModelController')
         ->except('create', 'edit', 'show')
         ->parameter('models', 'id');

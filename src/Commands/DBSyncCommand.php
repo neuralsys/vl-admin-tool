@@ -177,12 +177,6 @@ class DBSyncCommand extends BaseCommand
         return $model;
     }
 
-    public function predictHTMLType(Column $column)
-    {
-        $dbType = $column->getType();
-        return $dbType;
-    }
-
     public function createOrUpdateField(Model $model, Column $column)
     {
         $field = $this->fieldRepository
@@ -194,11 +188,11 @@ class DBSyncCommand extends BaseCommand
             $field = $this->fieldRepository->create([
                 'model_id' => $model->id,
                 'name' => $column->getName(),
-                'html_type' => $this->predictHTMLType($column)
+                'html_type' => $column->getType()->getName()
             ]);
         } else {
             $field->update([
-                'html_type' => $this->predictHTMLType($column)
+                'html_type' => $column->getType()->getName()
             ]);
         }
         return $field;
@@ -280,14 +274,15 @@ class DBSyncCommand extends BaseCommand
         return $dbConfig;
     }
 
-    public function predictDTConfig(Field $field, Column $column, array $primayColumns)
+    public function predictDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primayColumns)
     {
         $isPK = in_array($field->name, $primayColumns);
         $isFK = strpos($field->name, '_id') !== false; # Todo: update logic for all cases
         $isFKorPK = $isPK || $isFK;
 
         $isPassword = strpos($field->name, 'password') !== false;
-        $isSearchable = in_array($field->dbConfig->type, ['string', 'text']);
+        $isSearchable = in_array($dbConfig->type, ['string', 'text']);
+
         $isSearchable = ($isSearchable || $isFKorPK) && !$isPassword;
 
         return [
@@ -301,10 +296,10 @@ class DBSyncCommand extends BaseCommand
         ];
     }
 
-    public function createOrUpdateDTConfig(Field $field, Column $column, array $primayColumns)
+    public function createOrUpdateDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primayColumns)
     {
         $dtConfig = $field->dtConfig;
-        $dtConf = $this->predictDTConfig($field, $column, $primayColumns);
+        $dtConf = $this->predictDTConfig($field, $dbConfig, $column, $primayColumns);
         if (empty($dtConfig)) {
             $dtConfig = $this->dtConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -317,12 +312,12 @@ class DBSyncCommand extends BaseCommand
         return $dtConfig;
     }
 
-    public function generateRules(Field $field, Column $column, $isPK)
+    public function generateRules(Field $field, DBConfig $dbConfig, Column $column, $isPK)
     {
         $rule = [];
         if (!$isPK) {
             # Required or Nullable
-            if (!$field->dbConfig->nullable) {
+            if (!$dbConfig->nullable) {
                 $rule[] = "required";
             }
             else {
@@ -330,7 +325,7 @@ class DBSyncCommand extends BaseCommand
             }
 
             # Type of value
-            switch ($field->dbConfig->type) {
+            switch ($dbConfig->type) {
                 case 'integer':
                     $rule[] = 'integer';
                     break;
@@ -348,7 +343,7 @@ class DBSyncCommand extends BaseCommand
                 case 'string':
                     $rule[] = 'string';
                     # size of value
-                    $rule[] = 'max:' . $field->dbConfig->length;
+                    $rule[] = 'max:' . $dbConfig->length;
                     break;
                 case 'text':
                     $rule[] = 'string';
@@ -356,26 +351,26 @@ class DBSyncCommand extends BaseCommand
             }
 
             # unique at the end
-            if ($field->dbConfig->unique) $rule[] = "unique";
+            if ($dbConfig->unique) $rule[] = "unique";
         }
 
         return implode('|', $rule);
     }
 
-    public function predictCRUDConfig(Field $field, Column $column, $primayColumns)
+    public function predictCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primayColumns)
     {
         $isPK = in_array($field->name, $primayColumns);
         return [
             'creatable' => !$isPK,
             'editable' => !$isPK,
-            'rules' => $this->generateRules($field, $column, $isPK)
+            'rules' => $this->generateRules($field, $dbConfig, $column, $isPK)
         ];
     }
 
-    public function createOrUpdateCRUDConfig(Field $field, Column $column, $primayColumns)
+    public function createOrUpdateCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primayColumns)
     {
         $crudConfig = $field->crudConfig;
-        $crudConf = $this->predictCRUDConfig($field, $column, $primayColumns);
+        $crudConf = $this->predictCRUDConfig($field, $dbConfig, $column, $primayColumns);
         if (empty($crudConfig)) {
             $crudConfig = $this->crudConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -386,6 +381,19 @@ class DBSyncCommand extends BaseCommand
             ], $crudConf));
         }
         return $crudConfig;
+    }
+
+    public function updateHTMLType(Field $field, DBConfig $dbConfig) {
+        $name = $field->name;
+        $type = $dbConfig->type;
+
+        $htmlType = app("ViewMapping")->predictHTMLType($name, $type);
+
+        $field->update([
+            "html_type" => $htmlType
+        ]);
+
+        return $field;
     }
 
     public function createOrUpdateColumn(Table $table, Model $model, array $primayColumns)
@@ -407,9 +415,10 @@ class DBSyncCommand extends BaseCommand
         foreach ($columns as $column) {
             if (in_array($column->getName(), ['created_at', 'deleted_at', 'updated_at'])) continue;
             $field = $this->createOrUpdateField($model, $column);
-            $this->createOrUpdateDBConfig($field, $column);
-            $this->createOrUpdateDTConfig($field, $column, $primayColumns);
-            $this->createOrUpdateCRUDConfig($field, $column, $primayColumns);
+            $dbConfig = $this->createOrUpdateDBConfig($field, $column);
+            $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primayColumns);
+            $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primayColumns);
+            $field = $this->updateHTMLType($field, $dbConfig);
         }
     }
 

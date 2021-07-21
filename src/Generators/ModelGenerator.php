@@ -55,7 +55,13 @@ class ModelGenerator extends BaseGenerator
         $primaryKey = 'id';
 
         foreach ($this->commandData->fields as $field) {
-            $fillables[] = "'".$field->name."'";
+            if ((!in_array($field->name, $this->commandData->timestampFields))
+                && ($field->name !== $this->commandData->softDeleteField)
+                && (!$field->isPrimary)
+            ) {
+                $fillables[] = "'".$field->name."'";
+            }
+
             if ($field->isPrimary) {
                 $primaryKey = $field->name;
             }
@@ -65,14 +71,7 @@ class ModelGenerator extends BaseGenerator
 
         $templateData = $this->fillTimestamps($templateData);
 
-        if ($this->commandData->getOption('primary')) {
-            $primary = infy_tab()."protected \$primaryKey = '".$this->commandData->getOption('primary')."';\n";
-        } else {
-            $primary = '';
-            if ($this->commandData->getOption('fieldsFile') && $primaryKey != 'id') {
-                $primary = infy_tab()."protected \$primaryKey = '".$primaryKey."';\n";
-            }
-        }
+        $primary = "protected \$primaryKey = '".$primaryKey."';\n";
 
         $templateData = str_replace('$PRIMARY$', $primary, $templateData);
 
@@ -250,7 +249,7 @@ class ModelGenerator extends BaseGenerator
             list($created_at, $updated_at) = collect($timestamps)->map(function ($field) {
                 return !empty($field) ? "'$field'" : 'null';
             });
-            $replace = infy_nl_tab()."const CREATED_AT = $created_at;";
+            $replace = "const CREATED_AT = $created_at;";
             $replace .= infy_nl_tab()."const UPDATED_AT = $updated_at;\n";
 
             return str_replace('$TIMESTAMPS$', $replace, $templateData);

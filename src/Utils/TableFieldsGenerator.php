@@ -54,7 +54,7 @@ class TableFieldsGenerator
     /**
      * @var string
      */
-    private $softDelete;
+    public $softDelete;
 
 
     public function __construct(Model $modelObject)
@@ -131,7 +131,7 @@ class TableFieldsGenerator
         }
 
         $this->generateTimestampFields();
-        $this->generateSoftDeleteFields();
+        if ($this->softDelete !== null && $this->softDelete !== "") $this->generateSoftDeleteFields();
     }
 
     /**
@@ -171,34 +171,6 @@ class TableFieldsGenerator
         $deletedAtName = config('vl_admin_tool.timestamps.deleted_at', 'deleted_at');
 
         return $deletedAtName;
-    }
-
-    /**
-     * Generates integer text field for database.
-     *
-     * @param string $dbType
-     * @param Column $column
-     *
-     * @return GeneratorField
-     */
-    private function generateIntFieldInput($column, $dbType)
-    {
-        $field = new GeneratorField();
-        $field->name = $column->getName();
-        $field->parseDBType($dbType);
-        $field->htmlType = 'number';
-
-        if ($column->getAutoincrement()) {
-            $field->dbInput .= ',true';
-        } else {
-            $field->dbInput .= ',false';
-        }
-
-        if ($column->getUnsigned()) {
-            $field->dbInput .= ',true';
-        }
-
-        return $this->checkForPrimary($field);
     }
 
     /**

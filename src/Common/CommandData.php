@@ -21,6 +21,7 @@ class CommandData
     /** @var string */
     public $modelName;
     public $commandType;
+    public $softDeleteField;
 
     /** @var GeneratorConfig */
     public $config;
@@ -40,6 +41,7 @@ class CommandData
     /** @var array */
     public $dynamicVars = [];
     public $fieldNamesMapping = [];
+    public $timestampFields = [];
 
     /** @var CommandData */
     protected static $instance = null;
@@ -142,6 +144,8 @@ class CommandData
 //        $tableFieldsGenerator->prepareRelations();
 
         $this->fields = $tableFieldsGenerator->fields;
+        $this->timestampFields = $tableFieldsGenerator->timestamps;
+        $this->softDeleteField = $tableFieldsGenerator->softDelete;
 //        $this->relations = $tableFieldsGenerator->relations;
     }
 

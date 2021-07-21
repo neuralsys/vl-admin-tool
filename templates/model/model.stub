@@ -7,19 +7,13 @@ $SOFT_DELETE_IMPORT$
 $DOCS$
 class $MODEL_NAME$ extends EloquentModel
 {
-    $SOFT_DELETE$
-
-    $TIMESTAMPS$
-    $SOFT_DELETE_COLUMN$
-    $SOFT_DELETE_DATES$
-
-    public $table = '$TABLE_NAME$';
+    $SOFT_DELETE$$TIMESTAMPS$$SOFT_DELETE_COLUMN$$SOFT_DELETE_DATES$    public $table = '$TABLE_NAME$';
 
     public $fillable = [
         $FIELDS$
     ];
-
     $USE_TIMESTAMPS$
+    $PRIMARY$
     /**
      * The attributes that should be casted to native types.
      *
@@ -28,6 +22,5 @@ class $MODEL_NAME$ extends EloquentModel
     protected $casts = [
         $CAST$
     ];
-
     $RELATIONS$
 }

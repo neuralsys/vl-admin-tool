@@ -66,6 +66,9 @@ class FieldController extends Controller
      */
     public function index(FieldDataTable $fieldDataTable, Request $request)
     {
+        if (empty($request->input('model_id')))
+            return redirect()->route("models.index");
+
         $fieldTypes = $this->viewTemplateRepository->getFieldTypes();
         $fieldTypesSelector = [];
         foreach ($fieldTypes as $fieldType)

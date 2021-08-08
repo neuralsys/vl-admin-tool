@@ -14,6 +14,7 @@ class CreateRelationsTable extends Migration
     public function up()
     {
         Schema::create('relations', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('first_field_id');
             $table->unsignedBigInteger('second_field_id');
             $table->string('type');
@@ -21,8 +22,8 @@ class CreateRelationsTable extends Migration
             $table->string('fk_1')->nullable();
             $table->string('fk_2')->nullable();
             $table->timestamps();
-            $table->primary(['first_field_id', 'second_field_id']);
 
+            $table->unique(['first_field_id', 'second_field_id']);
             $table->foreign('first_field_id')->references('id')->on('fields');
             $table->foreign('second_field_id')->references('id')->on('fields');
         });

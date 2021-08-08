@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         var relationSelectedRows = [];
-        var relationTable = $('#relation-datatable').DataTable();
+        var relationTable = null;
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            relationTable = $('#relation-datatable').DataTable();
             initDatatableEvent('#relation-datatable', relationSelectedRows);
         });
     </script>

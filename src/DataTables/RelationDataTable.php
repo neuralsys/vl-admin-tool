@@ -18,6 +18,12 @@ class RelationDataTable extends DataTable {
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
+            ->addColumn('second_field_name', function ($record) {
+                return $record->secondField->name;
+            })
+            ->addColumn('second_field_table', function ($record) {
+                return $record->secondField->model->table_name;
+            })
             ->addColumn('action', 'vl-admin-tool::relations.datatables_actions');
     }
 
@@ -28,7 +34,11 @@ class RelationDataTable extends DataTable {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Relation $model) {
-        return $model->newQuery();
+        $fieldId = $this->request->input('field_id');
+
+        return $model
+            ->newQuery()
+            ->where('first_field_id', $fieldId);
     }
 
     /**
@@ -74,16 +84,13 @@ class RelationDataTable extends DataTable {
      */
     protected function getColumns() {
         return [
-            'second_field_id' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.second_field_id'), 'data' => 'second_field_id'])
-            ,
-            'type' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.type'), 'data' => 'type'])
-            ,
-            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.table_name'), 'data' => 'table_name'])
-            ,
-            'fk_1' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.fk_1'), 'data' => 'fk_1'])
-            ,
-            'fk_2' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.fk_2'), 'data' => 'fk_2'])
-
+            'second_field_id' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.second_field_id'), 'data' => 'second_field_id']),
+            'second_field_table' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.table_name'), 'data' => 'second_field_table']),
+            'second_field_name' => new Column(['title' => __('vl-admin-tool-lang::models/field.fields.name'), 'data' => 'second_field_name']),
+            'type' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.type'), 'data' => 'type']),
+            'table_name' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.table_name'), 'data' => 'table_name']),
+            'fk_1' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.fk_1'), 'data' => 'fk_1']),
+            'fk_2' => new Column(['title' => __('vl-admin-tool-lang::models/relation.fields.fk_2'), 'data' => 'fk_2']),
         ];
     }
 

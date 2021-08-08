@@ -20,4 +20,21 @@ class FieldRepository extends BaseRepository
     {
         return Field::class;
     }
+
+    public function getFieldsForRelation($exceptId) {
+        $fields = $this
+            ->model
+            ->with('model')
+            ->where('id', '<>', $exceptId)
+            ->orderBy('model_id')
+            ->orderBy('id')
+            ->get();
+
+        $res = [];
+        foreach ($fields as $field) {
+            $res[(string)$field->id] = $field->model->table_name . "." . $field->name;
+        }
+
+        return $res;
+    }
 }

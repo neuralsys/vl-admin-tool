@@ -41,9 +41,13 @@ class VLAdminToolServiceProvider extends ServiceProvider {
 
         # config
         $configPath = __DIR__ . '/../config/vl_admin_tool.php';
+        $relationsConstantsPath = __DIR__ . '/../config/relations.php';
+
         $this->publishes([
             $configPath => config_path('vl_admin_tool.php'),
-        ]);
+            $relationsConstantsPath => config_path('relations.php'),
+        ], "config");
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 InstallCommand::class,
@@ -170,5 +174,8 @@ class VLAdminToolServiceProvider extends ServiceProvider {
 
         $configPath = __DIR__ . '/../config/vl_admin_tool.php';
         $this->mergeConfigFrom($configPath, 'vl_admin_tool');
+
+        $relationsConstantsPath = __DIR__ . '/../config/relations.php';
+        $this->mergeConfigFrom($relationsConstantsPath, 'vl_admin_tool');
     }
 }

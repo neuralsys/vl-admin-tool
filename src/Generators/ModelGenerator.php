@@ -83,7 +83,7 @@ class ModelGenerator extends BaseGenerator
 
         $templateData = str_replace(
             '$RELATIONS$',
-            fill_template($this->commandData->dynamicVars, implode(PHP_EOL.infy_nl_tab(1, 1), $this->generateRelations())),
+            infy_nl_tab(1, 1).fill_template($this->commandData->dynamicVars, implode(PHP_EOL.infy_nl_tab(1, 1), $this->generateRelations())),
             $templateData
         );
 
@@ -114,7 +114,7 @@ class ModelGenerator extends BaseGenerator
             );
             $templateData = str_replace(
                 '$SOFT_DELETE_COLUMN$',
-                "const DELETED_AT = '$deletedAtTimestamp';\n",
+                infy_nl_tab()."const DELETED_AT = '$deletedAtTimestamp';\n",
                 $templateData
             );
         }
@@ -249,7 +249,7 @@ class ModelGenerator extends BaseGenerator
             list($created_at, $updated_at) = collect($timestamps)->map(function ($field) {
                 return !empty($field) ? "'$field'" : 'null';
             });
-            $replace = "const CREATED_AT = $created_at;";
+            $replace = infy_nl_tab()."const CREATED_AT = $created_at;";
             $replace .= infy_nl_tab()."const UPDATED_AT = $updated_at;\n";
 
             return str_replace('$TIMESTAMPS$', $replace, $templateData);

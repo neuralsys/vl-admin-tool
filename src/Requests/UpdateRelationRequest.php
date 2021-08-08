@@ -27,14 +27,12 @@ class UpdateRelationRequest extends FormRequest
     {
         $rules = [
             'second_field_id' => 'required',
-                'type' => 'required|string|max:255',
-                'table_name' => 'nullable|string|max:255',
-                'fk_1' => 'nullable|string|max:255',
-                'fk_2' => 'nullable|string|max:255',
-                'created_at' => 'nullable',
-                'updated_at' => 'nullable'
+            'type' => 'required|string|max:255',
+            'table_name' => 'nullable|string|max:255',
+            'fk_1' => 'nullable|string|max:255',
+            'fk_2' => 'nullable|string|max:255',
         ];
-        
+
         return $rules;
     }
 }

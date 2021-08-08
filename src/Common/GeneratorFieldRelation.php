@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Common;
 
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Models\Relation;
 
 class GeneratorFieldRelation
 {
@@ -10,6 +11,9 @@ class GeneratorFieldRelation
     public $type;
     public $inputs;
     public $relationName;
+
+    /** @var GeneratorForeignKey[] */
+    public $foreignKeys = [];
 
     public static function parseRelation($relationInput)
     {
@@ -27,23 +31,56 @@ class GeneratorFieldRelation
         return $relation;
     }
 
+    public static function parseRelationFromModel(Relation $relation)
+    {
+        $res = new self();
+        $res->type = $relation->type;
+        $res->inputs = [];
+
+        $classRelation = $relation->secondField->model->class_name;
+        $res->inputs[] = $classRelation;
+
+        $firstKey = $relation->firstField->name;
+        $secondKey = $relation->secondField->name;
+        switch ($relation->type) {
+            case "1-1":
+                $res->inputs[] = $firstKey;
+                break;
+            case "1-n":
+                $res->inputs[] = $secondKey;
+                $res->inputs[] = $firstKey;
+                break;
+            case "n-1":
+                $res->inputs[] = $firstKey;
+                $res->inputs[] = $secondKey;
+                break;
+            case "m-n":
+                $res->inputs[] = $relation->table_name;
+                $res->inputs[] = $relation->fk_1;
+                $res->inputs[] = $relation->fk_2;
+                break;
+        }
+
+        return $res;
+    }
+
     public function getRelationFunctionText($relationText = null)
     {
         $singularRelation = (!empty($this->relationName)) ? $this->relationName : Str::camel($relationText);
         $pluralRelation = (!empty($this->relationName)) ? $this->relationName : Str::camel(Str::plural($relationText));
 
         switch ($this->type) {
-            case '1t1':
+            case '1-1':
                 $functionName = $singularRelation;
                 $relation = 'hasOne';
                 $relationClass = 'HasOne';
                 break;
-            case '1tm':
+            case '1-n':
                 $functionName = $pluralRelation;
                 $relation = 'hasMany';
                 $relationClass = 'HasMany';
                 break;
-            case 'mt1':
+            case 'n-1':
                 if (!empty($this->relationName)) {
                     $singularRelation = $this->relationName;
                 } elseif (isset($this->inputs[1])) {
@@ -53,7 +90,7 @@ class GeneratorFieldRelation
                 $relation = 'belongsTo';
                 $relationClass = 'BelongsTo';
                 break;
-            case 'mtm':
+            case 'm-n':
                 $functionName = $pluralRelation;
                 $relation = 'belongsToMany';
                 $relationClass = 'BelongsToMany';

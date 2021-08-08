@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  *
  * @property \Vuongdq\VLAdminTool\Models\Field $firstField
  * @property \Vuongdq\VLAdminTool\Models\Field $secondField
+ * @property integer $first_field_id
  * @property integer $second_field_id
  * @property string $type
  * @property string $table_name
@@ -19,10 +20,11 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Relation extends EloquentModel
 {
-    
+
     public $table = 'relations';
 
     public $fillable = [
+        'first_field_id',
         'second_field_id',
         'type',
         'table_name',
@@ -30,7 +32,7 @@ class Relation extends EloquentModel
         'fk_2'
     ];
 
-    
+
     /**
      * The attributes that should be casted to native types.
      *

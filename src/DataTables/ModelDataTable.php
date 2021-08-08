@@ -19,8 +19,9 @@ class ModelDataTable extends DataTable {
 
         return $dataTable
             ->addColumn('field_view', 'vl-admin-tool::models.datatable_action_columns.field_column')
+            ->addColumn('relation_view', 'vl-admin-tool::models.datatable_action_columns.relation_column')
             ->addColumn('action', 'vl-admin-tool::models.datatables_actions')
-            ->rawColumns(['field_view', 'action']);
+            ->rawColumns(['field_view', 'relation_view', 'action']);
     }
 
     /**
@@ -83,7 +84,7 @@ class ModelDataTable extends DataTable {
             'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
             'use_timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_timestamps'), 'data' => 'use_timestamps']),
             'use_soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_soft_delete'), 'data' => 'use_soft_delete']),
-            'fields' => new Column(['title' => __('vl-admin-tool-lang::models/field.plural'), 'data' => 'field_view'])
+            'fields' => new Column(['title' => __('vl-admin-tool-lang::models/field.plural'), 'data' => 'field_view']),
         ];
     }
 

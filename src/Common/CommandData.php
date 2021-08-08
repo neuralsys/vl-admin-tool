@@ -141,12 +141,12 @@ class CommandData
     private function getInputFromModel() {
         $tableFieldsGenerator = new TableFieldsGenerator($this->modelObject);
         $tableFieldsGenerator->prepareFieldsFromModel();
-//        $tableFieldsGenerator->prepareRelations();
+        $tableFieldsGenerator->prepareRelations();
 
         $this->fields = $tableFieldsGenerator->fields;
         $this->timestampFields = $tableFieldsGenerator->timestamps;
         $this->softDeleteField = $tableFieldsGenerator->softDelete;
-//        $this->relations = $tableFieldsGenerator->relations;
+        $this->relations = $tableFieldsGenerator->relations;
     }
 
     private function getInputFromConsole()

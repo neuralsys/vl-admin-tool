@@ -7,17 +7,24 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\Tests\Common\Annotations\Name;
+use Facade\Ignition\Tabs\Tab;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
+use Vuongdq\VLAdminTool\Common\GeneratorFieldRelation;
+use Vuongdq\VLAdminTool\Common\GeneratorForeignKey;
+use Vuongdq\VLAdminTool\Common\GeneratorTable;
 use Vuongdq\VLAdminTool\Models\DBConfig;
 use Vuongdq\VLAdminTool\Models\Field;
 use Vuongdq\VLAdminTool\Models\Model;
+use Vuongdq\VLAdminTool\Models\Relation;
 use Vuongdq\VLAdminTool\Repositories\CRUDConfigRepository;
 use Vuongdq\VLAdminTool\Repositories\DTConfigRepository;
 use Vuongdq\VLAdminTool\Repositories\FieldRepository;
 use Vuongdq\VLAdminTool\Repositories\ModelRepository;
 use Vuongdq\VLAdminTool\Repositories\DBConfigRepository;
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Repositories\RelationRepository;
+use function Matrix\trace;
 
 class DBSyncCommand extends BaseCommand
 {
@@ -72,6 +79,15 @@ class DBSyncCommand extends BaseCommand
     public $crudConfigRepository;
 
     /**
+     *
+     * @var GeneratorTable[]
+     */
+    public $foreignKeys;
+
+    /** @var GeneratorFieldRelation[] */
+    public $relations;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -84,6 +100,7 @@ class DBSyncCommand extends BaseCommand
         $this->dbConfigRepository = app(DBConfigRepository::class);
         $this->dtConfigRepository = app(DTConfigRepository::class);
         $this->crudConfigRepository = app(CRUDConfigRepository::class);
+        $this->relationRepository = app(RelationRepository::class);
         $this->ignoreTables = array_merge([
             'migrations',
         ], $this->getAdminTableNames());
@@ -126,7 +143,7 @@ class DBSyncCommand extends BaseCommand
         return [];
     }
 
-    public function isUseTimestamps(Table $table)
+    public function isUseTimestamps(Table $table): bool
     {
         try {
             $table->getColumn('created_at');
@@ -228,7 +245,7 @@ class DBSyncCommand extends BaseCommand
                 $res['type'] = 'boolean';
                 break;
             case 'datetime':
-                $res['type'] = 'datetime';
+                $res['type'] = 'timestamp';
                 break;
             case 'datetimetz':
                 $res['type'] = 'dateTimeTz';
@@ -274,9 +291,9 @@ class DBSyncCommand extends BaseCommand
         return $dbConfig;
     }
 
-    public function predictDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primayColumns)
+    public function predictDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primaryColumns): array
     {
-        $isPK = in_array($field->name, $primayColumns);
+        $isPK = in_array($field->name, $primaryColumns);
         $isFK = strpos($field->name, '_id') !== false; # Todo: update logic for all cases
         $isFKorPK = $isPK || $isFK;
 
@@ -296,10 +313,10 @@ class DBSyncCommand extends BaseCommand
         ];
     }
 
-    public function createOrUpdateDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primayColumns)
+    public function createOrUpdateDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primaryColumns)
     {
         $dtConfig = $field->dtConfig;
-        $dtConf = $this->predictDTConfig($field, $dbConfig, $column, $primayColumns);
+        $dtConf = $this->predictDTConfig($field, $dbConfig, $column, $primaryColumns);
         if (empty($dtConfig)) {
             $dtConfig = $this->dtConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -312,7 +329,7 @@ class DBSyncCommand extends BaseCommand
         return $dtConfig;
     }
 
-    public function generateRules(Field $field, DBConfig $dbConfig, Column $column, $isPK)
+    public function generateRules(Field $field, DBConfig $dbConfig, Column $column, $isPK): string
     {
         $rule = [];
         if (!$isPK) {
@@ -332,7 +349,7 @@ class DBSyncCommand extends BaseCommand
                 case 'boolean':
                     $rule[] = 'boolean';
 
-                    # Avalidable values
+                    # Available values
                     $rule[] = "in:1,0";
                     break;
                 case 'float':
@@ -357,9 +374,9 @@ class DBSyncCommand extends BaseCommand
         return implode('|', $rule);
     }
 
-    public function predictCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primayColumns)
+    public function predictCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns)
     {
-        $isPK = in_array($field->name, $primayColumns);
+        $isPK = in_array($field->name, $primaryColumns);
         return [
             'creatable' => !$isPK,
             'editable' => !$isPK,
@@ -367,10 +384,10 @@ class DBSyncCommand extends BaseCommand
         ];
     }
 
-    public function createOrUpdateCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primayColumns)
+    public function createOrUpdateCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns)
     {
         $crudConfig = $field->crudConfig;
-        $crudConf = $this->predictCRUDConfig($field, $dbConfig, $column, $primayColumns);
+        $crudConf = $this->predictCRUDConfig($field, $dbConfig, $column, $primaryColumns);
         if (empty($crudConfig)) {
             $crudConfig = $this->crudConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -396,7 +413,339 @@ class DBSyncCommand extends BaseCommand
         return $field;
     }
 
-    public function createOrUpdateColumn(Table $table, Model $model, array $primayColumns)
+    public function extractRelationsByColumn(Field $field, Table $table)
+    {
+        $fieldRelations = [];
+        foreach ($this->relations as $relation) {
+            $foreignKeys = $relation->foreignKeys;
+            if (count($foreignKeys) > 0) {
+                switch ($relation->type) {
+                    case "1-1":
+                        if ($foreignKeys[0]->localField == $field->name) {
+                            $fieldRelations[] = $relation;
+                        }
+                        break;
+                    case "1-n":
+                        if ($foreignKeys[0]->foreignField == $field->name) {
+                            $fieldRelations[] = $relation;
+                        }
+                        break;
+                    case "n-1":
+                        if ($foreignKeys[0]->localField == $field->name) {
+                            $fieldRelations[] = $relation;
+                        }
+                        break;
+                    case "m-n":
+                        foreach ($foreignKeys as $foreignKey) {
+                            if ($foreignKey->foreignTable == $table->getName() && $foreignKey->foreignField == $field->name) {
+                                $fieldRelations[] = $relation;
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $fieldRelations;
+    }
+
+    /**
+     * Detect many to one relationship on model table
+     * If foreign key of model table is primary key of foreign table.
+     *
+     * @param GeneratorTable[] $tables
+     * @param GeneratorTable   $modelTable
+     *
+     * @return array
+     */
+    private function detectManyToOne($tables, $modelTable)
+    {
+        $manyToOneRelations = [];
+
+        $foreignKeys = $modelTable->foreignKeys;
+
+        foreach ($foreignKeys as $foreignKey) {
+            $foreignTable = $foreignKey->foreignTable;
+            $foreignField = $foreignKey->foreignField;
+
+            if (!isset($tables[$foreignTable])) {
+                continue;
+            }
+
+            if ($foreignField == $tables[$foreignTable]->primaryKey) {
+                $modelName = model_name_from_table_name($foreignTable);
+                $relations = GeneratorFieldRelation::parseRelation(
+                    'n-1,'.$modelName.','.$foreignKey->localField
+                );
+
+                $relations->foreignKeys[] = $foreignKey;
+                $manyToOneRelations[] = $relations;
+            }
+        }
+
+        return $manyToOneRelations;
+    }
+
+    /**
+     * Prepares relations array from table foreign keys.
+     *
+     * @param GeneratorTable[] $tables
+     * @param Table $table
+     */
+    private function checkForRelations($tables, Table $table)
+    {
+        // get Models table name and table details from tables list
+        $modelTableName = $table->getName();
+        $modelTable = $tables[$modelTableName];
+        unset($tables[$modelTableName]);
+
+        $this->relations = [];
+
+        // detects many to one rules for model table
+        $manyToOneRelations = $this->detectManyToOne($tables, $modelTable);
+
+        if (count($manyToOneRelations) > 0) {
+            $this->relations = array_merge($this->relations, $manyToOneRelations);
+        }
+
+        foreach ($tables as $tableName => $table) {
+            $foreignKeys = $table->foreignKeys;
+            $primary = $table->primaryKey;
+
+            // if foreign key count is 2 then check if many to many relationship is there
+            if (count($foreignKeys) == 2) {
+                $manyToManyRelation = $this->isManyToMany($tables, $tableName, $modelTable, $modelTableName);
+                if ($manyToManyRelation) {
+                    $this->relations[] = $manyToManyRelation;
+                    continue;
+                }
+            }
+
+            // iterate each foreign key and check for relationship
+            foreach ($foreignKeys as $foreignKey) {
+                // check if foreign key is on the model table for which we are using generator command
+                if ($foreignKey->foreignTable == $modelTableName) {
+
+                    // detect if one to one relationship is there
+                    $isOneToOne = $this->isOneToOne($primary, $foreignKey, $modelTable->primaryKey);
+                    if ($isOneToOne) {
+                        $modelName = model_name_from_table_name($tableName);
+                        $relations = GeneratorFieldRelation::parseRelation('1-1,'.$modelName);
+                        $relations->foreignKeys[] = $foreignKey;
+                        $this->relations[] = $relations;
+                        continue;
+                    }
+
+                    // detect if one to many relationship is there
+                    $isOneToMany = $this->isOneToMany($primary, $foreignKey, $modelTable->primaryKey);
+                    if ($isOneToMany) {
+                        $modelName = model_name_from_table_name($tableName);
+                        $relations = GeneratorFieldRelation::parseRelation(
+                            '1-n,'.$modelName.','.$foreignKey->localField
+                        );
+                        $relations->foreignKeys[] = $foreignKey;
+                        $this->relations[] = $relations;
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Detects many to many relationship
+     * If table has only two foreign keys
+     * Both foreign keys are primary key in foreign table
+     * Also one is from model table and one is from diff table.
+     *
+     * @param GeneratorTable[] $tables
+     * @param string           $tableName
+     * @param GeneratorTable   $modelTable
+     * @param string           $modelTableName
+     *
+     * @return bool|GeneratorFieldRelation
+     */
+    private function isManyToMany($tables, $tableName, $modelTable, $modelTableName)
+    {
+        // get table details
+        $table = $tables[$tableName];
+
+        $isAnyKeyOnModelTable = false;
+
+        // many to many model table name
+        $manyToManyTable = '';
+
+        $foreignKeys = $table->foreignKeys;
+        $primary = $table->primaryKey;
+
+        // check if any foreign key is there from model table
+        foreach ($foreignKeys as $foreignKey) {
+            if ($foreignKey->foreignTable == $modelTableName) {
+                $isAnyKeyOnModelTable = true;
+            }
+        }
+
+        // if foreign key is there
+        if (!$isAnyKeyOnModelTable) {
+            return false;
+        }
+
+        foreach ($foreignKeys as $foreignKey) {
+            $foreignField = $foreignKey->foreignField;
+            $foreignTableName = $foreignKey->foreignTable;
+
+            // if foreign table is model table
+            if ($foreignTableName == $modelTableName) {
+                $foreignTable = $modelTable;
+            } else {
+                $foreignTable = $tables[$foreignTableName];
+                // get the many to many model table name
+                $manyToManyTable = $foreignTableName;
+            }
+
+            // if foreign field is not primary key of foreign table
+            // then it can not be many to many
+            if ($foreignField != $foreignTable->primaryKey) {
+                return false;
+                break;
+            }
+        }
+
+        if (empty($manyToManyTable)) {
+            return false;
+        }
+
+        $modelName = model_name_from_table_name($manyToManyTable);
+
+        $relation = GeneratorFieldRelation::parseRelation('m-n,'.$modelName.','.$tableName);
+        $relation->foreignKeys = array_merge($relation->foreignKeys, $foreignKeys);
+        return $relation;
+    }
+
+    /**
+     * Detects if one to one relationship is there
+     * If foreign key of table is primary key of foreign table
+     * Also foreign key field is primary key of this table.
+     *
+     * @param string              $primaryKey
+     * @param GeneratorForeignKey $foreignKey
+     * @param string              $modelTablePrimary
+     *
+     * @return bool
+     */
+    private function isOneToOne($primaryKey, $foreignKey, $modelTablePrimary)
+    {
+        if ($foreignKey->foreignField == $modelTablePrimary) {
+            if ($foreignKey->localField == $primaryKey) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Detects if one to many relationship is there
+     * If foreign key of table is primary key of foreign table
+     * Also foreign key field is not primary key of this table.
+     *
+     * @param string              $primaryKey
+     * @param GeneratorForeignKey $foreignKey
+     * @param string              $modelTablePrimary
+     *
+     * @return bool
+     */
+    private function isOneToMany($primaryKey, $foreignKey, $modelTablePrimary)
+    {
+        if ($foreignKey->foreignField == $modelTablePrimary) {
+            if ($foreignKey->localField != $primaryKey) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function findSecondFieldIdByRelation(GeneratorFieldRelation $relation, Field $field, Table $table) {
+        $secondFieldId = null;
+        $foreignKeys = $relation->foreignKeys;
+        $foreignTable = $this->modelRepository->where('class_name', $relation->inputs[0])->first();
+        if (count($foreignKeys) > 0) {
+            switch ($relation->type) {
+                case "1-1":
+                    $foreignField = $foreignTable->fields()->where('name', $foreignKeys[0]->foreignField)->first();
+                    $secondFieldId = $foreignField->id;
+                    break;
+                case "1-n":
+                    $foreignField = $foreignTable->fields()->where('name', $relation->inputs[1])->first();
+                    $secondFieldId = $foreignField->id;
+                    break;
+                case "n-1":
+                    $foreignField = $foreignTable->fields()->where('name', $foreignKeys[0]->foreignField)->first();
+                    $secondFieldId = $foreignField->id;
+                    break;
+                case "m-n":
+                    $correctForeignKey = null;
+                    foreach ($foreignKeys as $foreignKey) {
+                        if ($foreignKey->foreignTable != $table->getName()) {
+                            $correctForeignKey = $foreignKey;
+                        }
+                    }
+
+                    if (!empty($correctForeignKey)) {
+                        $foreignField = $foreignTable->fields()->where('name', $correctForeignKey->foreignField)->first();;
+                        $secondFieldId = $foreignField->id;
+                    }
+
+                    break;
+            }
+        }
+
+        return $secondFieldId;
+    }
+
+    public function createRelationsByColumn(Table $table, Field $field) {
+        $fieldRelations = $this->extractRelationsByColumn($field, $table);
+
+        foreach ($fieldRelations as $fieldRelation) {
+            $firstFieldId = $field->id;
+            $secondFieldId = $this->findSecondFieldIdByRelation($fieldRelation, $field, $table);
+
+            $relation = new Relation();
+            $relation->first_field_id = $firstFieldId;
+            $relation->second_field_id = $secondFieldId;
+            $relation->type = $fieldRelation->type;
+
+            if (!empty($secondFieldId)) {
+                if ($fieldRelation->type == "m-n") {
+                    $relation->table_name = $fieldRelation->inputs[1];
+                    $firstTable = $fieldRelation->foreignKeys[0]->foreignTable;
+
+                    if ($table->getName() == $firstTable) {
+                        $relation->fk_1 = $fieldRelation->foreignKeys[0]->localField;
+                        $relation->fk_2 = $fieldRelation->foreignKeys[1]->localField;
+                    } else {
+                        $relation->fk_1 = $fieldRelation->foreignKeys[1]->localField;
+                        $relation->fk_2 = $fieldRelation->foreignKeys[0]->localField;
+                    }
+                }
+            }
+
+            $relation->save();
+        }
+    }
+
+    public function createOrUpdateRelations(Table $table) {
+        $model = $this->modelRepository->where('table_name', $table->getName())->first();
+        $fields = $model->fields;
+
+        foreach ($fields as $field) {
+            $field->relations()->delete();
+            $this->createRelationsByColumn($table, $field);
+        }
+    }
+
+    public function createOrUpdateColumn(Table $table, Model $model, array $primaryColumns)
     {
         $columns = $table->getColumns();
 
@@ -416,16 +765,58 @@ class DBSyncCommand extends BaseCommand
             if (in_array($column->getName(), ['created_at', 'deleted_at', 'updated_at'])) continue;
             $field = $this->createOrUpdateField($model, $column);
             $dbConfig = $this->createOrUpdateDBConfig($field, $column);
-            $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primayColumns);
-            $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primayColumns);
+            $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primaryColumns);
+            $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primaryColumns);
             $field = $this->updateHTMLType($field, $dbConfig);
         }
+    }
+
+    /**
+     * Prepares foreign keys from table with required details.
+     *
+     * @return GeneratorTable[]
+     */
+    public function prepareForeignKeys()
+    {
+        $tables = $this->schemaManager->listTables();
+
+        $fields = [];
+
+        foreach ($tables as $table) {
+            $primaryKey = $table->getPrimaryKey();
+            if ($primaryKey) {
+                $primaryKey = $primaryKey->getColumns()[0];
+            }
+            $formattedForeignKeys = [];
+            $tableForeignKeys = $table->getForeignKeys();
+            foreach ($tableForeignKeys as $tableForeignKey) {
+                $generatorForeignKey = new GeneratorForeignKey();
+                $generatorForeignKey->name = $tableForeignKey->getName();
+                $generatorForeignKey->localField = $tableForeignKey->getLocalColumns()[0];
+                $generatorForeignKey->foreignField = $tableForeignKey->getForeignColumns()[0];
+                $generatorForeignKey->foreignTable = $tableForeignKey->getForeignTableName();
+                $generatorForeignKey->onUpdate = $tableForeignKey->onUpdate();
+                $generatorForeignKey->onDelete = $tableForeignKey->onDelete();
+
+                $formattedForeignKeys[] = $generatorForeignKey;
+            }
+
+            $generatorTable = new GeneratorTable();
+            $generatorTable->primaryKey = $primaryKey;
+            $generatorTable->foreignKeys = $formattedForeignKeys;
+
+            $fields[$table->getName()] = $generatorTable;
+        }
+
+        return $fields;
     }
 
     public function syncTable(Table $table)
     {
         DB::beginTransaction();
         try {
+            $this->checkForRelations($this->foreignKeys, $table);
+
             $model = $this->createOrUpdateTable($table);
             try {
                 $primaryKeys = $table->getPrimaryKeyColumns();
@@ -438,6 +829,8 @@ class DBSyncCommand extends BaseCommand
             DB::rollBack();
             throw $e;
         }
+
+        $this->createOrUpdateRelations($table);
     }
 
     public function removeInvalidTables($tables) {
@@ -459,6 +852,8 @@ class DBSyncCommand extends BaseCommand
         foreach ($tables as $table) {
             if (in_array($table->getName(), $this->ignoreTables))
                 continue;
+
+            $this->foreignKeys = $this->prepareForeignKeys($table);
             $this->syncTable($table);
         }
     }

@@ -20,9 +20,10 @@ class FieldDataTable extends DataTable {
         return $dataTable
             ->addColumn('db_config_view', 'vl-admin-tool::fields.datatable_action_columns.db_config_column')
             ->addColumn('dt_config_view', 'vl-admin-tool::fields.datatable_action_columns.dt_config_column')
+            ->addColumn('relation_view', 'vl-admin-tool::fields.datatable_action_columns.relation_column')
             ->addColumn('crud_config_view', 'vl-admin-tool::fields.datatable_action_columns.crud_config_column')
             ->addColumn('action', 'vl-admin-tool::fields.datatables_actions')
-            ->rawColumns(['db_config_view', 'action', 'dt_config_view', 'crud_config_view']);
+            ->rawColumns(['db_config_view', 'relation_view', 'action', 'dt_config_view', 'crud_config_view']);
     }
 
     /**
@@ -109,6 +110,8 @@ class FieldDataTable extends DataTable {
             'creatable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.creatable'), 'data' => 'crud_config.creatable', 'searchable' => false, 'orderable' => false]),
             'editable' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.editable'), 'data' => 'crud_config.editable', 'searchable' => false, 'orderable' => false]),
             'rules' => new Column(['title' => __('vl-admin-tool-lang::models/cRUDConfig.fields.rules'), 'data' => 'crud_config.rules', 'searchable' => false, 'orderable' => false]),
+
+            'relations' => new Column(['title' => __('vl-admin-tool-lang::models/relation.plural'), 'data' => 'relation_view']),
         ];
     }
 

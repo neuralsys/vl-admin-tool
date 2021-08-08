@@ -3,7 +3,9 @@
 namespace Vuongdq\VLAdminTool\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Vuongdq\VLAdminTool\DataTables\RelationDataTable;
+use Vuongdq\VLAdminTool\Repositories\FieldRepository;
 use Vuongdq\VLAdminTool\Requests\CreateRelationRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateRelationRequest;
 use Vuongdq\VLAdminTool\Repositories\RelationRepository;
@@ -13,9 +15,16 @@ class RelationController extends Controller
     /** @var  RelationRepository */
     private $relationRepository;
 
-    public function __construct(RelationRepository $relationRepo)
+    /** @var  FieldRepository */
+    private $fieldRepository;
+
+    public function __construct(
+        RelationRepository $relationRepo,
+        FieldRepository $fieldRepository
+    )
     {
         $this->relationRepository = $relationRepo;
+        $this->fieldRepository = $fieldRepository;
     }
 
     /**
@@ -24,9 +33,19 @@ class RelationController extends Controller
      * @param RelationDataTable $relationDataTable
      * @return Response
      */
-    public function index(RelationDataTable $relationDataTable)
+    public function index(RelationDataTable $relationDataTable, Request $request)
     {
-        return $relationDataTable->render('vl-admin-tool::relations.index');
+        if (empty($request->input('field_id')))
+            return redirect()->route("fields.index");
+
+        $fields = $this->fieldRepository->getFieldsForRelation($request->input('field_id'));
+        $relationTypes = config('vl_admin_tool.relationTypes');
+
+        return $relationDataTable->render('vl-admin-tool::relations.index', [
+            "field_id" => $request->input("field_id"),
+            "fields" => $fields,
+            "relationTypes" => $relationTypes,
+        ]);
     }
 
     /**

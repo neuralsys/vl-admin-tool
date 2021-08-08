@@ -24,8 +24,8 @@ class CreateRelationsTable extends Migration
             $table->timestamps();
 
             $table->unique(['first_field_id', 'second_field_id']);
-            $table->foreign('first_field_id')->references('id')->on('fields');
-            $table->foreign('second_field_id')->references('id')->on('fields');
+            $table->foreign('first_field_id')->references('id')->on('fields')->onDelete('cascade');
+            $table->foreign('second_field_id')->references('id')->on('fields')->onDelete('cascade');
         });
     }
 

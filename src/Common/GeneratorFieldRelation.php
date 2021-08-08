@@ -43,6 +43,9 @@ class GeneratorFieldRelation
         $firstKey = $relation->firstField->name;
         $secondKey = $relation->secondField->name;
         switch ($relation->type) {
+            case "1-1i":
+                $res->inputs[] = $firstKey;
+                break;
             case "1-1":
                 $res->inputs[] = $firstKey;
                 break;
@@ -70,6 +73,11 @@ class GeneratorFieldRelation
         $pluralRelation = (!empty($this->relationName)) ? $this->relationName : Str::camel(Str::plural($relationText));
 
         switch ($this->type) {
+            case '1-1i':
+                $functionName = $singularRelation;
+                $relation = 'belongsTo';
+                $relationClass = 'BelongsTo';
+                break;
             case '1-1':
                 $functionName = $singularRelation;
                 $relation = 'hasOne';

@@ -420,8 +420,13 @@ class DBSyncCommand extends BaseCommand
             $foreignKeys = $relation->foreignKeys;
             if (count($foreignKeys) > 0) {
                 switch ($relation->type) {
-                    case "1-1":
+                    case "1-1i":
                         if ($foreignKeys[0]->localField == $field->name) {
+                            $fieldRelations[] = $relation;
+                        }
+                        break;
+                    case "1-1":
+                        if ($foreignKeys[0]->foreignField == $field->name) {
                             $fieldRelations[] = $relation;
                         }
                         break;
@@ -458,11 +463,12 @@ class DBSyncCommand extends BaseCommand
      *
      * @return array
      */
-    private function detectManyToOne($tables, $modelTable)
+    private function detectManyToOneOrOneToOneInverse($tables, $modelTable)
     {
         $manyToOneRelations = [];
 
         $foreignKeys = $modelTable->foreignKeys;
+        $primary = $modelTable->primaryKey;
 
         foreach ($foreignKeys as $foreignKey) {
             $foreignTable = $foreignKey->foreignTable;
@@ -474,9 +480,15 @@ class DBSyncCommand extends BaseCommand
 
             if ($foreignField == $tables[$foreignTable]->primaryKey) {
                 $modelName = model_name_from_table_name($foreignTable);
-                $relations = GeneratorFieldRelation::parseRelation(
-                    'n-1,'.$modelName.','.$foreignKey->localField
-                );
+                if ($foreignKey->localField != $primary) {
+                    $relations = GeneratorFieldRelation::parseRelation(
+                        'n-1,'.$modelName.','.$foreignKey->localField
+                    );
+                } else {
+                    $relations = GeneratorFieldRelation::parseRelation(
+                        '1-1i,'.$modelName.','.$foreignKey->localField
+                    );
+                }
 
                 $relations->foreignKeys[] = $foreignKey;
                 $manyToOneRelations[] = $relations;
@@ -502,7 +514,7 @@ class DBSyncCommand extends BaseCommand
         $this->relations = [];
 
         // detects many to one rules for model table
-        $manyToOneRelations = $this->detectManyToOne($tables, $modelTable);
+        $manyToOneRelations = $this->detectManyToOneOrOneToOneInverse($tables, $modelTable);
 
         if (count($manyToOneRelations) > 0) {
             $this->relations = array_merge($this->relations, $manyToOneRelations);
@@ -672,8 +684,12 @@ class DBSyncCommand extends BaseCommand
         $foreignTable = $this->modelRepository->where('class_name', $relation->inputs[0])->first();
         if (count($foreignKeys) > 0) {
             switch ($relation->type) {
-                case "1-1":
+                case "1-1i":
                     $foreignField = $foreignTable->fields()->where('name', $foreignKeys[0]->foreignField)->first();
+                    $secondFieldId = $foreignField->id;
+                    break;
+                case "1-1":
+                    $foreignField = $foreignTable->fields()->where('name', $foreignKeys[0]->localField)->first();
                     $secondFieldId = $foreignField->id;
                     break;
                 case "1-n":

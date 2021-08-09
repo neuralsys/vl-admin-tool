@@ -170,9 +170,10 @@ class ModelGenerator extends BaseGenerator
         switch ($db_type) {
             case 'datetime':
                 return 'string|\Carbon\Carbon';
-            case '1t1':
+            case '1-1i':
+            case '1-1':
                 return '\\'.$this->commandData->config->nsModel.'\\'.$relation->inputs[0].' $'.Str::camel($relationText);
-            case 'mt1':
+            case 'n-1':
                 if (isset($relation->inputs[1])) {
                     $relationName = str_replace('_id', '', strtolower($relation->inputs[1]));
                 } else {
@@ -180,8 +181,8 @@ class ModelGenerator extends BaseGenerator
                 }
 
                 return '\\'.$this->commandData->config->nsModel.'\\'.$relation->inputs[0].' $'.Str::camel($relationName);
-            case '1tm':
-            case 'mtm':
+            case '1-n':
+            case 'm-n':
             case 'hmt':
                 return '\Illuminate\Database\Eloquent\Collection $'.Str::camel(Str::plural($relationText));
             default:

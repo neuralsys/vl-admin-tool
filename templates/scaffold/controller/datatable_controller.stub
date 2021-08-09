@@ -7,6 +7,8 @@ use $NAMESPACE_DATATABLES$\$MODEL_NAME$DataTable;
 use $NAMESPACE_REQUEST$\Create$MODEL_NAME$Request;
 use $NAMESPACE_REQUEST$\Update$MODEL_NAME$Request;
 use $NAMESPACE_REPOSITORY$\$MODEL_NAME$Repository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class $MODEL_NAME$Controller extends Controller
 {
@@ -22,7 +24,7 @@ class $MODEL_NAME$Controller extends Controller
      * Display a listing of the $MODEL_NAME$.
      *
      * @param $MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable
-     * @return Response
+     * @return View|JsonResponse
      */
     public function index($MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable)
     {
@@ -34,9 +36,9 @@ class $MODEL_NAME$Controller extends Controller
      *
      * @param Create$MODEL_NAME$Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(Create$MODEL_NAME$Request $request)
+    public function store(Create$MODEL_NAME$Request $request): JsonResponse
     {
         $input = $request->all();
 
@@ -50,9 +52,9 @@ class $MODEL_NAME$Controller extends Controller
      *
      * @param  int $id
      *
-     * @return Response
+     * @return View
      */
-    public function show($id)
+    public function show(int $id): View
     {
         $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
 
@@ -66,12 +68,12 @@ class $MODEL_NAME$Controller extends Controller
     /**
      * Update the specified $MODEL_NAME$ in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param Update$MODEL_NAME$Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function update($id, Update$MODEL_NAME$Request $request)
+    public function update(int $id, Update$MODEL_NAME$Request $request): JsonResponse
     {
         $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
 
@@ -89,17 +91,17 @@ class $MODEL_NAME$Controller extends Controller
      *
      * @param  int $id
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
-
-        if (empty($$MODEL_NAME_CAMEL$)) {
+        try {
+            $this->$MODEL_NAME_CAMEL$Repository->delete($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return $this->error(__('crud.not_found'));
+        } catch (\Exception $e) {
+            return $this->error(__('crud.delete_failed'));
         }
-
-        $this->$MODEL_NAME_CAMEL$Repository->delete($id);
 
         return $this->success(__('crud.delete_success'));
     }

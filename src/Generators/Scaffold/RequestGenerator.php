@@ -59,7 +59,7 @@ class RequestGenerator extends BaseGenerator
         $templateData = get_template('scaffold.request.update_request', 'vl-admin-tool');
 
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
-        $templateData = str_replace('$RULES$', implode(','.infy_nl_tab(1, 4), $modelGenerator->generateRules()), $templateData);
+        $templateData = str_replace('$RULES$', implode(','.infy_nl_tab(1, 3), $modelGenerator->generateRules()), $templateData);
 
         FileUtil::createFile($this->path, $this->updateFileName, $templateData);
 

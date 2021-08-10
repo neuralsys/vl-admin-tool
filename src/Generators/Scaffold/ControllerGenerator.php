@@ -101,13 +101,11 @@ class ControllerGenerator extends BaseGenerator
             $this->commandData->commandComment('Controllers file deleted: '.$this->fileName);
         }
 
-        if ($this->commandData->getAddOn('datatables')) {
-            if ($this->rollbackFile(
-                $this->commandData->config->pathDataTables,
-                $this->commandData->modelName.'DataTable.php'
-            )) {
-                $this->commandData->commandComment('DataTable file deleted: '.$this->fileName);
-            }
+        if ($this->rollbackFile(
+            $this->commandData->config->pathDataTables,
+            $this->commandData->modelName.'DataTable.php'
+        )) {
+            $this->commandData->commandComment('DataTable file deleted: '.$this->fileName);
         }
     }
 }

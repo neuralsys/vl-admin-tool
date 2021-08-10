@@ -20,6 +20,7 @@ use Vuongdq\VLAdminTool\Generators\Scaffold\RoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\Scaffold\ViewGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Vuongdq\VLAdminTool\Models\Model;
 
 class RollbackGeneratorCommand extends Command
 {
@@ -64,30 +65,13 @@ class RollbackGeneratorCommand extends Command
      */
     public function handle()
     {
-        if (!in_array($this->argument('type'), [
-            CommandData::$COMMAND_TYPE_API,
-            CommandData::$COMMAND_TYPE_SCAFFOLD,
-            CommandData::$COMMAND_TYPE_API_SCAFFOLD,
-        ])) {
-            $this->error('invalid rollback type');
-        }
-
-        $this->commandData = new CommandData($this, $this->argument('type'));
+        $this->commandData = new CommandData($this, CommandData::$COMMAND_TYPE_SCAFFOLD);
         $this->commandData->config->mName = $this->commandData->modelName = $this->argument('model');
 
-        $this->commandData->config->init($this->commandData, ['tableName', 'prefix', 'plural', 'views']);
+        $modelObj = Model::where('class_name', $this->commandData->modelName)->first();
+        $this->commandData->modelObject = $modelObj;
 
-        $views = $this->commandData->getOption('views');
-        if (!empty($views)) {
-            $views = explode(',', $views);
-            $viewGenerator = new ViewGenerator($this->commandData);
-            $viewGenerator->rollback($views);
-
-            $this->info('Generating autoload files');
-            $this->composer->dumpOptimized();
-
-            return;
-        }
+        $this->commandData->config->init($this->commandData);
 
         $migrationGenerator = new MigrationGenerator($this->commandData);
         $migrationGenerator->rollback();
@@ -119,21 +103,17 @@ class RollbackGeneratorCommand extends Command
         $routeGenerator = new RoutesGenerator($this->commandData);
         $routeGenerator->rollback();
 
-        if ($this->commandData->getAddOn('tests')) {
-            $repositoryTestGenerator = new RepositoryTestGenerator($this->commandData);
-            $repositoryTestGenerator->rollback();
+        $repositoryTestGenerator = new RepositoryTestGenerator($this->commandData);
+        $repositoryTestGenerator->rollback();
 
-            $apiTestGenerator = new APITestGenerator($this->commandData);
-            $apiTestGenerator->rollback();
-        }
+        $apiTestGenerator = new APITestGenerator($this->commandData);
+        $apiTestGenerator->rollback();
 
         $factoryGenerator = new FactoryGenerator($this->commandData);
         $factoryGenerator->rollback();
 
-        if ($this->commandData->config->getAddOn('menu.enabled')) {
-            $menuGenerator = new MenuGenerator($this->commandData);
-            $menuGenerator->rollback();
-        }
+        $menuGenerator = new MenuGenerator($this->commandData);
+        $menuGenerator->rollback();
 
         $this->info('Generating autoload files');
         $this->composer->dumpOptimized();
@@ -146,11 +126,7 @@ class RollbackGeneratorCommand extends Command
      */
     public function getOptions()
     {
-        return [
-            ['tableName', null, InputOption::VALUE_REQUIRED, 'Table Name'],
-            ['plural', null, InputOption::VALUE_REQUIRED, 'Plural Models name'],
-            ['views', null, InputOption::VALUE_REQUIRED, 'Views to rollback'],
-        ];
+        return [];
     }
 
     /**
@@ -162,7 +138,6 @@ class RollbackGeneratorCommand extends Command
     {
         return [
             ['model', InputArgument::REQUIRED, 'Singular Models name'],
-            ['type', InputArgument::REQUIRED, 'Rollback type: (api / scaffold / api_scaffold)'],
         ];
     }
 }

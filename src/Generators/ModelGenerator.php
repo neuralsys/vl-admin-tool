@@ -367,4 +367,9 @@ class ModelGenerator extends BaseGenerator
             $this->commandData->commandComment('Models file deleted: '.$this->fileName);
         }
     }
+
+    public function delete()
+    {
+        return $this->rollback();
+    }
 }

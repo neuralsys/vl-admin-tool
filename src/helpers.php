@@ -17,6 +17,31 @@ if (!function_exists('infy_tab')) {
     }
 }
 
+if (!function_exists('deleteDir')) {
+    /**
+     * Delete Directory with files and directories in it.
+     *
+     * @param string $folder
+     *
+     * @return string
+     */
+    function deleteDir($folder)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
+                        rrmdir($dir. DIRECTORY_SEPARATOR .$object);
+                    else
+                        unlink($dir. DIRECTORY_SEPARATOR .$object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+}
+
 if (!function_exists('infy_tabs')) {
     /**
      * Generates tab with spaces.

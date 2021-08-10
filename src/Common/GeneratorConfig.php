@@ -196,7 +196,7 @@ class GeneratorConfig
             resource_path('views/')
         ).$viewPrefix.$this->mSnakePlural.'/';
 
-        $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('Seeds/'));
+        $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('seeds/'));
         $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
         $this->pathViewProvider = config(
             'vl_admin_tool.path.view_provider',
@@ -339,6 +339,7 @@ class GeneratorConfig
         foreach ($this->availableOptions as $option) {
             $this->options[$option] = $this->commandData->commandObj->option($option);
         }
+
         # add prefix options
         $prefixKeys = $this->getPrefixKeysFromConfig();
         foreach ($prefixKeys as $prefixKey) {
@@ -517,7 +518,7 @@ class GeneratorConfig
     }
 
     private function getAvailableOptions() {
-        $options = (new BaseCommand())->getOptions();
+        $options = $this->commandData->commandObj->getOptions();
         $res = [];
         foreach ($options as $option)
             $res[] = $option[0];

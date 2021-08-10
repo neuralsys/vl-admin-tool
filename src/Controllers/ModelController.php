@@ -83,9 +83,18 @@ class ModelController extends Controller
             return $this->error(__('crud.not_found'));
         }
 
-        $this->modelRepository->delete($id);
-
-        return $this->success(__('crud.delete_success'));
+        # generate model
+        $modelName = $model->class_name;
+        try {
+            $exitCode = Artisan::call("vlat:delete $modelName");
+            if ($exitCode === 0) {
+                return $this->success("Delete $modelName successfully!");
+            } else {
+                return $this->error("Delete $modelName failed, exit code=$exitCode!");
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     public function generate($id, Request $request) {

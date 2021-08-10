@@ -45,9 +45,21 @@ class MenuGenerator extends BaseGenerator
 
     public function rollback()
     {
-        if (Str::contains($this->menuContents, $this->menuTemplate)) {
-            file_put_contents($this->path, str_replace($this->menuTemplate, '', $this->menuContents));
-            $this->commandData->commandComment('menu deleted');
+        $parentId = 0;
+        $menuRepo = app(MenuRepository::class);
+
+        $modelMenu = $menuRepo->where(
+            'url_pattern',
+            fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$*')
+        )->first();
+
+        if (!empty($modelMenu)) {
+            foreach ($modelMenu->children as $childMenu) {
+                $childMenu->parentId = 0;
+                $childMenu->save();
+            }
+
+            $modelMenu->delete();
         }
     }
 }

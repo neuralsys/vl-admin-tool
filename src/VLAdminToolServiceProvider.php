@@ -8,6 +8,7 @@ use Vuongdq\VLAdminTool\Commands\API\APIControllerGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\API\APIRequestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\API\TestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\APIScaffoldGeneratorCommand;
+use Vuongdq\VLAdminTool\Commands\BaseCommand;
 use Vuongdq\VLAdminTool\Commands\Common\MigrationGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\Common\RepositoryGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\DBSyncCommand;
@@ -69,6 +70,14 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new GeneratorPublishCommand();
         });
 
+        $this->app->singleton('vlat.publish.layout', function ($app) {
+            return new LayoutPublishCommand();
+        });
+
+        $this->app->singleton('vlat.publish.user', function ($app) {
+            return new PublishUserCommand();
+        });
+
         $this->app->singleton('vlat.migrate', function ($app) {
             return new MigrateCommand();
         });
@@ -89,56 +98,28 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new GenerateMenuCommand();
         });
 
-        $this->app->singleton('vlat.publish.layout', function ($app) {
-            return new LayoutPublishCommand();
-        });
-
-        $this->app->singleton('vlat.api_scaffold', function ($app) {
-            return new APIScaffoldGeneratorCommand();
-        });
-
-//        $this->app->singleton('vlat.migration', function ($app) {
-//            return new MigrationGeneratorCommand();
-//        });
-
         $this->app->singleton('vlat.generate.model', function ($app) {
             return new GenerateModelCommand();
         });
 
-        $this->app->singleton('vlat.repository', function ($app) {
+        $this->app->singleton('vlat.generate.repository', function ($app) {
             return new RepositoryGeneratorCommand();
         });
 
-        $this->app->singleton('vlat.api.controller', function ($app) {
-            return new APIControllerGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.api.requests', function ($app) {
-            return new APIRequestsGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.api.tests', function ($app) {
-            return new TestsGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.scaffold.controller', function ($app) {
+        $this->app->singleton('vlat.generate.controller', function ($app) {
             return new ControllerGeneratorCommand();
         });
 
-        $this->app->singleton('vlat.scaffold.requests', function ($app) {
+        $this->app->singleton('vlat.generate.request', function ($app) {
             return new RequestsGeneratorCommand();
         });
 
-        $this->app->singleton('vlat.scaffold.views', function ($app) {
+        $this->app->singleton('vlat.generate.view', function ($app) {
             return new ViewsGeneratorCommand();
         });
 
         $this->app->singleton('vlat.rollback', function ($app) {
             return new RollbackGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.publish.user', function ($app) {
-            return new PublishUserCommand();
         });
 
         $this->commands([
@@ -150,26 +131,19 @@ class VLAdminToolServiceProvider extends ServiceProvider {
 
             # run specific cases
             'vlat.generate.menu',
+            'vlat.publish.layout',
+            'vlat.publish.user',
 
             # generate model with elements
             'vlat.generate',
             'vlat.generate.model',
-//            'vlat.generate:controller',
-//            'vlat.generate:request',
-//            'vlat.generate:views',
+            'vlat.generate.controller',
+            'vlat.generate.repository',
+            'vlat.generate.request',
+            'vlat.generate.view',
 
-            'vlat.api_scaffold',
-            'vlat.publish.layout',
-//            'vlat.migration',
-            'vlat.repository',
-            'vlat.api.controller',
-            'vlat.api.requests',
-            'vlat.api.tests',
-            'vlat.scaffold.controller',
-            'vlat.scaffold.requests',
-            'vlat.scaffold.views',
+            # rollback
             'vlat.rollback',
-            'vlat.publish.user',
         ]);
 
         $configPath = __DIR__ . '/../config/vl_admin_tool.php';

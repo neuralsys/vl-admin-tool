@@ -3,6 +3,7 @@
 namespace Vuongdq\VLAdminTool\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Vuongdq\VLAdminTool\Common\CommandData;
 use Vuongdq\VLAdminTool\Generators\API\APIControllerGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRequestGenerator;
@@ -114,6 +115,7 @@ class RollbackGeneratorCommand extends Command
 
         $menuGenerator = new MenuGenerator($this->commandData);
         $menuGenerator->rollback();
+        Artisan::call('vlat.generate:menu', []);
 
         $this->info('Generating autoload files');
         $this->composer->dumpOptimized();

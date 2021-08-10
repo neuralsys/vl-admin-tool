@@ -27,17 +27,17 @@ if (!function_exists('deleteDir')) {
      */
     function deleteDir($folder)
     {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
+        if (is_dir($folder)) {
+            $objects = scandir($folder);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
-                        rrmdir($dir. DIRECTORY_SEPARATOR .$object);
+                    if (is_dir($folder. DIRECTORY_SEPARATOR .$object) && !is_link($folder."/".$object))
+                        rrmdir($folder. DIRECTORY_SEPARATOR .$object);
                     else
-                        unlink($dir. DIRECTORY_SEPARATOR .$object);
+                        unlink($folder. DIRECTORY_SEPARATOR .$object);
                 }
             }
-            rmdir($dir);
+            rmdir($folder);
         }
     }
 }

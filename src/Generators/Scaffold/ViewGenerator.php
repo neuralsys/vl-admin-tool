@@ -395,6 +395,6 @@ class ViewGenerator extends BaseGenerator
 
     public function rollback()
     {
-        array_map('unlink', glob($this->path."/*.*"));
+        deleteDir($this->path);
     }
 }

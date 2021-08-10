@@ -86,7 +86,7 @@ class ModelController extends Controller
         # generate model
         $modelName = $model->class_name;
         try {
-            $exitCode = Artisan::call("vlat:delete $modelName");
+            $exitCode = Artisan::call("vlat:rollback $modelName");
             if ($exitCode === 0) {
                 return $this->success("Delete $modelName successfully!");
             } else {

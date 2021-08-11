@@ -869,8 +869,24 @@ class DBSyncCommand extends BaseCommand
             if (in_array($table->getName(), $this->ignoreTables))
                 continue;
 
-            $this->foreignKeys = $this->prepareForeignKeys($table);
             $this->syncTable($table);
+        }
+
+        foreach ($tables as $table) {
+            if (in_array($table->getName(), $this->ignoreTables))
+                continue;
+
+            $this->foreignKeys = $this->prepareForeignKeys($table);
+
+            DB::beginTransaction();
+            try {
+                $this->checkForRelations($this->foreignKeys, $table);
+                $this->createOrUpdateRelations($table);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                throw $e;
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace Vuongdq\VLAdminTool\Repositories;
 
 use Vuongdq\VLAdminTool\Models\DBConfig;
-use App\Repositories\BaseRepository;
+use Vuongdq\VLAdminTool\Repositories\BaseRepository;
 
 /**
  * Class DBConfigRepository

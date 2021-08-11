@@ -4,7 +4,7 @@ namespace $NAMESPACE_APP$\Http\Controllers;
 
 use $JSON_RESPONSE_TRAIT_NAMESPACE$\JsonResponse;
 
-class AppBaseController extends Controller {
+class ApiBaseController extends Controller {
     use JsonResponse;
     /**
      * @OA\Info(

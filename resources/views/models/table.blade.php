@@ -4,7 +4,7 @@
 
 <div class="card" style="overflow-y: auto;">
     <div class="card-body">
-        {!! $dataTable->table(['width' => '100%', 'class' => 'table table-bordered table-hover dataTable', 'id' => 'model-datatable']) !!}
+        {!! $dataTable->table(['width' => '100%', 'class' => 'table table-bordered table-hover dataTable', 'id' => 'model-datatable', 'style' => "border-collapse: collapse !important;"]) !!}
     </div>
 </div>
 

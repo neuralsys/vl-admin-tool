@@ -101,13 +101,13 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishBaseController()
     {
-        $templateData = get_template('app_base_controller', 'vl-admin-tool');
+        $templateData = get_template('api_base_controller', 'vl-admin-tool');
 
         $templateData = $this->fillTemplate($templateData);
 
         $controllerPath = app_path('Http/Controllers/');
 
-        $fileName = 'AppBaseController.php';
+        $fileName = 'ApiBaseController.php';
 
         if (file_exists($controllerPath.$fileName) && !$this->confirmOverwrite($fileName)) {
             return;
@@ -115,7 +115,23 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
         FileUtil::createFile($controllerPath, $fileName, $templateData);
 
-        $this->info('AppBaseController created');
+        $this->info('ApiBaseController created');
+
+        $templateData = get_template('base_controller', 'vl-admin-tool');
+
+        $templateData = $this->fillTemplate($templateData);
+
+        $controllerPath = app_path('Http/Controllers/');
+
+        $fileName = 'Controller.php';
+
+        if (file_exists($controllerPath.$fileName) && !$this->confirmOverwrite($fileName)) {
+            return;
+        }
+
+        FileUtil::createFile($controllerPath, $fileName, $templateData);
+
+        $this->info('Controller created');
     }
 
     private function publishBaseRepository()

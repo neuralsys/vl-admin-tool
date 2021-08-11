@@ -38,6 +38,9 @@ class InstallCommand extends BaseCommand
     public function handle() {
         $this->info('Installing VL Admin Tool...');
         $force = $this->hasOption('force') ? $this->option('force') : false;
+
+        $this->call('ui', ['type' => 'bootstrap', '--auth' => true, '--no-interaction' => $force]);
+
         $this->call('vlat:publish', ['--force' => $force]);
 
         if (!$this->hasOption('skip-migration') || !$this->option('skip-migration'))

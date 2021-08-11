@@ -47,7 +47,7 @@ return [
 
         'templates_dir'     => resource_path('vl-admin-tool/templates/'),
 
-        'seeder'            => database_path('Seeds/'),
+        'seeder'            => database_path('seeds/'),
 
         'database_seeder'   => database_path('seeds/DatabaseSeeder.php'),
 

@@ -134,15 +134,18 @@ class ModelGenerator extends BaseGenerator
         $fillables = '';
         $fieldsArr = [];
         $count = 1;
-        foreach ($this->commandData->relations as $relation) {
-            $field = $relationText = (isset($relation->inputs[0])) ? $relation->inputs[0] : null;
-            if (in_array($field, $fieldsArr)) {
-                $relationText = $relationText.'_'.$count;
-                $count++;
-            }
 
-            $fillables .= ' * @property '.$this->getPHPDocType($relation->type, $relation, $relationText).PHP_EOL;
-            $fieldsArr[] = $field;
+        if (!empty($this->commandData->relations)) {
+            foreach ($this->commandData->relations as $relation) {
+                $field = $relationText = (isset($relation->inputs[0])) ? $relation->inputs[0] : null;
+                if (in_array($field, $fieldsArr)) {
+                    $relationText = $relationText . '_' . $count;
+                    $count++;
+                }
+
+                $fillables .= ' * @property ' . $this->getPHPDocType($relation->type, $relation, $relationText) . PHP_EOL;
+                $fieldsArr[] = $field;
+            }
         }
 
         foreach ($this->commandData->fields as $field) {
@@ -342,19 +345,21 @@ class ModelGenerator extends BaseGenerator
 
         $count = 1;
         $fieldsArr = [];
-        foreach ($this->commandData->relations as $relation) {
-            $field = (isset($relation->inputs[0])) ? $relation->inputs[0] : null;
+        if (!empty($this->commandData->relations)) {
+            foreach ($this->commandData->relations as $relation) {
+                $field = (isset($relation->inputs[0])) ? $relation->inputs[0] : null;
 
-            $relationShipText = $field;
-            if (in_array($field, $fieldsArr)) {
-                $relationShipText = $relationShipText.'_'.$count;
-                $count++;
-            }
+                $relationShipText = $field;
+                if (in_array($field, $fieldsArr)) {
+                    $relationShipText = $relationShipText . '_' . $count;
+                    $count++;
+                }
 
-            $relationText = $relation->getRelationFunctionText($relationShipText);
-            if (!empty($relationText)) {
-                $fieldsArr[] = $field;
-                $relations[] = $relationText;
+                $relationText = $relation->getRelationFunctionText($relationShipText);
+                if (!empty($relationText)) {
+                    $fieldsArr[] = $field;
+                    $relations[] = $relationText;
+                }
             }
         }
 

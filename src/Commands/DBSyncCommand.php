@@ -831,8 +831,6 @@ class DBSyncCommand extends BaseCommand
     {
         DB::beginTransaction();
         try {
-            $this->checkForRelations($this->foreignKeys, $table);
-
             $model = $this->createOrUpdateTable($table);
             try {
                 $primaryKeys = $table->getPrimaryKeyColumns();
@@ -845,8 +843,6 @@ class DBSyncCommand extends BaseCommand
             DB::rollBack();
             throw $e;
         }
-
-        $this->createOrUpdateRelations($table);
     }
 
     public function removeInvalidTables($tables) {

@@ -86,7 +86,7 @@ class GenerateMenuCommand extends BaseCommand {
                 ];
                 break;
             case 'has-child':
-                $childrenMenus = $menu->children;
+                $childrenMenus = $menu->children()->orderBy('pos')->get();
                 $menus = '';
                 $condition = '';
                 foreach ($childrenMenus as $childrenMenu) {

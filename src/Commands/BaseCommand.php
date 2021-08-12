@@ -260,8 +260,8 @@ class BaseCommand extends Command
     private function saveLocaleFile()
     {
         $locales = [
-            'singular' => $this->commandData->modelName,
-            'plural'   => $this->commandData->config->mPlural,
+            'singular' => Str::title(str_replace('_', ' ', $this->commandData->config->mSingular)),
+            'plural'   => Str::title(str_replace('_', ' ', $this->commandData->config->mPlural)),
             'fields'   => [],
         ];
 

@@ -157,8 +157,8 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishLocaleFiles()
     {
-        $localesDir = __DIR__ . '/../../../locale/';
-
+        $packageDir = $this->getPackagePath();
+        $localesDir = $packageDir . '/locale';
         $this->publishDirectory($localesDir, resource_path('lang'), 'lang', true);
 
         $this->comment('Locale files published');

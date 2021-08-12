@@ -9,7 +9,6 @@
                 'width' => '100%',
                 'class' => 'table table-bordered table-hover dataTable',
                 'id' => 'model-datatable',
-                'style' => 'border-collapse: collapse !important;'
             ])
         !!}
     </div>

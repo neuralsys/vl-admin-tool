@@ -22,6 +22,7 @@ use Vuongdq\VLAdminTool\Generators\Scaffold\ViewGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Vuongdq\VLAdminTool\Models\Model;
+use Vuongdq\VLAdminTool\Utils\FileUtil;
 
 class RollbackGeneratorCommand extends Command
 {
@@ -113,12 +114,15 @@ class RollbackGeneratorCommand extends Command
         $factoryGenerator = new FactoryGenerator($this->commandData);
         $factoryGenerator->rollback();
 
+        $this->removeLocaleFile($this->commandData);
+
         $menuGenerator = new MenuGenerator($this->commandData);
         $menuGenerator->rollback();
         Artisan::call('vlat.generate:menu', []);
 
         $this->info('Generating autoload files');
         $this->composer->dumpOptimized();
+        return 0;
     }
 
     /**
@@ -141,5 +145,17 @@ class RollbackGeneratorCommand extends Command
         return [
             ['model', InputArgument::REQUIRED, 'Singular Models name'],
         ];
+    }
+
+    public function removeLocaleFile(CommandData $commandData) {
+        $this->commandData->commandComment('Locale File Removing...');
+        $path = config('vl_admin_tool.path.models_locale_files', base_path('resources/lang/en/models/'));
+
+        $fileName = $this->commandData->config->mCamel.'.php';
+
+        if (file_exists($path.$fileName)) {
+            FileUtil::deleteFile($path, $fileName);
+        }
+        $this->commandData->commandComment('Removing Locale File successfully!');
     }
 }

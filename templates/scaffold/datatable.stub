@@ -63,9 +63,7 @@ class $MODEL_NAME$DataTable extends DataTable
                        'text' => '<i class="fa fa-refresh"></i> ' .__('auth.app.reload').''
                     ],
                 ],
-                 'language' => [
-                   'url' => url('//cdn.datatables.net/plug-ins/1.10.12/i18n/English.json'),
-                 ],
+                 'language' => __('vl-admin-tool-lang::datatable'),
                  "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
                  'select' => true
             ]);

@@ -49,6 +49,7 @@ class GeneratorConfig
 
     /* Models Names */
     public $mName;
+    public $mSingular;
     public $mPlural;
     public $mCamel;
     public $mCamelPlural;
@@ -317,6 +318,7 @@ class GeneratorConfig
     public function prepareModelNames()
     {
         $this->mName = $this->commandData->modelName;
+        $this->mSingular = $this->commandData->modelObject->singular;
         $this->mPlural = $this->commandData->modelObject->plural;
         $this->mCamel = Str::camel($this->mName);
         $this->mCamelPlural = Str::camel($this->mPlural);

@@ -1,7 +1,6 @@
 ## Laravel Admin Tool by Vuongdq
 
 ## Todo:
-- Add ignore components when generating model
 - Sort menu
 - Update parent menu Option after adding new
 - Fix modifying route correctly
@@ -11,3 +10,4 @@
 - Add Languages
 - Add Translation Files
 - Add Translation Words/Sentences
+- Rollback Seeder

@@ -10,11 +10,88 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!-- Timestamps Field -->
+                        <!-- Migration Field -->
                         <div class="form-group col-sm-6">
                             <label class="checkbox-inline">
                                 {!! Form::hidden('migration', '0', ['class' => 'ignore-reset']) !!}
                                 {!! Form::checkbox('migration', '1', 1, ['data-column' => 'migration']) !!} Migration
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('model', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('model', '1', 1, ['data-column' => 'model']) !!} Model
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('repository', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('repository', '1', 1, ['data-column' => 'repository']) !!} Repository
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('factory', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('factory', '1', 1, ['data-column' => 'factory']) !!} Factory
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('seeder', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('seeder', '1', 1, ['data-column' => 'seeder']) !!} Seeder
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('requests', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('requests', '1', 1, ['data-column' => 'requests']) !!} Requests
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('datatable', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('datatable', '1', 1, ['data-column' => 'datatable']) !!} Datatable
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('controller', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('controller', '1', 1, ['data-column' => 'controller']) !!} Controller
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('views', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('views', '1', 1, ['data-column' => 'views']) !!} Views
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('routes', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('routes', '1', 1, ['data-column' => 'routes']) !!} Routes
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('menu', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('menu', '1', 1, ['data-column' => 'menu']) !!} Menu
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="checkbox-inline">
+                                {!! Form::hidden('lang', '0', ['class' => 'ignore-reset']) !!}
+                                {!! Form::checkbox('lang', '1', 1, ['data-column' => 'lang']) !!} Lang
                             </label>
                         </div>
                     </div>

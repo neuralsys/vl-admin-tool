@@ -9,6 +9,7 @@ use Vuongdq\VLAdminTool\Generators\API\APIControllerGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRequestGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APITestGenerator;
+use Vuongdq\VLAdminTool\Generators\DataTableGenerator;
 use Vuongdq\VLAdminTool\Generators\FactoryGenerator;
 use Vuongdq\VLAdminTool\Generators\LanguageGenerator;
 use Vuongdq\VLAdminTool\Generators\MigrationGenerator;
@@ -96,6 +97,9 @@ class RollbackGeneratorCommand extends Command
 
         $requestGenerator = new RequestGenerator($this->commandData);
         $requestGenerator->rollback();
+
+        $datatableGenerator = new DataTableGenerator($this->commandData);
+        $datatableGenerator->rollback();
 
         $controllerGenerator = new ControllerGenerator($this->commandData);
         $controllerGenerator->rollback();

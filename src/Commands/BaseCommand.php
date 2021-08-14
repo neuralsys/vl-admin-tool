@@ -9,7 +9,9 @@ use Vuongdq\VLAdminTool\Generators\API\APIControllerGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRequestGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APITestGenerator;
+use Vuongdq\VLAdminTool\Generators\DataTableGenerator;
 use Vuongdq\VLAdminTool\Generators\FactoryGenerator;
+use Vuongdq\VLAdminTool\Generators\LanguageGenerator;
 use Vuongdq\VLAdminTool\Generators\MigrationGenerator;
 use Vuongdq\VLAdminTool\Generators\ModelGenerator;
 use Vuongdq\VLAdminTool\Generators\RepositoryGenerator;
@@ -21,7 +23,6 @@ use Vuongdq\VLAdminTool\Generators\Scaffold\RoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\Scaffold\ViewGenerator;
 use Vuongdq\VLAdminTool\Generators\SeederGenerator;
 use Vuongdq\VLAdminTool\Repositories\ModelRepository;
-use Vuongdq\VLAdminTool\Utils\FileUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -135,6 +136,11 @@ class BaseCommand extends Command
             $requestGenerator->generate();
         }
 
+        if (!$this->isSkip('datatable')) {
+            $datatableGenerator = new DataTableGenerator($this->commandData);
+            $datatableGenerator->generate();
+        }
+
         if (!$this->isSkip('controller')) {
             $controllerGenerator = new ControllerGenerator($this->commandData);
             $controllerGenerator->generate();
@@ -154,6 +160,11 @@ class BaseCommand extends Command
             $menuGenerator = new MenuGenerator($this->commandData);
             $menuGenerator->generate();
         }
+
+        if (!$this->isSkip('lang')) {
+            $languageGenerator = new LanguageGenerator($this->commandData);
+            $languageGenerator->generate();
+        }
     }
 
     public function findOldMigration() {
@@ -169,33 +180,12 @@ class BaseCommand extends Command
         return null;
     }
 
-    public function performPreActions()
-    {
-        if (!$this->isSkip('migration')) {
-            $migrationFile = $this->findOldMigration();
-            if ($migrationFile !== null) {
-                $this->call("migrate:refresh --seed", ['--force' => true]);
-            }
-        }
-    }
-
     public function performPostActions($runMigration = false)
     {
-        $this->saveLocaleFile();
-
         if (!$this->isSkip('dump-autoload')) {
             $this->info('Generating autoload files');
             $this->composer->dumpOptimized();
         }
-    }
-
-    public function runMigration()
-    {
-        $migrationPath = config('vl_admin_tool.path.migration', database_path('migrations/'));
-        $path = Str::after($migrationPath, base_path()); // get path after base_path
-        $this->call('migrate', ['--path' => $path, '--force' => true]);
-
-        return true;
     }
 
     public function isSkip($skip)
@@ -207,79 +197,9 @@ class BaseCommand extends Command
         return false;
     }
 
-    public function performPreActionsWithMigration()
-    {
-        $this->performPreActions();
-    }
-
     public function performPostActionsWithMigration()
     {
         $this->performPostActions(true);
-    }
-
-    private function saveSchemaFile()
-    {
-        $fileFields = [];
-
-        foreach ($this->commandData->fields as $field) {
-            $fileFields[] = [
-                'name'        => $field->name,
-                'dbType'      => $field->dbInput,
-                'htmlType'    => $field->htmlInput,
-                'validations' => $field->validations,
-                'searchable'  => $field->isSearchable,
-                'fillable'    => $field->isFillable,
-                'primary'     => $field->isPrimary,
-                'inForm'      => $field->inForm,
-                'inIndex'     => $field->inIndex,
-                'inView'      => $field->inView,
-            ];
-        }
-
-        foreach ($this->commandData->relations as $relation) {
-            $fileFields[] = [
-                'type'     => 'relation',
-                'relation' => $relation->type.','.implode(',', $relation->inputs),
-            ];
-        }
-
-        $path = config('admin_generator.path.schema_files', resource_path('model_schemas/'));
-
-        $fileName = $this->commandData->modelName.'.json';
-
-        if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
-            return;
-        }
-        FileUtil::createFile($path, $fileName, json_encode($fileFields, JSON_PRETTY_PRINT));
-        $this->commandData->commandComment("\nSchema File saved: ");
-        $this->commandData->commandInfo($fileName);
-
-        return $fileName;
-    }
-
-    private function saveLocaleFile()
-    {
-        $locales = [
-            'singular' => Str::title(str_replace('_', ' ', $this->commandData->config->mSingular)),
-            'plural'   => Str::title(str_replace('_', ' ', $this->commandData->config->mPlural)),
-            'fields'   => [],
-        ];
-
-        foreach ($this->commandData->fields as $field) {
-            $locales['fields'][$field->name] = Str::title(str_replace('_', ' ', $field->name));
-        }
-
-        $path = config('vl_admin_tool.path.models_locale_files', base_path('resources/lang/en/models/'));
-
-        $fileName = $this->commandData->config->mCamel.'.php';
-
-        if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
-            return;
-        }
-        $content = "<?php\n\nreturn ".var_export($locales, true).';'.\PHP_EOL;
-        FileUtil::createFile($path, $fileName, $content);
-        $this->commandData->commandComment("\nModels Locale File saved: ");
-        $this->commandData->commandInfo($fileName);
     }
 
     /**
@@ -288,7 +208,7 @@ class BaseCommand extends Command
      *
      * @return bool
      */
-    protected function confirmOverwrite($fileName, $prompt = '')
+    protected function confirmOverwrite($fileName, string $prompt = ''): bool
     {
         $force = $this->hasOption('force') && $this->option('force');
         $prompt = (empty($prompt))
@@ -342,7 +262,8 @@ class BaseCommand extends Command
      * get migration folder of tool
      * @return string
      */
-    public function getToolMigrationFolder() {
+    public function getToolMigrationFolder(): string
+    {
         $rootPath = $this->getPackagePath();
         return $rootPath.'/database/migrations';
     }
@@ -350,8 +271,7 @@ class BaseCommand extends Command
     public function getPackagePath() {
         $basePath = str_replace("\\", "/", base_path('') . '/');
         $fullPath = str_replace("\\", "/", dirname(realpath(__DIR__.'/../')));
-        $relativePath = str_replace($basePath, '', $fullPath);
-        return $relativePath;
+        return str_replace($basePath, '', $fullPath);
     }
 
     public function getAdminTableNames() {

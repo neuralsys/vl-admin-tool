@@ -30,6 +30,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
     {
         $this->info('Publishing...');
         $this->copyView();
+        $this->publishPublicFiles();
         $this->updateRoutes();
         $this->publishHomeController();
 
@@ -37,7 +38,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $this->publishTraits();
         $this->publishBaseController();
         $this->publishBaseRepository();
-        $this->publishLocaleFiles();
+        $this->publishBaseLocaleFiles();
         $this->info('Publish successfully!');
     }
 
@@ -155,11 +156,33 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $this->info('BaseRepository created');
     }
 
-    private function publishLocaleFiles()
+    private function publishPublicFiles()
+    {
+        $publicPath = public_path();
+        $templateType = config('vl_admin_tool.templates', 'adminlte-templates');
+
+        $tempaltePublicDir = get_templates_package_path($templateType) . "/public";
+
+        $files = array_diff(scandir($tempaltePublicDir), array('.', '..'));
+        foreach ($files as $fileOrFolder) {
+            $sourcePath = $tempaltePublicDir."/".$fileOrFolder;
+            if (is_file($sourcePath)) {
+                FileUtil::copyFile($tempaltePublicDir, $fileOrFolder, $publicPath, true);
+                $this->info($fileOrFolder . " File created");
+            } elseif (is_dir($sourcePath)) {
+                FileUtil::copyDirectory($sourcePath, $publicPath."/".$fileOrFolder, true);
+                $this->info($fileOrFolder . " Folder created");
+            }
+        }
+
+        $this->comment('Public files published');
+    }
+
+    private function publishBaseLocaleFiles()
     {
         $packageDir = $this->getPackagePath();
         $localesDir = $packageDir . '/locale';
-        $this->publishDirectory($localesDir, resource_path('lang'), 'lang', true);
+        FileUtil::copyDirectory($localesDir, resource_path('lang'), true);
 
         $this->comment('Locale files published');
     }
@@ -233,6 +256,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         return [
             'layouts/app'        => 'layouts/app.blade.php',
             'layouts/sidebar'    => 'layouts/sidebar.blade.php',
+            'layouts/navbar'    => 'layouts/navbar.blade.php',
             'layouts/datatables_css'    => 'layouts/datatables_css.blade.php',
             'layouts/datatables_js'     => 'layouts/datatables_js.blade.php',
             'layouts/menu'              => 'layouts/menu.blade.php',

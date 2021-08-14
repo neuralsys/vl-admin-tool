@@ -30,6 +30,7 @@ class GeneratorConfig
     /* Path variables */
     public $pathRepository;
     public $pathModel;
+    public $pathLang;
     public $pathDataTables;
     public $pathFactory;
     public $pathSeeder;
@@ -45,7 +46,6 @@ class GeneratorConfig
     public $pathRequest;
     public $pathRoutes;
     public $pathViews;
-    public $modelJsPath;
 
     /* Models Names */
     public $mName;
@@ -192,22 +192,15 @@ class GeneratorConfig
         $this->pathRoutes = config('vl_admin_tool.path.routes', base_path('routes/web.php'));
         $this->pathFactory = config('vl_admin_tool.path.factory', database_path('factories/'));
 
-        $this->pathViews = config(
-            'vl_admin_tool.path.views',
-            resource_path('views/')
-        ).$viewPrefix.$this->mSnakePlural.'/';
+        $this->pathViews = config('vl_admin_tool.path.views', resource_path('views/')).$viewPrefix.$this->mSnakePlural.'/';
 
         $this->pathSeeder = config('vl_admin_tool.path.seeder', database_path('seeds/'));
-        $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
-        $this->pathViewProvider = config(
-            'vl_admin_tool.path.view_provider',
-            app_path('Providers/ViewServiceProvider.php')
-        );
 
-        $this->modelJsPath = config(
-            'vl_admin_tool.path.modelsJs',
-            resource_path('assets/js/models/')
-        );
+        $this->pathDatabaseSeeder = config('vl_admin_tool.path.database_seeder', database_path('seeds/DatabaseSeeder.php'));
+
+        $this->pathViewProvider = config('vl_admin_tool.path.view_provider', app_path('Providers/ViewServiceProvider.php'));
+
+        $this->pathLang = config('vl_admin_tool.path.lang', resource_path('resources/lang'));
     }
 
     public function loadDynamicVariables()

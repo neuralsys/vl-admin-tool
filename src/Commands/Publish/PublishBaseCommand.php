@@ -2,13 +2,13 @@
 
 namespace Vuongdq\VLAdminTool\Commands\Publish;
 
-use File;
 use Vuongdq\VLAdminTool\Commands\BaseCommand;
 
 class PublishBaseCommand extends BaseCommand
 {
     public function handle()
     {
+        return 0;
     }
 
     public function publishFile($sourceFile, $destinationFile, $fileName)
@@ -21,29 +21,6 @@ class PublishBaseCommand extends BaseCommand
 
         $this->comment($fileName.' published');
         $this->info($destinationFile);
-    }
-
-    /**
-     * @param $sourceDir
-     * @param $destinationDir
-     * @param $dirName
-     * @param bool $force
-     *
-     * @return bool|void
-     */
-    public function publishDirectory($sourceDir, $destinationDir, $dirName, $force = false)
-    {
-        if (file_exists($destinationDir) && !$force && !$this->confirmOverwrite($destinationDir)) {
-            return;
-        }
-
-        File::makeDirectory($destinationDir, 493, true, true);
-        File::copyDirectory($sourceDir, $destinationDir);
-
-        $this->comment($dirName.' published');
-        $this->info($destinationDir);
-
-        return true;
     }
 
     /**

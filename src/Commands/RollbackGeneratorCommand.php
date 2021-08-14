@@ -10,6 +10,7 @@ use Vuongdq\VLAdminTool\Generators\API\APIRequestGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APIRoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\API\APITestGenerator;
 use Vuongdq\VLAdminTool\Generators\FactoryGenerator;
+use Vuongdq\VLAdminTool\Generators\LanguageGenerator;
 use Vuongdq\VLAdminTool\Generators\MigrationGenerator;
 use Vuongdq\VLAdminTool\Generators\ModelGenerator;
 use Vuongdq\VLAdminTool\Generators\RepositoryGenerator;
@@ -114,7 +115,8 @@ class RollbackGeneratorCommand extends Command
         $factoryGenerator = new FactoryGenerator($this->commandData);
         $factoryGenerator->rollback();
 
-        $this->removeLocaleFile($this->commandData);
+        $languageGenerator = new LanguageGenerator($this->commandData);
+        $languageGenerator->rollback();
 
         $menuGenerator = new MenuGenerator($this->commandData);
         $menuGenerator->rollback();
@@ -145,17 +147,5 @@ class RollbackGeneratorCommand extends Command
         return [
             ['model', InputArgument::REQUIRED, 'Singular Models name'],
         ];
-    }
-
-    public function removeLocaleFile(CommandData $commandData) {
-        $this->commandData->commandComment('Locale File Removing...');
-        $path = config('vl_admin_tool.path.models_locale_files', base_path('resources/lang/en/models/'));
-
-        $fileName = $this->commandData->config->mCamel.'.php';
-
-        if (file_exists($path.$fileName)) {
-            FileUtil::deleteFile($path, $fileName);
-        }
-        $this->commandData->commandComment('Removing Locale File successfully!');
     }
 }

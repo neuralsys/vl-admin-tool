@@ -15,7 +15,7 @@ return [
 
         'model'             => app_path('Models/'),
 
-        'models_locale_files' => base_path('resources/lang/en/models/'),
+        'lange'             => base_path('resources/lang/'),
 
         'trait'             => app_path('Traits/'),
 

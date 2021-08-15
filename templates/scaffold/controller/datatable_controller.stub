@@ -28,7 +28,8 @@ class $MODEL_NAME$Controller extends Controller
      */
     public function index($MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable)
     {
-        return $$MODEL_NAME_CAMEL$DataTable->render('$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index');
+        return $$MODEL_NAME_CAMEL$DataTable
+            ->render('$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index');
     }
 
     /**
@@ -44,7 +45,7 @@ class $MODEL_NAME$Controller extends Controller
 
         $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->create($input);
 
-        return $this->success(__('crud.add_success'));
+        return $this->success(__('crud.add_success', ['model' => Str::lower(__('models/$MODEL_NAME_CAMEL$.singular'))]));
     }
 
     /**

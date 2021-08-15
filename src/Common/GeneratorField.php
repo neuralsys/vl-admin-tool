@@ -168,27 +168,12 @@ class GeneratorField
         $this->migrationText .= ';';
     }
 
-    public static function parseFieldFromFile($fieldInput)
-    {
-        $field = new self();
-        $field->name = $fieldInput['name'];
-        $field->parseDBType($fieldInput['dbType']);
-        $field->parseHtmlInput(isset($fieldInput['htmlType']) ? $fieldInput['htmlType'] : '');
-        $field->validations = isset($fieldInput['validations']) ? $fieldInput['validations'] : '';
-        $field->isSearchable = isset($fieldInput['searchable']) ? $fieldInput['searchable'] : false;
-//        $field->isFillable = isset($fieldInput['fillable']) ? $fieldInput['fillable'] : true;
-        $field->isPrimary = isset($fieldInput['primary']) ? $fieldInput['primary'] : false;
-//        $field->inForm = isset($fieldInput['inForm']) ? $fieldInput['inForm'] : true;
-//        $field->inIndex = isset($fieldInput['inIndex']) ? $fieldInput['inIndex'] : true;
-//        $field->inView = isset($fieldInput['inView']) ? $fieldInput['inView'] : true;
-
-        return $field;
-    }
-
     public function __get($key)
     {
         if ($key == 'fieldTitle') {
             return Str::title(str_replace('_', ' ', $this->name));
+        } elseif ($key == 'fieldCamel') {
+            return Str::camel($this->name);
         }
 
         return $this->$key;

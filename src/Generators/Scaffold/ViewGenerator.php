@@ -65,10 +65,6 @@ class ViewGenerator extends BaseGenerator
                 $this->generateUpdate();
             }
 
-//            if (in_array('show', $viewsToBeGenerated)) {
-//                $this->generateShowFields();
-//                $this->generateShow();
-//            }
         } else {
             $this->generateTable();
             $this->generateTableTypes();
@@ -76,8 +72,6 @@ class ViewGenerator extends BaseGenerator
             $this->generateFields();
             $this->generateCreate();
             $this->generateUpdate();
-//            $this->generateShowFields();
-//            $this->generateShow();
         }
 
         $this->commandData->commandComment('Views created: ');
@@ -150,73 +144,6 @@ class ViewGenerator extends BaseGenerator
         FileUtil::createFile($this->path, 'datatables_actions.blade.php', $templateData);
 
         $this->commandData->commandInfo('datatables_actions.blade.php created');
-    }
-
-    private function generateBladeTableBody()
-    {
-        $templateName = 'blade_table_body';
-
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-        }
-
-        $templateData = get_template('views.'.$templateName, $this->templateType);
-
-        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
-
-        $templateData = str_replace('$FIELD_HEADERS$', $this->generateTableHeaderFields(), $templateData);
-
-        $cellFieldTemplate = get_template('views.table_cell', $this->templateType);
-
-        $tableBodyFields = [];
-
-        foreach ($this->commandData->fields as $field) {
-            $tableBodyFields[] = fill_template_with_field_data(
-                $this->commandData->dynamicVars,
-                $this->commandData->fieldNamesMapping,
-                $cellFieldTemplate,
-                $field
-            );
-        }
-
-        $tableBodyFields = implode(infy_nl_tab(1, 3), $tableBodyFields);
-
-        return str_replace('$FIELD_BODY$', $tableBodyFields, $templateData);
-    }
-
-    private function generateTableHeaderFields()
-    {
-        $templateName = 'table_header';
-
-        $localized = false;
-        if ($this->commandData->isLocalizedTemplates()) {
-            $templateName .= '_locale';
-            $localized = true;
-        }
-
-        $headerFieldTemplate = get_template('views.'.$templateName, $this->templateType);
-
-        $headerFields = [];
-
-        foreach ($this->commandData->fields as $field) {
-            if ($localized) {
-                $headerFields[] = $fieldTemplate = fill_template_with_field_data_locale(
-                    $this->commandData->dynamicVars,
-                    $this->commandData->fieldNamesMapping,
-                    $headerFieldTemplate,
-                    $field
-                );
-            } else {
-                $headerFields[] = $fieldTemplate = fill_template_with_field_data(
-                    $this->commandData->dynamicVars,
-                    $this->commandData->fieldNamesMapping,
-                    $headerFieldTemplate,
-                    $field
-                );
-            }
-        }
-
-        return implode(infy_nl_tab(1, 2), $headerFields);
     }
 
     private function generateIndex()
@@ -353,44 +280,6 @@ class ViewGenerator extends BaseGenerator
 
         FileUtil::createFile($this->path, 'edit_modal.blade.php', $templateData);
         $this->commandData->commandInfo('edit_modal.blade.php created');
-    }
-
-    private function generateShowFields()
-    {
-        $templateName = 'show_field';
-        $fieldTemplate = get_template('views.'.$templateName, $this->templateType);
-
-        $fieldsStr = '';
-
-        foreach ($this->commandData->fields as $field) {
-            if (!$field->inView) {
-                continue;
-            }
-            $singleFieldStr = str_replace(
-                '$FIELD_NAME_TITLE$',
-                Str::title(str_replace('_', ' ', $field->name)),
-                $fieldTemplate
-            );
-            $singleFieldStr = str_replace('$FIELD_NAME$', $field->name, $singleFieldStr);
-            $singleFieldStr = fill_template($this->commandData->dynamicVars, $singleFieldStr);
-
-            $fieldsStr .= $singleFieldStr."\n\n";
-        }
-
-        FileUtil::createFile($this->path, 'show_fields.blade.php', $fieldsStr);
-        $this->commandData->commandInfo('show_fields.blade.php created');
-    }
-
-    private function generateShow()
-    {
-        $templateName = 'show';
-
-        $templateData = get_template('views.'.$templateName, $this->templateType);
-
-        $templateData = fill_template($this->commandData->dynamicVars, $templateData);
-
-        FileUtil::createFile($this->path, 'show.blade.php', $templateData);
-        $this->commandData->commandInfo('show.blade.php created');
     }
 
     public function rollback()

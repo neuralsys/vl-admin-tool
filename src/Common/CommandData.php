@@ -81,6 +81,7 @@ class CommandData
         $this->fieldNamesMapping = [
             '$FIELD_NAME_TITLE$' => 'fieldTitle',
             '$FIELD_NAME$'       => 'name',
+            '$FIELD_NAME_CAMEL$'       => 'fieldCamel',
         ];
 
         $this->config = new GeneratorConfig();
@@ -149,50 +150,6 @@ class CommandData
         $this->relations = $tableFieldsGenerator->relations;
     }
 
-    private function getInputFromConsole()
-    {
-        $this->commandInfo('Specify fields for the model (skip id & timestamp fields, we will add it automatically)');
-        $this->commandInfo('Read docs carefully to specify field inputs)');
-        $this->commandInfo('Enter "exit" to finish');
-
-        $this->addPrimaryKey();
-
-        while (true) {
-            $fieldInputStr = $this->commandObj->ask('Field: (name db_type html_type options)', '');
-
-            if (empty($fieldInputStr) || $fieldInputStr == false || $fieldInputStr == 'exit') {
-                break;
-            }
-
-            if (!GeneratorFieldsInputUtil::validateFieldInput($fieldInputStr)) {
-                $this->commandError('Invalid Input. Try again');
-                continue;
-            }
-
-            $validations = $this->commandObj->ask('Enter validations: ', false);
-            $validations = ($validations == false) ? '' : $validations;
-
-            if ($this->getOption('relations')) {
-                $relation = $this->commandObj->ask('Enter relationship (Leave Blank to skip):', false);
-            } else {
-                $relation = '';
-            }
-
-            $this->fields[] = GeneratorFieldsInputUtil::processFieldInput(
-                $fieldInputStr,
-                $validations
-            );
-
-            if (!empty($relation)) {
-                $this->relations[] = GeneratorFieldRelation::parseRelation($relation);
-            }
-        }
-
-        if (config('admin_generator.laravel_generator.timestamps.enabled', true)) {
-            $this->addTimestamps();
-        }
-    }
-
     private function addPrimaryKey()
     {
         $primaryKey = new GeneratorField();
@@ -220,79 +177,6 @@ class CommandData
         $updatedAt->parseDBType('timestamp');
         $updatedAt->parseOptions('s,f,if,ii');
         $this->fields[] = $updatedAt;
-    }
-
-    private function getInputFromFileOrJson()
-    {
-        // fieldsFile option will get high priority than json option if both options are passed
-        try {
-            if ($this->getOption('fieldsFile')) {
-                $fieldsFileValue = $this->getOption('fieldsFile');
-                if (file_exists($fieldsFileValue)) {
-                    $filePath = $fieldsFileValue;
-                } elseif (file_exists(base_path($fieldsFileValue))) {
-                    $filePath = base_path($fieldsFileValue);
-                } else {
-                    $schemaFileDirector = config(
-                        'vl-admin-tool.path.schema_files',
-                        resource_path('model_schemas/')
-                    );
-                    $filePath = $schemaFileDirector.$fieldsFileValue;
-                }
-
-                if (!file_exists($filePath)) {
-                    $this->commandError('Fields file not found');
-                    exit;
-                }
-
-                $fileContents = file_get_contents($filePath);
-                $jsonData = json_decode($fileContents, true);
-                $this->fields = [];
-                foreach ($jsonData as $field) {
-                    if (isset($field['type']) && $field['relation']) {
-                        $this->relations[] = GeneratorFieldRelation::parseRelation($field['relation']);
-                    } else {
-                        $this->fields[] = GeneratorField::parseFieldFromFile($field);
-                        if (isset($field['relation'])) {
-                            $this->relations[] = GeneratorFieldRelation::parseRelation($field['relation']);
-                        }
-                    }
-                }
-            } else {
-                $fileContents = $this->getOption('jsonFromGUI');
-                $jsonData = json_decode($fileContents, true);
-
-                // override config options from jsonFromGUI
-                $this->config->overrideOptionsFromJsonFile($jsonData);
-
-                // Manage custom table name option
-                if (isset($jsonData['tableName'])) {
-                    $tableName = $jsonData['tableName'];
-                    $this->config->tableName = $tableName;
-                    $this->addDynamicVariable('$TABLE_NAME$', $tableName);
-                    $this->addDynamicVariable('$TABLE_NAME_TITLE$', Str::studly($tableName));
-                }
-
-                // Manage migrate option
-                if (isset($jsonData['migrate']) && $jsonData['migrate'] == false) {
-                    $this->config->options['skip'][] = 'migration';
-                }
-
-                foreach ($jsonData['fields'] as $field) {
-                    if (isset($field['type']) && $field['relation']) {
-                        $this->relations[] = GeneratorFieldRelation::parseRelation($field['relation']);
-                    } else {
-                        $this->fields[] = GeneratorField::parseFieldFromFile($field);
-                        if (isset($field['relation'])) {
-                            $this->relations[] = GeneratorFieldRelation::parseRelation($field['relation']);
-                        }
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $this->commandError($e->getMessage());
-            exit;
-        }
     }
 
     private function getInputFromTable()

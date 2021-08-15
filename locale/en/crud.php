@@ -14,7 +14,9 @@ return [
     'deleted_at' => 'Deleted At',
     'are_you_sure' => 'Are you sure?',
     'sync_db' => 'Sync DB',
+    'select' => 'Select',
 
     # CRUD Status
     'add_success' => 'Add new :model successfully!',
+    'update_success' => 'Update :model successfully!',
 ];

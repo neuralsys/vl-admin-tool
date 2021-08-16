@@ -7,6 +7,7 @@ use Vuongdq\VLAdminTool\DataTables\MenuDataTable;
 use Vuongdq\VLAdminTool\Requests\CreateMenuRequest;
 use Vuongdq\VLAdminTool\Requests\UpdateMenuRequest;
 use Vuongdq\VLAdminTool\Repositories\MenuRepository;
+use Illuminate\Support\Facades\Artisan;
 
 class MenuController extends Controller
 {
@@ -118,5 +119,17 @@ class MenuController extends Controller
         return $this->success(__('crud.delete_success'));
     }
 
+    public function sync() {
+        try {
+            $exitCode = Artisan::call("vlat.generate:menu");
+            if ($exitCode === 0) {
+                return $this->success("Sync menu successfully!");
+            } else {
+                return $this->error("Sync menu failed, exit code=$exitCode!");
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
+    }
 }
 

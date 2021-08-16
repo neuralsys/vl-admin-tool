@@ -31,6 +31,7 @@ Route::group(['middleware' => $middleware], function () {
         ->except('create', 'edit', 'show')
         ->parameter('relations', 'id');
 
+    Route::post('menus/sync', 'MenuController@sync')->name('menus.sync');
     Route::resource('menus', 'MenuController')
         ->except('create', 'edit', 'show')
         ->parameter('menus', 'id');

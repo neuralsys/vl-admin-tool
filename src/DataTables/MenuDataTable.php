@@ -6,6 +6,7 @@ use Vuongdq\VLAdminTool\Models\Menu;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\DB;
 
 class MenuDataTable extends DataTable {
     /**
@@ -31,9 +32,8 @@ class MenuDataTable extends DataTable {
         return $model
             ->newQuery()
             ->leftJoin('menus as p', 'p.id', 'menus.parent_id')
-            ->select('menus.*', 'p.title as parent_menu')
-            ->orderBy('parent_id')
-            ->orderBy('pos');
+            ->select('menus.*', 'p.title as parent_menu', DB::raw('(COALESCE(p.pos, menus.pos) * 1000000 + IF(p.pos is NULL, 0, menus.pos)) as real_pos'))
+            ->orderBy('real_pos');
     }
 
     /**
@@ -86,6 +86,7 @@ class MenuDataTable extends DataTable {
             'parent_id' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.parent_id'), 'data' => 'parent_id']),
             'parent_menu' => new Column(['title' => __('vl-admin-tool-lang::models/menu.parent'), 'data' => 'parent_menu']),
             'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos']),
+            'real_pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'real_pos', 'visible' => false]),
         ];
     }
 

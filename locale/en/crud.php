@@ -14,6 +14,7 @@ return [
     'deleted_at' => 'Deleted At',
     'are_you_sure' => 'Are you sure?',
     'sync_db' => 'Sync DB',
+    'sync_menu' => 'Sync Menu',
     'select' => 'Select',
 
     # CRUD Status

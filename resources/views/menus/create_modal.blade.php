@@ -32,12 +32,17 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
+            const onSuccessCreateMenu = (resp, table, modal) => {
+                defaultOnSuccess(resp, table, modal);
+                setTimeout(() => {location.reload();}, 100);
+            }
             menuCreateForm.on('submit', (evt) => {
                 evt.preventDefault();
                 sendFormAjax(menuCreateForm, {
                     table: menuTable,
-                    modal: menuCreateModal
-                })
+                    modal: menuCreateModal,
+                    onSuccess: onSuccessCreateMenu
+                });
             });
         });
     </script>

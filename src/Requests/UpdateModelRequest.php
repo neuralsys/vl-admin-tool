@@ -33,8 +33,7 @@ class UpdateModelRequest extends FormRequest
                 'description' => 'nullable|string',
                 'use_timestamps' => 'required|boolean',
                 'use_soft_delete' => 'required|boolean',
-                'created_at' => 'nullable',
-                'updated_at' => 'nullable'
+                'is_authenticate' => 'required|boolean',
         ];
 
         return $rules;

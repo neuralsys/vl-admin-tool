@@ -14,6 +14,7 @@ return array(
             'description' => 'Description',
             'use_timestamps' => 'Timestamps',
             'use_soft_delete' => 'Soft Delete',
+            'is_authenticate' => 'Is Authenticate',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ),

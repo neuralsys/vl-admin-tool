@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * @property string $description
  * @property boolean $use_timestamps
  * @property boolean $use_soft_delete
+ * @property boolean $is_authenticate
  */
 class Model extends EloquentModel
 {
@@ -30,7 +31,8 @@ class Model extends EloquentModel
         'plural',
         'description',
         'use_timestamps',
-        'use_soft_delete'
+        'use_soft_delete',
+        'is_authenticate'
     ];
 
 
@@ -47,7 +49,8 @@ class Model extends EloquentModel
         'plural' => 'string',
         'description' => 'string',
         'use_timestamps' => 'boolean',
-        'use_soft_delete' => 'boolean'
+        'use_soft_delete' => 'boolean',
+        'is_authenticate' => 'boolean'
     ];
 
     /**

@@ -179,7 +179,8 @@ class DBSyncCommand extends BaseCommand
                 'plural' => Str::lower(Str::plural($tableName)),
                 'description' => "",
                 'use_timestamps' => $this->isUseTimestamps($table),
-                'use_soft_delete' => $this->isUseSoftDelete($table)
+                'use_soft_delete' => $this->isUseSoftDelete($table),
+                'is_authenticate' => $this->isAuthenticateModel($tableName),
             ]);
         } else {
             $model->update([
@@ -188,7 +189,8 @@ class DBSyncCommand extends BaseCommand
                 'singular' => Str::lower(Str::singular($tableName)),
                 'plural' => Str::lower(Str::plural($tableName)),
                 'use_timestamps' => $this->isUseTimestamps($table),
-                'use_soft_delete' => $this->isUseSoftDelete($table)
+                'use_soft_delete' => $this->isUseSoftDelete($table),
+                'is_authenticate' => $this->isAuthenticateModel($tableName),
             ]);
         }
         return $model;
@@ -884,5 +886,10 @@ class DBSyncCommand extends BaseCommand
                 throw $e;
             }
         }
+    }
+
+    public function isAuthenticateModel($tableName) {
+        $authenticateTableNames = ["users", "user"]; # TODO: should be in config
+        return in_array($tableName, $authenticateTableNames);
     }
 }

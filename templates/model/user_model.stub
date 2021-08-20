@@ -1,0 +1,38 @@
+<?php
+
+namespace $NAMESPACE_MODEL$;
+
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Notifications\Notifiable;
+$SOFT_DELETE_IMPORT$
+$DOCS$
+class $MODEL_NAME$ extends EloquentModel implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
+{
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, Notifiable;
+    $SOFT_DELETE$$TIMESTAMPS$$SOFT_DELETE_COLUMN$$SOFT_DELETE_DATES$    public $table = '$TABLE_NAME$';
+
+    public $fillable = [
+        $FIELDS$
+    ];
+    $USE_TIMESTAMPS$
+    $PRIMARY$
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        $CAST$
+    ];
+    $RELATIONS$
+}

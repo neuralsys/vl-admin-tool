@@ -34,7 +34,11 @@ class ModelGenerator extends BaseGenerator
 
     public function generate()
     {
-        $templateData = get_template('model.model', 'vl-admin-tool');
+        if ($this->commandData->modelObject->is_authenticate) {
+            $templateData = get_template('model.user_model', 'vl-admin-tool');
+        } else {
+            $templateData = get_template('model.base_model', 'vl-admin-tool');
+        }
 
         $templateData = $this->fillTemplate($templateData);
 

@@ -22,6 +22,7 @@ class CreateModelsTable extends Migration
             $table->text('description')->nullable();
             $table->boolean('use_timestamps')->default(1);
             $table->boolean('use_soft_delete')->default(1);
+            $table->boolean('is_authenticate')->default(0);
             $table->timestamps();
         });
     }

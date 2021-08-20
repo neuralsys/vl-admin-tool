@@ -82,6 +82,7 @@ class ModelDataTable extends DataTable {
             'description' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.description'), 'data' => 'description']),
             'use_timestamps' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_timestamps'), 'data' => 'use_timestamps']),
             'use_soft_delete' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.use_soft_delete'), 'data' => 'use_soft_delete']),
+            'is_authenticate' => new Column(['title' => __('vl-admin-tool-lang::models/model.fields.is_authenticate'), 'data' => 'is_authenticate']),
             'fields' => new Column(['title' => __('vl-admin-tool-lang::models/field.plural'), 'data' => 'field_view']),
         ];
     }

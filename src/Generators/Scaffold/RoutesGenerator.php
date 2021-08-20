@@ -14,6 +14,9 @@ class RoutesGenerator
     private $path;
 
     /** @var string */
+    private $existRouteContents;
+
+    /** @var string */
     private $routeContents;
 
     /** @var string */
@@ -23,26 +26,21 @@ class RoutesGenerator
     {
         $this->commandData = $commandData;
         $this->path = $commandData->config->pathRoutes;
-        $this->routeContents = file_get_contents($this->path);
-        if (!empty($this->commandData->config->prefixes['route'])) {
-            $this->routesTemplate = get_template('scaffold.routes.prefix_routes', 'vl-admin-tool');
-        } else {
-            $this->routesTemplate = get_template('scaffold.routes.routes', 'vl-admin-tool');
-        }
-        $this->routesTemplate = fill_template($this->commandData->dynamicVars, $this->routesTemplate);
+        $this->existRouteContents = file_get_contents($this->path);
+        $this->routesTemplate = get_template('scaffold.routes.prefix_routes', 'vl-admin-tool');
+        $this->routeContents = fill_template($this->commandData->dynamicVars, $this->routesTemplate);
     }
 
     public function generate()
     {
-        $this->routeContents .= "\n\n".$this->routesTemplate;
-        $existingRouteContents = file_get_contents($this->path);
-        if (Str::contains($existingRouteContents, "Route::resource('".$this->commandData->config->mSnakePlural."',")) {
+//        dd($this->routeContents);
+//        dd($this->existRouteContents);
+        if (Str::contains($this->existRouteContents, "group(['prefix' => '".$this->commandData->config->mSnakePlural."'], function (\$router) ")) {
             $this->commandData->commandObj->info('Route '.$this->commandData->config->mPlural.' is already exists, Skipping Adjustment.');
-
             return;
         }
 
-        file_put_contents($this->path, $this->routeContents);
+        file_put_contents($this->path, $this->existRouteContents."\n\n{$this->routeContents}");
         $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' routes added.');
     }
 

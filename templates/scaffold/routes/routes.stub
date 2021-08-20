@@ -1,3 +1,0 @@
-Route::resource('$MODEL_NAME_PLURAL_CAMEL$', '$MODEL_NAME$Controller')
-        ->except('create', 'edit', 'show')
-        ->parameter('$MODEL_NAME_PLURAL_CAMEL$', 'id');

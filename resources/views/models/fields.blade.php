@@ -50,3 +50,10 @@
     </label>
 </div>
 
+<!-- Is Authenticate Field -->
+<div class="form-group col-sm-6">
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_authenticate', 0) !!}
+        {!! Form::checkbox('is_authenticate', '1', null, ['data-column' => 'is_authenticate']) !!} {{__('vl-admin-tool-lang::models/model.fields.is_authenticate')}}
+    </label>
+</div>

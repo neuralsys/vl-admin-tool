@@ -23,6 +23,7 @@ use Vuongdq\VLAdminTool\Generators\Scaffold\RoutesGenerator;
 use Vuongdq\VLAdminTool\Generators\Scaffold\ViewGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Vuongdq\VLAdminTool\Generators\SeederGenerator;
 use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
 
@@ -118,6 +119,9 @@ class RollbackGeneratorCommand extends Command
 
         $factoryGenerator = new FactoryGenerator($this->commandData);
         $factoryGenerator->rollback();
+
+        $seederGenerator = new SeederGenerator($this->commandData);
+        $seederGenerator->rollback();
 
         $languageGenerator = new LanguageGenerator($this->commandData);
         $languageGenerator->rollback();

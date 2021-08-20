@@ -1,8 +1,6 @@
 ## Laravel Admin Tool by Vuongdq
 
 ## Todo:
-- Rollback Seeder
-
 - Only show admin menu for admin users (adding to generate menu command)
 - Add User Type Table for vl-admin-tool to generating to user_types.php config file
 - Add menu for each user type (user-type config from file)

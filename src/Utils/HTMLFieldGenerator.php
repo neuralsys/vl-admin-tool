@@ -23,13 +23,6 @@ class HTMLFieldGenerator
             case 'select':
             case 'enum':
                 $fieldTemplate = get_template('fields.select', $templateType);
-                $radioLabels = GeneratorFieldsInputUtil::prepareKeyValueArrFromLabelValueStr($field->htmlValues);
-
-                $fieldTemplate = str_replace(
-                    '$INPUT_ARR$',
-                    GeneratorFieldsInputUtil::prepareKeyValueArrayStr($radioLabels),
-                    $fieldTemplate
-                );
                 break;
             case 'checkbox':
                 $fieldTemplate = get_template('fields.checkbox', $templateType);
@@ -43,16 +36,6 @@ class HTMLFieldGenerator
             case 'radio':
                 $fieldTemplate = get_template('fields.radio_group', $templateType);
                 $radioTemplate = get_template('fields.radio', $templateType);
-
-                $radioLabels = GeneratorFieldsInputUtil::prepareKeyValueArrFromLabelValueStr($field->htmlValues);
-
-                $radioButtons = [];
-                foreach ($radioLabels as $label => $value) {
-                    $radioButtonTemplate = str_replace('$LABEL$', $label, $radioTemplate);
-                    $radioButtonTemplate = str_replace('$VALUE$', $value, $radioButtonTemplate);
-                    $radioButtons[] = $radioButtonTemplate;
-                }
-                $fieldTemplate = str_replace('$RADIO_BUTTONS$', implode("\n", $radioButtons), $fieldTemplate);
                 break;
             case 'toggle-switch':
                 $fieldTemplate = get_template('fields.toggle-switch', $templateType);

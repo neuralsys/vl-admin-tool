@@ -82,6 +82,7 @@ class CommandData
             '$FIELD_NAME_TITLE$' => 'fieldTitle',
             '$FIELD_NAME$'       => 'name',
             '$FIELD_NAME_CAMEL$'       => 'fieldCamel',
+            '$FIELD_DEFAULT_VALUE$'       => 'fieldDefaultValue',
         ];
 
         $this->config = new GeneratorConfig();
@@ -148,35 +149,6 @@ class CommandData
         $this->timestampFields = $tableFieldsGenerator->timestamps;
         $this->softDeleteField = $tableFieldsGenerator->softDelete;
         $this->relations = $tableFieldsGenerator->relations;
-    }
-
-    private function addPrimaryKey()
-    {
-        $primaryKey = new GeneratorField();
-        if ($this->getOption('primary')) {
-            $primaryKey->name = $this->getOption('primary');
-        } else {
-            $primaryKey->name = 'id';
-        }
-        $primaryKey->parseDBType('increments');
-        $primaryKey->parseOptions('s,f,p,if,ii');
-
-        $this->fields[] = $primaryKey;
-    }
-
-    private function addTimestamps()
-    {
-        $createdAt = new GeneratorField();
-        $createdAt->name = 'created_at';
-        $createdAt->parseDBType('timestamp');
-        $createdAt->parseOptions('s,f,if,ii');
-        $this->fields[] = $createdAt;
-
-        $updatedAt = new GeneratorField();
-        $updatedAt->name = 'updated_at';
-        $updatedAt->parseDBType('timestamp');
-        $updatedAt->parseOptions('s,f,if,ii');
-        $this->fields[] = $updatedAt;
     }
 
     private function getInputFromTable()

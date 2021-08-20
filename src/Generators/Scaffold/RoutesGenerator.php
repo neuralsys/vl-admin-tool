@@ -33,8 +33,6 @@ class RoutesGenerator
 
     public function generate()
     {
-//        dd($this->routeContents);
-//        dd($this->existRouteContents);
         if (Str::contains($this->existRouteContents, "group(['prefix' => '".$this->commandData->config->mSnakePlural."'], function (\$router) ")) {
             $this->commandData->commandObj->info('Route '.$this->commandData->config->mPlural.' is already exists, Skipping Adjustment.');
             return;

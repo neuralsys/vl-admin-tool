@@ -1,7 +1,6 @@
 ## Laravel Admin Tool by Vuongdq
 
 ## Todo:
-- Add data-default-value for html element for setting default value
 - Rollback Seeder
 
 - Only show admin menu for admin users (adding to generate menu command)

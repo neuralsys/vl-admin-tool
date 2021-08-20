@@ -15,6 +15,7 @@ class GeneratorField
     public $htmlType;
     public $fieldType;
     public $description;
+    public $defaultValue;
 
     /** @var array */
     public $htmlValues;
@@ -62,6 +63,8 @@ class GeneratorField
         $this->dbInput = $dbInput;
         if (!is_null($column)) {
             $dbConfig = $column->dbConfig;
+            $this->defaultValue = $column->dbConfig->default;
+
             $this->dbInput = (!is_null($dbConfig->length) && $dbConfig->length > 0) ? $this->dbInput.','.$dbConfig->length : $this->dbInput;
             $this->dbInput = ($dbConfig->nullable) ? $this->dbInput.':nullable' : $this->dbInput;
             $this->dbInput = ($dbConfig->unique) ? $this->dbInput.':unique' : $this->dbInput;
@@ -96,36 +99,6 @@ class GeneratorField
         if (count($inputsArr) > 0) {
             $this->htmlValues = $inputsArr;
         }
-    }
-
-    public function parseOptions($options)
-    {
-        $options = strtolower($options);
-        $optionsArr = explode(',', $options);
-        if (in_array('s', $optionsArr)) {
-            $this->isSearchable = false;
-        }
-        if (in_array('p', $optionsArr)) {
-            // if field is primary key, then its not searchable, fillable, not in index & form
-            $this->isPrimary = true;
-            $this->isSearchable = false;
-//            $this->isFillable = false;
-//            $this->inForm = false;
-//            $this->inIndex = false;
-//            $this->inView = false;
-        }
-//        if (in_array('f', $optionsArr)) {
-//            $this->isFillable = false;
-//        }
-//        if (in_array('if', $optionsArr)) {
-//            $this->inForm = false;
-//        }
-//        if (in_array('ii', $optionsArr)) {
-//            $this->inIndex = false;
-//        }
-//        if (in_array('iv', $optionsArr)) {
-//            $this->inView = false;
-//        }
     }
 
     private function prepareMigrationText()
@@ -174,6 +147,9 @@ class GeneratorField
             return Str::title(str_replace('_', ' ', $this->name));
         } elseif ($key == 'fieldCamel') {
             return Str::camel($this->name);
+        } elseif ($key == 'fieldDefaultValue') {
+            if ($this->defaultValue == null) return "null";
+            return "'{$this->defaultValue}'";
         }
 
         return $this->$key;

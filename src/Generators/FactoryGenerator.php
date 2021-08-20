@@ -89,11 +89,6 @@ class FactoryGenerator extends BaseGenerator
                 case 'timestamp':
                     $fakerData = "date('Y-m-d H:i:s')";
                     break;
-                case 'enum':
-                    $fakerData = 'randomElement('.
-                        GeneratorFieldsInputUtil::prepareValuesArrayStr($field->htmlValues).
-                        ')';
-                    break;
                 default:
                     $fakerData = 'word';
             }

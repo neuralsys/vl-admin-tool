@@ -194,32 +194,6 @@ class ViewGenerator extends BaseGenerator
 
             $fieldTemplate = HTMLFieldGenerator::generateHTML($field, $this->templateType);
 
-            if ($field->htmlType == 'selectTable') {
-                $inputArr = explode(',', $field->htmlValues[1]);
-                $columns = '';
-                foreach ($inputArr as $item) {
-                    $columns .= "'$item'".',';  //e.g 'email,id,'
-                }
-                $columns = substr_replace($columns, '', -1); // remove last ,
-
-                $htmlValues = explode(',', $field->htmlValues[0]);
-                $selectTable = $htmlValues[0];
-                $modalName = null;
-                if (count($htmlValues) == 2) {
-                    $modalName = $htmlValues[1];
-                }
-
-                $tableName = $this->commandData->config->tableName;
-                $viewPath = $this->commandData->config->prefixes['view'];
-                if (!empty($viewPath)) {
-                    $tableName = $viewPath.'.'.$tableName;
-                }
-
-                $variableName = Str::singular($selectTable).'Items'; // e.g $userItems
-
-                $fieldTemplate = $this->generateViewComposer($tableName, $variableName, $columns, $selectTable, $modalName);
-            }
-
             if (!empty($fieldTemplate)) {
                 $fieldTemplate = fill_template_with_field_data(
                     $this->commandData->dynamicVars,

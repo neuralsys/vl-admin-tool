@@ -98,7 +98,7 @@ class GenerateMenuCommand extends BaseCommand {
 
                 return [
                     '$MENU_TITLE' => $menu->title,
-                    '$CONDITION' => $condition,
+                    '$CONDITION' => $condition == "" ? "false" : $condition,
                     '$INDEX_ROUTE' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$CHILDRENT_MENUS' => $menus,
                     '$PADDING_LEFT' => 1 + 0.8 * ($level - 1),

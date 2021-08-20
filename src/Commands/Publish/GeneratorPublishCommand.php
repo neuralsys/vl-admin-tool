@@ -33,6 +33,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $this->publishPublicFiles();
         $this->updateRoutes();
         $this->publishHomeController();
+        $this->publishExceptionHandler();
 
         $this->publishTestCases();
         $this->publishTraits();
@@ -98,6 +99,13 @@ class GeneratorPublishCommand extends PublishBaseCommand
             FileUtil::createDirectoryIfNotExist($testRepositoriesPath);
             $this->info('Repositories Tests directory created');
         }
+    }
+
+    public function publishExceptionHandler() {
+        $exceptionFilePath = app_path('Exceptions/Handler.php');
+        $stub = "scaffold.handler";
+        $sourceFile = get_template_file_path($stub, "vl-admin-tool");
+        $this->publishFile($sourceFile, $exceptionFilePath, "Handler.php");
     }
 
     private function publishBaseController()

@@ -53,6 +53,7 @@ class GenerateCommand extends BaseCommand
                 $this->performPostActionsWithMigration();
                 return 0;
             } catch (\Exception $e) {
+                throw $e;
                 throw new \Exception($e->getMessage()."\n".$e->getFile()."\n".$e->getLine());
             }
         } else {

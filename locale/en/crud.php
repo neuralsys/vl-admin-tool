@@ -19,5 +19,9 @@ return [
 
     # CRUD Status
     'add_success' => 'Add new :model successfully!',
+    'add_failed' => 'Add new :model failed!',
     'update_success' => 'Update :model successfully!',
+
+    # CRUD Error
+    'duplicate_insert' => " Data info existed"
 ];

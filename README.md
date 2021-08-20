@@ -2,9 +2,7 @@
 
 ## Todo:
 - Handle Common Error:
-    + Duplicate Entity When Add/Edit
     + Missing value of column (not null) When Add/Edit
-    + Session expired
 
 - Only show admin menu for admin users (adding to generate menu command)
 - Add User Type Table for vl-admin-tool to generating to user_types.php config file

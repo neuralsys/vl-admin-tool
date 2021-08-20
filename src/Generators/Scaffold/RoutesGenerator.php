@@ -38,16 +38,24 @@ class RoutesGenerator
             return;
         }
 
-        file_put_contents($this->path, $this->existRouteContents."\n\n{$this->routeContents}");
+        file_put_contents($this->path, $this->existRouteContents."\n{$this->routeContents}");
         $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' routes added.');
     }
 
     public function rollback()
     {
-        if (Str::contains($this->routeContents, $this->routesTemplate)) {
-            $this->routeContents = str_replace($this->routesTemplate, '', $this->routeContents);
-            file_put_contents($this->path, $this->routeContents);
-            $this->commandData->commandComment('scaffold routes deleted');
+        $lines = explode("\n", $this->routeContents);
+        for ($nTabs = 0; $nTabs <= 10; $nTabs++) {
+            $contentWithTabs = "";
+            foreach ($lines as $line) {
+                if ($line != "") $contentWithTabs .= infy_tabs($nTabs).$line."\n";
+            }
+            if (Str::contains($this->existRouteContents, "\n{$contentWithTabs}")) {
+                $this->existRouteContents = str_replace("\n{$contentWithTabs}", '', $this->existRouteContents);
+                file_put_contents($this->path, $this->existRouteContents);
+                $this->commandData->commandComment('Routes deleted');
+                break;
+            }
         }
     }
 }

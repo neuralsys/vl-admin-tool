@@ -43,7 +43,7 @@ class $MODEL_NAME$DataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->minifiedAjax('', $this->getScript(), [], ['error' => 'function (err) { defaultOnError(err);}'])
             ->addAction(['width' => '120px', 'printable' => false, 'title' => __('crud.action')])
             ->parameters([
                 'dom'       => '<"$MODEL_NAME_CAMEL$-toolbar">Bfrtip',
@@ -89,5 +89,11 @@ class $MODEL_NAME$DataTable extends DataTable
     protected function filename()
     {
         return '$MODEL_NAME_PLURAL_SNAKE$_datatable_' . time();
+    }
+
+    private function getScript()
+    {
+        return "
+        ";
     }
 }

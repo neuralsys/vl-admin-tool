@@ -2,9 +2,12 @@
 
 namespace Vuongdq\VLAdminTool\Common;
 
+use Doctrine\DBAL\Schema\Table;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\Nullable;
 use Vuongdq\VLAdminTool\Models\Field;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 
 class GeneratorField
 {
@@ -37,21 +40,15 @@ class GeneratorField
     public $isEditable = true;
     public $isShowable = true;
 
+    /** @var $table Table  */
+    public $table;
+
     /** @var int */
     public $numberDecimalPoints = 2;
 
-    /**
-     * @param Column $column
-     * @param $dbInput
-     */
-    public function parseDBType($dbInput, $column = null)
+    public function __construct(Table $table)
     {
-        $this->dbInput = $dbInput;
-        if (!is_null($column)) {
-            $this->dbInput = ($column->getLength() > 0) ? $this->dbInput.','.$column->getLength() : $this->dbInput;
-            $this->dbInput = (!$column->getNotnull()) ? $this->dbInput.':nullable' : $this->dbInput;
-        }
-        $this->prepareMigrationText();
+        $this->table = $table;
     }
 
     /**
@@ -101,9 +98,9 @@ class GeneratorField
         }
     }
 
-    private function prepareMigrationText()
-    {
+    private function generateMigrationText() {
         $inputsArr = explode(':', $this->dbInput);
+
         $this->migrationText = '$table->';
 
         $fieldTypeParams = explode(',', array_shift($inputsArr));
@@ -119,26 +116,47 @@ class GeneratorField
         foreach ($inputsArr as $input) {
             $inputParams = explode(',', $input);
             $functionName = array_shift($inputParams);
-            if ($functionName == 'foreign') {
-                $foreignTable = array_shift($inputParams);
-                $foreignField = array_shift($inputParams);
-                $this->foreignKeyText .= "\$table->foreign('".$this->name."')->references('".$foreignField."')->on('".$foreignTable."')";
-                if (count($inputParams)) {
-                    $cascade = array_shift($inputParams);
-                    if ($cascade == 'cascade') {
-                        $this->foreignKeyText .= "->onUpdate('cascade')->onDelete('cascade')";
-                    }
-                }
-                $this->foreignKeyText .= ';';
-            } else {
-                $this->migrationText .= '->'.$functionName;
-                $this->migrationText .= '(';
-                $this->migrationText .= implode(', ', $inputParams);
-                $this->migrationText .= ')';
-            }
+            $this->migrationText .= '->'.$functionName;
+            $this->migrationText .= '(';
+            $this->migrationText .= implode(', ', $inputParams);
+            $this->migrationText .= ')';
         }
 
         $this->migrationText .= ';';
+    }
+
+    private function generateForeginKeyText() {
+        $foreignKeys = $this->table->getForeignKeys();
+        foreach ($foreignKeys as $foreignKey) {
+            /** @var $foreignKey ForeignKeyConstraint */
+            if (
+                count($foreignKey->getLocalColumns()) != 1
+                || count($foreignKey->getForeignColumns()) != 1
+            ) continue;
+            $localColum = $foreignKey->getLocalColumns()[0];
+            if ($localColum != $this->name) continue;
+            $foreignField = $foreignKey->getForeignColumns()[0];
+            $foreignTable = $foreignKey->getForeignTableName();
+            $cascadeOnUpdate = $foreignKey->onUpdate();
+            $cascadeOnDelete = $foreignKey->onDelete();
+            $this->foreignKeyText .= "\$table->foreign('".$this->name."')->references('".$foreignField."')->on('".$foreignTable."')";
+            if (strtolower($cascadeOnUpdate) == 'cascade') {
+                $this->foreignKeyText .= "->onUpdate('cascade')";
+            }
+
+            if (strtolower($cascadeOnDelete) == 'cascade') {
+                $this->foreignKeyText .= "->onDelete('cascade')";
+            }
+
+            $this->foreignKeyText .= ';';
+            break;
+        }
+    }
+
+    private function prepareMigrationText()
+    {
+        $this->generateMigrationText();
+        $this->generateForeginKeyText();
     }
 
     public function __get($key)

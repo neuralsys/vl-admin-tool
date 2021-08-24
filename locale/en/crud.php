@@ -15,6 +15,7 @@ return [
     'are_you_sure' => 'Are you sure?',
     'sync_db' => 'Sync DB',
     'sync_menu' => 'Sync Menu',
+    'sync_permission' => 'Sync Permission',
     'select' => 'Select',
 
     # CRUD Status

@@ -85,7 +85,7 @@ class $MODEL_NAME$Controller extends Controller
 
         $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->update($request->all(), $id);
 
-        return $this->success(__('crud.update_success'));
+        return $this->success(__('crud.update_success', ['model' => Str::lower(__('models/$MODEL_NAME_CAMEL$.singular'))]));
     }
 
     /**

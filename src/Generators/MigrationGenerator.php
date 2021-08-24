@@ -2,6 +2,9 @@
 
 namespace Vuongdq\VLAdminTool\Generators;
 
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Table;
 use File;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +21,25 @@ class MigrationGenerator extends BaseGenerator
     /** @var string */
     private $path;
 
+    /** @var $schemaManager AbstractSchemaManager */
+    private $schemaManager;
+
+    /** @var Table */
+    public $table;
+
     public function __construct($commandData)
     {
         $this->commandData = $commandData;
+
+        $this->schemaManager = DB::getDoctrineSchemaManager();
+        $allTables = $this->schemaManager->listTables();
+        foreach ($allTables as $_table) {
+            /** @var $_table Table */
+            if ($_table->getName() == $this->commandData->modelObject->table_name) {
+                $this->table = $_table;
+                break;
+            }
+        }
         $this->path = config('vl_admin_tool.path.migration', database_path('migrations/'));
     }
 
@@ -87,6 +106,31 @@ class MigrationGenerator extends BaseGenerator
         return str_replace('.php', '', basename($path));
     }
 
+    private function generateIndexTexts() {
+        $res = [];
+        $indexes = [];
+        $tableIndexes = $this->table->getIndexes();
+        foreach ($tableIndexes as $tableIndex) {
+            /** @var $tableIndex Index */
+            $columns = $tableIndex->getColumns();
+            if (count($columns) <= 1 && ($tableIndex->isUnique() || $tableIndex->isPrimary())) continue;
+
+            $func = null;
+            if ($tableIndex->isUnique()) $func = "unique";
+            elseif ($tableIndex->isPrimary())  $func = "primary";
+
+            if ($func !== null) {
+                $indexText = '$table->'. $func . '([';
+                $columnTexts = [];
+                foreach ($columns as $column) {
+                    $columnTexts[] = "'" . $column . "'";
+                }
+                $indexText .= implode(", ", $columnTexts) . ']);';
+                $res[] = $indexText;
+            }
+        }
+        return $res;
+    }
 
     private function generateFields()
     {
@@ -129,7 +173,8 @@ class MigrationGenerator extends BaseGenerator
             $fields[] = '$table->softDeletes();';
         }
 
-        return implode(infy_nl_tab(1, 3), array_merge($fields, $foreignKeys));
+        $indexTexts = $this->generateIndexTexts();
+        return implode(infy_nl_tab(1, 3), array_merge($fields, [""], $foreignKeys, $indexTexts));
     }
 
     public function rollback()

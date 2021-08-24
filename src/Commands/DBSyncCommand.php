@@ -24,6 +24,7 @@ use Vuongdq\VLAdminTool\Repositories\ModelRepository;
 use Vuongdq\VLAdminTool\Repositories\DBConfigRepository;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Repositories\RelationRepository;
+use Doctrine\DBAL\Schema\Index;
 use function Matrix\trace;
 
 class DBSyncCommand extends BaseCommand
@@ -217,13 +218,27 @@ class DBSyncCommand extends BaseCommand
         return $field;
     }
 
-    public function predictDBConfig(Column $column)
+    public function predictDBConfig(Column $column, array $tableIndexes)
     {
+        $isUnique = false;
+        foreach ($tableIndexes as $tableIndex) {
+            /** @var $tableIndex Index */
+            $columns = $tableIndex->getColumns();
+            if ($tableIndex->isUnique()
+                && count($columns) == 1
+                && $columns[0] == $column->getName()
+                && !$tableIndex->isPrimary()
+            ) {
+                $isUnique = true;
+                break;
+            }
+        }
+
         $res = [
             'type' => null,
             'length' => $column->getLength(),
             'nullable' => !$column->getNotnull(),
-            'unique' => false,
+            'unique' => $isUnique,
             'default' => $column->getDefault()
         ];
 
@@ -277,10 +292,10 @@ class DBSyncCommand extends BaseCommand
         return $res;
     }
 
-    public function createOrUpdateDBConfig(Field $field, Column $column)
+    public function createOrUpdateDBConfig(Field $field, Column $column, array $tableIndexes)
     {
         $dbConfig = $field->dbConfig;
-        $dbConf = $this->predictDBConfig($column);
+        $dbConf = $this->predictDBConfig($column, $tableIndexes);
         if (empty($dbConfig)) {
             $dbConfig = $this->dbConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -766,6 +781,7 @@ class DBSyncCommand extends BaseCommand
     public function createOrUpdateColumn(Table $table, Model $model, array $primaryColumns)
     {
         $columns = $table->getColumns();
+        $tableIndexes = $table->getIndexes();
 
         # delete column
         $fields = $model->fields;
@@ -782,7 +798,7 @@ class DBSyncCommand extends BaseCommand
         foreach ($columns as $column) {
             if (in_array($column->getName(), ['created_at', 'deleted_at', 'updated_at'])) continue;
             $field = $this->createOrUpdateField($model, $column);
-            $dbConfig = $this->createOrUpdateDBConfig($field, $column);
+            $dbConfig = $this->createOrUpdateDBConfig($field, $column, $tableIndexes);
             $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primaryColumns);
             $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primaryColumns);
             $field = $this->updateHTMLType($field, $dbConfig);

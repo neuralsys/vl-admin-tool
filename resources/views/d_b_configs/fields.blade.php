@@ -21,15 +21,19 @@
 
 <!-- Nullable Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label(null, __('vl-admin-tool-lang::models/dBConfig.fields.nullable').':') !!}
-    {!! Form::number('nullable', null, ['class' => 'form-control', 'data-column' => 'db_config.nullable']) !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('nullable', 0) !!}
+        {!! Form::checkbox('nullable', '1', null, ['data-column' => 'db_config.nullable']) !!} {{__('vl-admin-tool-lang::models/dBConfig.fields.nullable')}}
+    </label>
 </div>
 
 
 <!-- Unique Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label(null, __('vl-admin-tool-lang::models/dBConfig.fields.unique').':') !!}
-    {!! Form::number('unique', null, ['class' => 'form-control', 'data-column' => 'db_config.unique']) !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('unique', 0) !!}
+        {!! Form::checkbox('unique', '1', null, ['data-column' => 'db_config.unique']) !!} {{__('vl-admin-tool-lang::models/dBConfig.fields.unique')}}
+    </label>
 </div>
 
 

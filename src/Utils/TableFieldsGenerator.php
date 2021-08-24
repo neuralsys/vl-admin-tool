@@ -5,6 +5,7 @@ namespace Vuongdq\VLAdminTool\Utils;
 use Illuminate\Support\Facades\DB;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Table;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Common\GeneratorField;
 use Vuongdq\VLAdminTool\Common\GeneratorFieldRelation;
@@ -34,6 +35,10 @@ class TableFieldsGenerator
 
     /** @var Model */
     public $modelObject;
+
+    /** @var Table */
+    public $table;
+
     /**
      * @var string
      */
@@ -43,7 +48,18 @@ class TableFieldsGenerator
     public function __construct(Model $modelObject)
     {
         $this->modelObject = $modelObject;
-        $this->tableName = $modelObject->getAttributes('table_name');
+        $this->tableName = $modelObject->table_name;
+
+        /** @var $schemaManager AbstractSchemaManager */
+        $schemaManager = DB::getDoctrineSchemaManager();
+        $allTables = $schemaManager->listTables();
+        foreach ($allTables as $_table) {
+            /** @var $_table Table */
+            if ($_table->getName() == $this->tableName) {
+                $this->table = $_table;
+                break;
+            }
+        }
 
         $this->columns = $this->getTableColumns();
 
@@ -58,7 +74,7 @@ class TableFieldsGenerator
     }
 
     public function generateTimestampField($columnName) {
-        $field = new GeneratorField();
+        $field = new GeneratorField($this->table);
         $field->name = $columnName;
         $field->parseDBTypeFromModel("timestamp", null);
 
@@ -104,8 +120,8 @@ class TableFieldsGenerator
 
             if (in_array($field->name, $datetimeColumns)) {
                 $field->isSearchable = false;
-//                $field->isCreatable = false;
-//                $field->inEditable = false;
+                $field->isCreatable = false;
+                $field->isEditable = false;
             }
             $field->isNotNull = !$column->dbConfig->nullable;
             $field->description = '';
@@ -177,14 +193,14 @@ class TableFieldsGenerator
      * Generates field.
      *
      * @param Field $column
-     * @param $dbType
-     * @param $htmlType
+     * @param string $dbType
+     * @param string $htmlType
      *
      * @return GeneratorField
      */
-    private function generateField(Field $column, $dbType, $htmlType)
+    private function generateField(Field $column, string $dbType, string $htmlType)
     {
-        $field = new GeneratorField();
+        $field = new GeneratorField($this->table);
         $field->name = $column->name;
         $field->parseDBTypeFromModel($dbType, $column);
         $field->parseHtmlInput($htmlType);
@@ -203,28 +219,6 @@ class TableFieldsGenerator
         $field->isExportable = $dtConfig->exportable ?? false;
         $field->isPrintable = $dtConfig->printable ?? true;
         $field->cssClasses = $dtConfig->class ?? "";
-
-        return $this->checkForPrimary($field);
-    }
-
-    /**
-     * Generates number field.
-     *
-     * @param Column $column
-     * @param string $dbType
-     *
-     * @return GeneratorField
-     */
-    private function generateNumberInput($column, $dbType)
-    {
-        $field = new GeneratorField();
-        $field->name = $column->getName();
-        $field->parseDBType($dbType.','.$column->getPrecision().','.$column->getScale());
-        $field->htmlType = 'number';
-
-        if ($dbType === 'decimal') {
-            $field->numberDecimalPoints = $column->getScale();
-        }
 
         return $this->checkForPrimary($field);
     }

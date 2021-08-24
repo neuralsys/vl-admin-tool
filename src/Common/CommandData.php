@@ -2,8 +2,10 @@
 
 namespace Vuongdq\VLAdminTool\Common;
 
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\GeneratorFieldsInputUtil;
@@ -148,25 +150,6 @@ class CommandData
         $this->fields = $tableFieldsGenerator->fields;
         $this->timestampFields = $tableFieldsGenerator->timestamps;
         $this->softDeleteField = $tableFieldsGenerator->softDelete;
-        $this->relations = $tableFieldsGenerator->relations;
-    }
-
-    private function getInputFromTable()
-    {
-        $tableName = $this->dynamicVars['$TABLE_NAME$'];
-
-        $ignoredFields = $this->getOption('ignoreFields');
-        if (!empty($ignoredFields)) {
-            $ignoredFields = explode(',', trim($ignoredFields));
-        } else {
-            $ignoredFields = [];
-        }
-
-        $tableFieldsGenerator = new TableFieldsGenerator($tableName, $ignoredFields, $this->config->connection);
-        $tableFieldsGenerator->prepareFieldsFromTable();
-        $tableFieldsGenerator->prepareRelations();
-
-        $this->fields = $tableFieldsGenerator->fields;
         $this->relations = $tableFieldsGenerator->relations;
     }
 

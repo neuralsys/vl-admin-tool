@@ -275,3 +275,35 @@ if (!function_exists('model_name_from_table_name')) {
         return Str::ucfirst(Str::camel(Str::singular($tableName)));
     }
 }
+
+if (!function_exists('prefix_tabs_each_line')) {
+    /**
+     * prefix tabs to each line of text string.
+     *
+     * @param string $text
+     * @param int $tabs
+     * @param int $spaces
+     *
+     * @return string
+     */
+    function prefix_tabs_each_line(string $text, int $tabs = 1, int $spaces = 4)
+    {
+        $lines = explode("\n", $text);
+        return implode("\n".infy_tabs($tabs, $spaces), $lines);
+    }
+}
+
+if (!function_exists('getRouteNameFromRoute')) {
+    /**
+     * extract route name from route.
+     *
+     * @return string
+     */
+    function getRouteNameFromRoute($route) {
+        $routeName = $route->getName();
+        if ($routeName == "" && $route->getActionName() == "App\Http\Controllers\Auth\LoginController@login") {
+            $routeName = "do_login";
+        }
+        return $routeName;
+    };
+}

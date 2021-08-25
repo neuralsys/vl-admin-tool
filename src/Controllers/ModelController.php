@@ -109,6 +109,16 @@ class ModelController extends Controller
         if (empty($model))
             return $this->error("Model not found!");
 
+        $ignoreTables = [
+            'roles',
+            'permissions',
+            'role_users',
+            'role_permissions'
+        ];
+
+        if (in_array($model->table_name, $ignoreTables))
+            return $this->error("Can't generate the model!");
+
         # generate model
         $modelName = $model->class_name;
         try {
@@ -125,7 +135,7 @@ class ModelController extends Controller
 
     public function sync() {
         try {
-            $exitCode = Artisan::call("vlat:sync");
+            $exitCode = Artisan::call("vlat.sync:db");
             if ($exitCode === 0) {
                 return $this->success("Sync database successfully!");
             } else {

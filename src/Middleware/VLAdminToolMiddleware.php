@@ -2,6 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Middleware;
 
+use App\Models\Role;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class VLAdminToolMiddleware extends Middleware
@@ -14,8 +15,15 @@ class VLAdminToolMiddleware extends Middleware
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
                 $user = $this->auth->guard($guard)->user();
-                if ($user->id === (int)config('vl_admin_tool.admin_id', 1)) {
-                    return $this->auth->shouldUse($guard);
+                $roles = $user->roles;
+                if (!empty($roles)) {
+                    foreach ($roles as $role) {
+                        if ($role->code == Role::SUPER_ADMIN) return $this->auth->shouldUse($guard);
+                    }
+                } else {
+                    if ($user->id === (int)config('vl_admin_tool.admin_id', 1)) {
+                        return $this->auth->shouldUse($guard);
+                    }
                 }
             }
         }

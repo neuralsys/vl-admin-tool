@@ -34,7 +34,7 @@ class DBSyncCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vlat:sync';
+    protected $name = 'vlat.sync:db';
 
     /**
      * The console command description.
@@ -870,7 +870,9 @@ class DBSyncCommand extends BaseCommand
 
         $models = $this->modelRepository->all();
         foreach ($models as $model) {
-            if (!in_array($model->table_name, $tableNames)) $model->delete();
+            if (!in_array($model->table_name, $tableNames)
+                || in_array($model->table_name, $this->ignoreTables))
+                $model->delete();
         }
     }
 

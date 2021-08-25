@@ -2,6 +2,7 @@
 
 namespace Vuongdq\VLAdminTool\Commands\Publish;
 
+use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -29,18 +30,174 @@ class GeneratorPublishCommand extends PublishBaseCommand
     public function handle()
     {
         $this->info('Publishing...');
+        $this->updateConfigAuth();
         $this->copyView();
         $this->publishPublicFiles();
         $this->updateRoutes();
         $this->publishHomeController();
         $this->publishExceptionHandler();
-
         $this->publishTestCases();
+
+        # publish base common objects
         $this->publishTraits();
+        $this->publishMiddleware();
         $this->publishBaseController();
         $this->publishBaseRepository();
         $this->publishBaseLocaleFiles();
+
+        # publish role permission objects
+        $this->publishRolePermission();
+
         $this->info('Publish successfully!');
+    }
+
+    private function updateConfigAuth() {
+        $authFile = config_path('auth.php');
+
+        $content = file_get_contents($authFile);
+
+        $newContent = str_replace("'model' => App\User::class", "'model' => App\Models\User::class", $content);
+
+        file_put_contents($authFile, $newContent);
+
+        $userPath = app_path('User.php');
+        if (file_exists($userPath)) {
+            $userContent = file_get_contents();
+            $userContent = str_replace("namespace App;", "namespace App\Models;", $userContent);
+            FileUtil::createDirectoryIfNotExist(app_path('Models'));
+            file_put_contents(app_path('Models/User.php'), $userContent);
+            FileUtil::deleteFile(app_path('/'), 'User.php');
+        }
+    }
+
+    private function publishRolePermission()
+    {
+        $this->publishRolePermissionMigrationFiles();
+        $this->publishRolePermissionSeedFiles();
+        $this->publishRolePermissionModelFiles();
+        $this->publishRolePermissionDataTableFiles();
+        $this->publishRolePermissionControllerFiles();
+        $this->publishRolePermissionCommandFiles();
+        $this->publishRolePermissionRepositoryFiles();
+        $this->publishRolePermissionRequestFiles();
+        $this->publishRolePermissionViewFiles();
+    }
+
+    private function publishRolePermissionViewFiles() {
+        $destinationPath = resource_path('views');
+        $sourcePath = $this->getPackagePath() . '/publish/views';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('View files published');
+    }
+
+    private function publishRolePermissionRequestFiles() {
+        $destinationPath = app_path('Requests');
+        $sourcePath = $this->getPackagePath() . '/publish/requests';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('Request files published');
+    }
+
+    private function publishRolePermissionRepositoryFiles() {
+        $destinationPath = app_path('Repositories');
+        $sourcePath = $this->getPackagePath() . '/publish/repositories';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('Repository files published');
+    }
+
+    private function publishRolePermissionCommandFiles() {
+        $destinationPath = app_path('Console/Commands');
+        $sourcePath = $this->getPackagePath() . '/publish/commands';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('Command files published');
+    }
+
+    private function publishRolePermissionControllerFiles() {
+        $destinationPath = app_path('Http/Controllers');
+        $sourcePath = $this->getPackagePath() . '/publish/controllers';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('Controller files published');
+    }
+
+    private function publishRolePermissionDataTableFiles() {
+        $destinationPath = app_path('DataTables');
+        $sourcePath = $this->getPackagePath() . '/publish/datatables';
+
+        FileUtil::copyDirectory($sourcePath, $destinationPath, true);
+
+        $this->comment('DataTable files published');
+    }
+
+    private function publishRolePermissionModelFiles() {
+        $modelPath = app_path('Models');
+        $templateModelDir = $this->getPackagePath() . '/publish/models';
+
+        FileUtil::copyDirectory($templateModelDir, $modelPath, true);
+
+        $this->comment('Model files published');
+    }
+
+    private function publishRolePermissionMigrationFiles() {
+        $migrationPath = database_path('migrations');
+        $templateMigrationDir = $this->getPackagePath() . '/publish/migrations';
+        FileUtil::copyDirectory($templateMigrationDir, $migrationPath, true);
+        $this->comment('Migration files published');
+    }
+
+    private function publishRolePermissionSeedFiles() {
+        $seedPath = database_path('seeds');
+        $tempalteSeedDir = $this->getPackagePath() . '/publish/seeds';
+
+        $files = array_diff(scandir($tempalteSeedDir), array('.', '..'));
+        foreach ($files as $fileOrFolder) {
+            $sourcePath = $tempalteSeedDir."/".$fileOrFolder;
+            if (is_file($sourcePath)) {
+                FileUtil::copyFile($tempalteSeedDir, $fileOrFolder, $seedPath, true);
+                $this->updateMainSeeder($fileOrFolder);
+                $this->info($fileOrFolder . " File created");
+            }
+        }
+
+        $this->comment('Seed files published');
+    }
+
+    private function updateMainSeeder($fileName) {
+        $fileName = str_replace(".php", "", $fileName);
+
+        $mainSeederFile = database_path('seeds/DatabaseSeeder.php');
+
+        $mainSeederContent = file_get_contents($mainSeederFile);
+
+        $newSeederStatement = '$this->call('.$fileName.'::class);';
+
+        if (strpos($mainSeederContent, $newSeederStatement) != false) {
+            $this->comment($fileName.' entry found in DatabaseSeeder. Skipping Adjustment.');
+            return;
+        }
+
+        $newSeederStatement = infy_tabs(2).$newSeederStatement.infy_nl();
+
+        preg_match_all('/\\$this->call\\((.*);/', $mainSeederContent, $matches);
+
+        $totalMatches = count($matches[0]);
+        $lastSeederStatement = $matches[0][$totalMatches - 1];
+
+        $replacePosition = strpos($mainSeederContent, $lastSeederStatement);
+
+        $mainSeederContent = substr_replace($mainSeederContent, $newSeederStatement, $replacePosition + strlen($lastSeederStatement) + 1, 0);
+
+        file_put_contents($mainSeederFile, $mainSeederContent);
+        $this->comment('Main Seeder file updated.');
+
     }
 
     /**
@@ -189,7 +346,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
     private function publishBaseLocaleFiles()
     {
         $packageDir = $this->getPackagePath();
-        $localesDir = $packageDir . '/locale';
+        $localesDir = $packageDir . '/publish/locale';
         FileUtil::copyDirectory($localesDir, resource_path('lang'), true);
 
         $this->comment('Locale files published');
@@ -216,6 +373,38 @@ class GeneratorPublishCommand extends PublishBaseCommand
     protected function getArguments()
     {
         return [];
+    }
+
+    private function publishMiddleware() {
+        $middlewarePath = app_path('Http/Middleware');
+        $tempalteMiddlewareDir = get_templates_package_path('vl-admin-tool') . "/publish/middleware";
+
+        $files = array_diff(scandir($tempalteMiddlewareDir), array('.', '..'));
+        foreach ($files as $fileOrFolder) {
+            $sourcePath = $tempalteMiddlewareDir."/".$fileOrFolder;
+            if (is_file($sourcePath)) {
+                FileUtil::copyFile($tempalteMiddlewareDir, $fileOrFolder, $middlewarePath, true);
+                $this->updateKernel($fileOrFolder);
+                $this->info($fileOrFolder . " File created");
+            }
+        }
+
+        $this->comment('Middleware files published');
+    }
+
+    private function updateKernel($fileName) {
+        $fileName = str_replace(".php", "", $fileName);
+        $kernelFilePath = app_path('Http/Kernel.php');
+        $content = file_get_contents($kernelFilePath);
+        $endLinePos = strpos($content, "];\n}\n");
+
+        $middlewareName = Str::camel($fileName);
+        $middlewareLine = "'$middlewareName' => $fileName::class,\n";
+        if (strpos($content, $middlewareLine) != false) {
+            return;
+        }
+        $newContent = substr($content, 0, $endLinePos) . infy_tabs(1) . $middlewareLine . infy_tabs(1) . substr($content, $endLinePos);
+        file_put_contents($kernelFilePath, $newContent);
     }
 
     private function publishTraits() {
@@ -286,14 +475,23 @@ class GeneratorPublishCommand extends PublishBaseCommand
             return;
         }
 
-        $routeContents = file_get_contents($path);
-
-        $routesTemplate = get_template('routes.auth', 'vl-admin-tool');
-
-        $routeContents .= "\n\n".$routesTemplate;
+        $routeContents = $this->generateRoutes();
 
         file_put_contents($path, $routeContents);
         $this->comment("\nRoutes added");
+    }
+
+    public function generateRoutes() {
+        $templateRoute = get_template('scaffold/routes/template_structure', 'vl-admin-tool');
+
+        $rolePermissionRoutes = get_template('scaffold/routes/role_permission_routes', 'vl-admin-tool');
+        $rolePermissionRoutes = prefix_tabs_each_line($rolePermissionRoutes);
+        $authRoutes = get_template('scaffold/routes/auth', 'vl-admin-tool');
+
+        return fill_template([
+            '$AUTH_ROUTES$' => $authRoutes,
+            '$DOMAIN_ROUTES$' => $rolePermissionRoutes,
+        ], $templateRoute);
     }
 
     private function publishHomeController()

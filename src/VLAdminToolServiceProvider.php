@@ -26,6 +26,7 @@ use Vuongdq\VLAdminTool\Commands\Scaffold\RequestsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\GenerateCommand;
 use Vuongdq\VLAdminTool\Commands\Scaffold\ViewsGeneratorCommand;
 use Vuongdq\VLAdminTool\Commands\SeedingCommand;
+use Vuongdq\VLAdminTool\Commands\SyncPermissionCommand;
 use Vuongdq\VLAdminTool\Commands\UninstallCommand;
 use Vuongdq\VLAdminTool\Middleware\VLAdminToolMiddleware;
 
@@ -37,12 +38,13 @@ class VLAdminToolServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot(Router $router) {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'vl-admin-tool');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'vl-admin-tool-lang');
+        $packagePath = get_templates_package_path('vl-admin-tool');
+        $this->loadViewsFrom( $packagePath . '/resources/views', 'vl-admin-tool');
+        $this->loadTranslationsFrom($packagePath . '/resources/lang', 'vl-admin-tool-lang');
 
         # config
-        $configPath = __DIR__ . '/../config/vl_admin_tool.php';
-        $relationsConstantsPath = __DIR__ . '/../config/relations.php';
+        $configPath = $packagePath . '/publish/config/vl_admin_tool.php';
+        $relationsConstantsPath = $packagePath . '/publish/config/relations.php';
 
         $this->publishes([
             $configPath => config_path('vl_admin_tool.php'),
@@ -86,7 +88,7 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new SeedingCommand();
         });
 
-        $this->app->singleton('vlat.sync', function ($app) {
+        $this->app->singleton('vlat.sync.db', function ($app) {
             return new DBSyncCommand();
         });
 
@@ -127,7 +129,7 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             'vlat.publish',
             'vlat.migrate',
             'vlat.seed',
-            'vlat.sync',
+            'vlat.sync.db',
 
             # run specific cases
             'vlat.generate.menu',
@@ -146,10 +148,12 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             'vlat.rollback',
         ]);
 
-        $configPath = __DIR__ . '/../config/vl_admin_tool.php';
+        $packagePath = get_templates_package_path('vl-admin-tool');
+
+        $configPath = $packagePath . '/publish/config/vl_admin_tool.php';
         $this->mergeConfigFrom($configPath, 'vl_admin_tool');
 
-        $relationsConstantsPath = __DIR__ . '/../config/relations.php';
+        $relationsConstantsPath = $packagePath . '/publish/config/relations.php';
         $this->mergeConfigFrom($relationsConstantsPath, 'vl_admin_tool');
     }
 }

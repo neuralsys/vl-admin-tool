@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * @package Vuongdq\VLAdminTool\Models
  * @version January 6, 2021, 7:28 am UTC
  *
+ * @property int $id
  * @property string $type
  * @property string $url_pattern
  * @property string $index_route_name

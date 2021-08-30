@@ -36,7 +36,7 @@ class PermissionController extends Controller
 
     public function sync() {
         try {
-            $exitCode = Artisan::call("vlat.sync:permission");
+            $exitCode = Artisan::call("sync:permission");
             if ($exitCode === 0) {
                 return $this->success("Sync permission successfully!");
             } else {

@@ -20,5 +20,5 @@ Route::group(['middleware' => ['auth:web', 'checkPermission']], function (\Illum
     $route->get('/', 'HomeController@index')->name('home');
 
     $DOMAIN_ROUTES$
-    # v-a-r
+    # v-mp-r
 });

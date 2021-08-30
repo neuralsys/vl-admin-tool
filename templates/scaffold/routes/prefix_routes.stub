@@ -1,7 +1,7 @@
-Route::group(['prefix' => '$MODEL_NAME_PLURAL_CAMEL$'], function ($router) {
-    $router->get('/', '$PATH_PREFIX$$MODEL_NAME$Controller@index')->name('$MODEL_NAME_PLURAL_CAMEL$.index');
-    // $router->get('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@show')->name('$MODEL_NAME_PLURAL_CAMEL$.show');
-    $router->post('/', '$PATH_PREFIX$$MODEL_NAME$Controller@store')->name('$MODEL_NAME_PLURAL_CAMEL$.store');
-    $router->put('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@update')->name('$MODEL_NAME_PLURAL_CAMEL$.update');
-    $router->delete('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@destroy')->name('$MODEL_NAME_PLURAL_CAMEL$.destroy');
+Route::group(['prefix' => '$MODEL_NAME_PLURAL_DASHED$'], function ($router) {
+    $router->get('/', '$PATH_PREFIX$$MODEL_NAME$Controller@index')->name('$MODEL_NAME_PLURAL_DASHED$.index');
+    // $router->get('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@show')->name('$MODEL_NAME_PLURAL_DASHED$.show');
+    $router->post('/', '$PATH_PREFIX$$MODEL_NAME$Controller@store')->name('$MODEL_NAME_PLURAL_DASHED$.store');
+    $router->put('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@update')->name('$MODEL_NAME_PLURAL_DASHED$.update');
+    $router->delete('{id}', '$PATH_PREFIX$$MODEL_NAME$Controller@destroy')->name('$MODEL_NAME_PLURAL_DASHED$.destroy');
 });

@@ -33,12 +33,18 @@ class RoutesGenerator
 
     public function generate()
     {
-        if (Str::contains($this->existRouteContents, "group(['prefix' => '".$this->commandData->config->mSnakePlural."'], function (\$router) ")) {
+        if (Str::contains($this->existRouteContents, "group(['prefix' => '".$this->commandData->config->mDashedPlural."'], function (\$router) ")) {
             $this->commandData->commandObj->info('Route '.$this->commandData->config->mPlural.' is already exists, Skipping Adjustment.');
             return;
         }
 
-        file_put_contents($this->path, $this->existRouteContents."\n{$this->routeContents}");
+        $markPosition = strripos($this->existRouteContents, "# v-mp-r");
+        if ($markPosition != false) {
+            $this->routeContents = prefix_tabs_each_line($this->routeContents, 1) . PHP_EOL . infy_tabs(1);
+            $newContent = substr($this->existRouteContents, 0, $markPosition) . $this->routeContents . substr($this->existRouteContents, $markPosition);
+        }
+        else $newContent = $this->existRouteContents."\n{$this->routeContents}";
+        file_put_contents($this->path, $newContent);
         $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' routes added.');
     }
 

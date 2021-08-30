@@ -26,9 +26,9 @@ class MenuGenerator extends BaseGenerator
         $menuRepo = app(MenuRepository::class);
         try {
             $modelMenu = $menuRepo->create([
-                'url_pattern' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$*'),
+                'url_pattern' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_DASHED$*'),
                 'type' => 'no-child',
-                'index_route_name' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$.index'),
+                'index_route_name' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_DASHED$.index'),
                 'title' => fill_template($this->commandData->dynamicVars,'$MODEL_NAME$'),
                 'parent_id' => $parentId
             ]);
@@ -50,7 +50,7 @@ class MenuGenerator extends BaseGenerator
 
         $modelMenu = $menuRepo->where(
             'url_pattern',
-            fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_CAMEL$*')
+            fill_template($this->commandData->dynamicVars,'$MODEL_NAME_PLURAL_DASHED$*')
         )->first();
 
         if (!empty($modelMenu)) {

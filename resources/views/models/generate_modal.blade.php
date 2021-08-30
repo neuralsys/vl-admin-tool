@@ -9,6 +9,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <button class="btn btn-sm btn-primary mr-2" id="btnSelectAll"> Select All</button>
+                            <button class="btn btn-sm btn-primary" id="btnDeselectAll"> Deselect All</button>
+                        </div>
+                    </div>
                     <div class="row">
                         <!-- Migration Field -->
                         <div class="form-group col-sm-6">
@@ -129,9 +135,24 @@
                 let isConfirmed = await confirmBox(options);
                 if (isConfirmed) {
                     sendFormAjax(modelGenerateForm, {
-                        modal: modelGenerateModal
+                        modal: modelGenerateModal,
+                        onCompleted: function () {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        }
                     });
                 }
+            });
+
+            $('#btnSelectAll').on('click', function (evt) {
+               evt.preventDefault();
+               $('#model-generate-form input[type=checkbox]').prop('checked', true);
+            });
+
+            $('#btnDeselectAll').on('click', function (evt) {
+                evt.preventDefault();
+                $('#model-generate-form input[type=checkbox]').prop('checked', false);
             });
         });
     </script>

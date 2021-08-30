@@ -31,10 +31,26 @@ class MenuTableSeeder extends Seeder
             ]);
 
             $menuMenu = Menu::create([
-                'url_pattern' => 'menu*',
+                'url_pattern' => 'menus*',
                 'type' => 'no-child',
                 'index_route_name' => 'menus.index',
                 'title' => 'Menu',
+                'parent_id' => $rootMenu->id
+            ]);
+
+            $menuMenu = Menu::create([
+                'url_pattern' => 'roles*',
+                'type' => 'no-child',
+                'index_route_name' => 'roles.index',
+                'title' => 'Role',
+                'parent_id' => $rootMenu->id
+            ]);
+
+            $menuMenu = Menu::create([
+                'url_pattern' => 'permissions*',
+                'type' => 'no-child',
+                'index_route_name' => 'permissions.index',
+                'title' => 'Permission',
                 'parent_id' => $rootMenu->id
             ]);
 

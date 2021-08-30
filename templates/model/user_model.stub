@@ -35,4 +35,29 @@ class $MODEL_NAME$ extends EloquentModel implements
         $CAST$
     ];
     $RELATIONS$
+
+    public static function boot() {
+        parent::boot();
+
+        static::creating(function (User $item) {
+            if ($item->password == "" || $item->password == null) {
+                throw new \Exception("Password not set");
+            }
+
+            $item->password = bcrypt($item->password);
+        });
+
+        static::updating(function (User $item) {
+            $changes = $item->getDirty();
+
+            if (array_key_exists('password', $changes)) {
+                if ($item->password == "" || $item->password == null) {
+                    $item->password = $item->getOriginal('password');
+                }
+                else {
+                    $item->password = bcrypt($item->password);
+                }
+            }
+        });
+    }
 }

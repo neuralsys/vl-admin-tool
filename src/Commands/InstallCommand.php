@@ -49,6 +49,11 @@ class InstallCommand extends BaseCommand
         if (!$this->hasOption('skip-seeding') || !$this->option('skip-seeding'))
             $this->call('vlat:seed');
 
+        if (!$this->hasOption('skip-menu') || !$this->option('skip-menu'))
+            $this->call('vlat.generate:menu');
+
+        if (!$this->hasOption('skip-sync') || !$this->option('skip-sync'))
+            $this->call('vlat.sync:db');
 
         $this->info('Install VL Admin Tool successfully!');
         return 0;
@@ -58,6 +63,7 @@ class InstallCommand extends BaseCommand
         return [
             ['skip-migration', null, InputOption::VALUE_NONE, 'Skip migrating after install'],
             ['skip-seeding', null, InputOption::VALUE_NONE, 'Skip seeding after install'],
+            ['skip-menu', null, InputOption::VALUE_NONE, 'Skip generating menu after install'],
             ['force', null, InputOption::VALUE_NONE, 'Force install'],
         ];
     }

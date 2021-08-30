@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Traits\JsonResponse;
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -49,5 +50,21 @@ class CheckPermission
     private function findRequirePermission(\Illuminate\Http\Request $request)
     {
         return getRouteNameFromRoute($request->route());
+    }
+
+    public static function hasRole(User $user, $roles) {
+        if (empty($user)) return false;
+        $userRoles = $user->roles;
+        if ($userRoles === null) return false;
+
+        $roleCodes = $userRoles->map(function (Role $role) {
+            return $role->code;
+        })->toArray();
+
+        foreach ($roles as $role) {
+            if (!in_array($role, $roleCodes)) return false;
+        }
+
+        return true;
     }
 }

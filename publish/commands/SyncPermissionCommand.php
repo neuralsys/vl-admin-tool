@@ -51,6 +51,7 @@ class SyncPermissionCommand extends Command
         /* @var $route Route */
         foreach ($routeCollection as $route) {
             $routeName = getRouteNameFromRoute($route);
+            if (empty($routeName) && $route->uri() == "api/user") continue;
             if (strpos($routeName, "ignition") != false) continue;
             $routeCategory = $this->extractCategory($routeName);
             $routeURL = $route->uri();

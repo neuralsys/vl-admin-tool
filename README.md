@@ -2,10 +2,7 @@
 
 ## Todo:
 - Only show admin menu for admin users (adding to generate menu command)
-- Add User Type Table for vl-admin-tool to generating to user_types.php config file
-
 - Add menu for each user type (user-type config from file)
-
 
 - Generate Select Option For Select Field in Controller
 - Auto choose Html Type as Select if field is Foreign Key

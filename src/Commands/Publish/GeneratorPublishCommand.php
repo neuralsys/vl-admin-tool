@@ -179,7 +179,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
         $newSeederStatement = '$this->call('.$fileName.'::class);';
 
-        if (strpos($mainSeederContent, $newSeederStatement) != false) {
+        if (strpos($mainSeederContent, $newSeederStatement) !== false) {
             $this->comment($fileName.' entry found in DatabaseSeeder. Skipping Adjustment.');
             return;
         }
@@ -400,7 +400,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
         $middlewareName = Str::camel($fileName);
         $middlewareLine = "'$middlewareName' => $fileName::class,\n";
-        if (strpos($content, $middlewareLine) != false) {
+        if (strpos($content, $middlewareLine) !== false) {
             return;
         }
         $newContent = substr($content, 0, $endLinePos) . infy_tabs(1) . $middlewareLine . infy_tabs(1) . substr($content, $endLinePos);

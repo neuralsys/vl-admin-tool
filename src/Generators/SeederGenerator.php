@@ -47,7 +47,7 @@ class SeederGenerator extends BaseGenerator
 
         $newSeederStatement = '$this->call('.$this->commandData->config->mName.'TableSeeder::class);';
 
-        if (strpos($mainSeederContent, $newSeederStatement) != false) {
+        if (strpos($mainSeederContent, $newSeederStatement) !== false) {
             $this->commandData->commandObj->info($this->commandData->config->mPlural.'TableSeeder entry found in DatabaseSeeder. Skipping Adjustment.');
 
             return;

@@ -52,7 +52,7 @@ class SyncPermissionCommand extends Command
         foreach ($routeCollection as $route) {
             $routeName = getRouteNameFromRoute($route);
             if (empty($routeName) && $route->uri() == "api/user") continue;
-            if (strpos($routeName, "ignition") != false) continue;
+            if (strpos($routeName, "ignition") !== false) continue;
             $routeCategory = $this->extractCategory($routeName);
             $routeURL = $route->uri();
             $routeMethod = implode("|", $route->methods());
@@ -90,7 +90,7 @@ class SyncPermissionCommand extends Command
 
     private function extractCategory($routeName)
     {
-        if (strpos($routeName, ".") != false) return explode(".", $routeName)[0];
+        if (strpos($routeName, ".") !== false) return explode(".", $routeName)[0];
         return null;
     }
 }

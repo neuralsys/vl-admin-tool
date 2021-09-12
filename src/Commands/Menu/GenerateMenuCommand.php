@@ -64,10 +64,7 @@ class GenerateMenuCommand extends BaseCommand {
     public function generateMenu(Menu $menu, $level) {
         $result = '';
         $templateMenu = get_template('menu/'.$menu->type, 'vl-admin-tool');
-        $variables = array_merge(
-            $this->getVariables($menu, $level),
-            $this->commandData->dynamicVars
-        );
+        $variables = $this->getVariables($menu, $level);
         $variables['$TABS$'] = infy_tabs(($level - 1) * 2);
         if ($menu->id == 1) {
             $variables['$VISIBLE_CONDITION_START$'] = "@if(\App\Http\Middleware\CheckPermission::hasRole(\Illuminate\Support\Facades\Auth::user(), [\App\Models\Role::SUPER_ADMIN]))";
@@ -81,12 +78,14 @@ class GenerateMenuCommand extends BaseCommand {
         switch ($menu->type) {
             case 'header':
                 return [
-                    '$MENU_TITLE$' => $menu->title
+                    '$MENU_TITLE$' => $menu->title,
+                    '$INDEX_ROUTE_NAME$' => $menu->index_route_name,
                 ];
                 break;
             case 'no-child':
                 return [
                     '$MENU_TITLE$' => $menu->title,
+                    '$INDEX_ROUTE_NAME$' => $menu->index_route_name,
                     '$INDEX_ROUTE$' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$URL_PATTERN$' => $menu->url_pattern,
                     '$PADDING_LEFT$' => 1 + 0.8 * ($level - 1),
@@ -110,7 +109,8 @@ class GenerateMenuCommand extends BaseCommand {
                     '$INDEX_ROUTE$' => $menu->index_route_name ? "{{route('$menu->index_route_name')}}" : '#',
                     '$CHILDRENT_MENUS$' => $menus,
                     '$PADDING_LEFT$' => 1 + 0.8 * ($level - 1),
-                    '$ICON_CLASS$' => 'fas fa-circle nav-icon'
+                    '$ICON_CLASS$' => 'fas fa-circle nav-icon',
+                    '$INDEX_ROUTE_NAME$' => $menu->index_route_name,
                 ];
                 break;
         }

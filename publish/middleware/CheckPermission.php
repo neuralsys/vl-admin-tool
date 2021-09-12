@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Permission;
 use App\Traits\JsonResponse;
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -66,5 +67,24 @@ class CheckPermission
         }
 
         return true;
+    }
+
+    public static function hasPermission(User $user, $routeName) {
+        if (empty($user)) return false;
+        $userRoles = $user->roles;
+        if ($userRoles === null) return false;
+
+        /** @var Role $role */
+        foreach ($userRoles as $role) {
+            if ($role->code == Role::SUPER_ADMIN) return true;
+            $permissions = $role->permissions;
+            /** @var Permission $permission */
+            foreach ($permissions as $permission) {
+                if ($permission->name == $routeName) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

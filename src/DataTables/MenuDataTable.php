@@ -85,7 +85,7 @@ class MenuDataTable extends DataTable {
             'title' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.title'), 'data' => 'title']),
             'parent_id' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.parent_id'), 'data' => 'parent_id']),
             'parent_menu' => new Column(['title' => __('vl-admin-tool-lang::models/menu.parent'), 'data' => 'parent_menu']),
-            'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos']),
+            'pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'pos', "visible" => false]),
             'real_pos' => new Column(['title' => __('vl-admin-tool-lang::models/menu.fields.pos'), 'data' => 'real_pos', 'visible' => false]),
         ];
     }

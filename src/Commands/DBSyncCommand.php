@@ -346,7 +346,7 @@ class DBSyncCommand extends BaseCommand
         return $dtConfig;
     }
 
-    public function generateRules(Field $field, DBConfig $dbConfig, Column $column, $isPK): string
+    public function generateRules(Field $field, DBConfig $dbConfig, Column $column, $isPK, $tableName): string
     {
         $rule = [];
         if (!$isPK) {
@@ -385,26 +385,26 @@ class DBSyncCommand extends BaseCommand
             }
 
             # unique at the end
-            if ($dbConfig->unique) $rule[] = "unique";
+            if ($dbConfig->unique) $rule[] = "unique:$tableName,". $field->name;
         }
 
         return implode('|', $rule);
     }
 
-    public function predictCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns)
+    public function predictCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns, string $tableName)
     {
         $isPK = in_array($field->name, $primaryColumns);
         return [
             'creatable' => !$isPK,
             'editable' => !$isPK,
-            'rules' => $this->generateRules($field, $dbConfig, $column, $isPK)
+            'rules' => $this->generateRules($field, $dbConfig, $column, $isPK, $tableName)
         ];
     }
 
-    public function createOrUpdateCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns)
+    public function createOrUpdateCRUDConfig(Field $field, DBConfig $dbConfig, Column $column, $primaryColumns, string $tableName)
     {
         $crudConfig = $field->crudConfig;
-        $crudConf = $this->predictCRUDConfig($field, $dbConfig, $column, $primaryColumns);
+        $crudConf = $this->predictCRUDConfig($field, $dbConfig, $column, $primaryColumns, $tableName);
         if (empty($crudConfig)) {
             $crudConfig = $this->crudConfigRepository->create(array_merge([
                 'field_id' => $field->id,
@@ -800,7 +800,7 @@ class DBSyncCommand extends BaseCommand
             $field = $this->createOrUpdateField($model, $column);
             $dbConfig = $this->createOrUpdateDBConfig($field, $column, $tableIndexes);
             $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primaryColumns);
-            $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primaryColumns);
+            $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primaryColumns, $model->table_name);
             $field = $this->updateHTMLType($field, $dbConfig);
         }
     }

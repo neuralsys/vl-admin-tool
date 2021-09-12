@@ -264,7 +264,7 @@ class ModelGenerator extends BaseGenerator
         }
     }
 
-    public function generateRules()
+    public function generateRules(string $type = 'create')
     {
         $tableGenerator = new TableFieldsGenerator($this->commandData->modelObject);
         $timestampFields =  $tableGenerator->getTimestampFieldNames();
@@ -286,15 +286,20 @@ class ModelGenerator extends BaseGenerator
             }
 
             if (!empty($field->validations)) {
+                $hasUnique = false;
                 if (Str::contains($field->validations, 'unique:')) {
                     $rule = array_unique(explode('|', $field->validations));
                     // move unique rule to last
                     usort($rule, function ($record) {
                         return (Str::contains($record, 'unique:')) ? 1 : 0;
                     });
+                    $hasUnique = true;
                     $field->validations = implode('|', $rule);
                 }
                 $rule = "'".$field->name."' => '".$field->validations."'";
+                if ($hasUnique && $type == "update") {
+                    $rule .= " . (\$id ? \",\$id\": \"\")";
+                };
                 $rules[] = $rule;
             }
         }

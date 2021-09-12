@@ -25,10 +25,11 @@ class Update$MODEL_NAME$Request extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('id');
+
         $rules = [
             $RULES$
         ];
-        $UNIQUE_RULES$
         return $rules;
     }
 }

@@ -64,7 +64,10 @@ class GenerateMenuCommand extends BaseCommand {
     public function generateMenu(Menu $menu, $level) {
         $result = '';
         $templateMenu = get_template('menu/'.$menu->type, 'vl-admin-tool');
-        $variables = $this->getVariables($menu, $level);
+        $variables = array_merge(
+            $this->getVariables($menu, $level),
+            $this->commandData->dynamicVars
+        );
         $variables['$TABS$'] = infy_tabs(($level - 1) * 2);
         if ($menu->id == 1) {
             $variables['$VISIBLE_CONDITION_START$'] = "@if(\App\Http\Middleware\CheckPermission::hasRole(\Illuminate\Support\Facades\Auth::user(), [\App\Models\Role::SUPER_ADMIN]))";

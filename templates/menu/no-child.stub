@@ -1,6 +1,6 @@
 $TABS$@if(\App\Http\Middleware\CheckPermission::hasPermission(\Illuminate\Support\Facades\Auth::user(), '$INDEX_ROUTE_NAME$'))
 $TABS$<li class="nav-item">
-$TABS$    <a href="$INDEX_ROUTE$" class="nav-link {{ Request::is('$URL_PATTERN$') ? 'active' : '' }}" style="padding-left: $PADDING_LEFT$rem">
+$TABS$    <a href="$INDEX_ROUTE$" class="nav-link {{ Request::routeIs('$URL_PATTERN$') ? 'active' : '' }}" style="padding-left: $PADDING_LEFT$rem">
 $TABS$        <i class="$ICON_CLASS$"></i>
 $TABS$        <p>$MENU_TITLE$</p>
 $TABS$    </a>

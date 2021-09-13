@@ -107,7 +107,7 @@ class DataTableGenerator extends BaseGenerator
         /** @var GeneratorField $field */
         foreach ($this->commandData->fields as $field) {
             if ($field->isShowable) {
-                $selectedColumns[] = "'{$field->name}'";
+                $selectedColumns[] = "'{$this->commandData->modelObject->table_name}.{$field->name}'";
             }
         }
 

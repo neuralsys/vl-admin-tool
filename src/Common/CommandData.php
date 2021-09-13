@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Vuongdq\VLAdminTool\Models\Field;
 use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\GeneratorFieldsInputUtil;
 use Vuongdq\VLAdminTool\Utils\TableFieldsGenerator;
@@ -86,6 +87,7 @@ class CommandData
             '$FIELD_NAME_CAMEL$'       => 'fieldCamel',
             '$FIELD_DEFAULT_VALUE$'       => 'fieldDefaultValue',
             '$LANG_FIELD_NAME$'       => 'name',
+            '$DATA_FIELD_NAME$'       => 'name',
         ];
 
         $this->config = new GeneratorConfig();
@@ -160,5 +162,31 @@ class CommandData
 
     public function isUseSoftDelete() {
         return $this->modelObject->use_soft_delete;
+    }
+
+    public function generateFKVars(GeneratorField $field) {
+        /** @var Field $fieldObj */
+        $fieldObj = $this->modelObject->fields()->where('name', $field->name)->first();
+        $destinationField = $fieldObj->secondFields[0];
+        $destinationModel = $destinationField->model;
+
+        return [
+            '$SOURCE_TABLE_NAME$' => $destinationModel->table_name,
+            '$SOURCE_COLUMN$' => $destinationField->name,
+            '$TABLE_NAME$' => $this->modelObject->table_name,
+            '$FOREIGN_COLUMN$' => $fieldObj->name,
+            '$SOURCE_SELECTED_COLUMN$' => $this->findNextColumn($destinationModel, $destinationField),
+            '$SOURCE_TABLE_NAME_SINGULAR_CAMEL$' => Str::camel(Str::singular($destinationModel->table_name)),
+            '$SOURCE_TABLE_NAME_SINGULAR_HUMAN$' => Str::ucfirst(Str::camel(Str::singular($destinationModel->table_name))),
+        ];
+    }
+
+    private function findNextColumn(Model $model, Field $markField) {
+        $fields = $model->fields;
+        $mark = false;
+        foreach ($fields as $field) {
+            if ($mark) return $field->name;
+            if ($field->id == $markField->id) $mark = true;
+        }
     }
 }

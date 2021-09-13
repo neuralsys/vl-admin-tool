@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use $NAMESPACE_DATATABLES$\$MODEL_NAME$DataTable;
 use $NAMESPACE_REQUEST$\Create$MODEL_NAME$Request;
 use $NAMESPACE_REQUEST$\Update$MODEL_NAME$Request;
-use $NAMESPACE_REPOSITORY$\$MODEL_NAME$Repository;
+use $NAMESPACE_REPOSITORY$\$MODEL_NAME$Repository;$FK_REPO_IMPORT$
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Str;
@@ -15,10 +15,12 @@ class $MODEL_NAME$Controller extends Controller
 {
     /** @var  $MODEL_NAME$Repository */
     private $$MODEL_NAME_CAMEL$Repository;
-
-    public function __construct($MODEL_NAME$Repository $$MODEL_NAME_CAMEL$Repo)
+    $FK_REPO_DECLARATIONS$
+    public function __construct(
+        $MODEL_NAME$Repository $$MODEL_NAME_CAMEL$Repository$FK_REPO_PARAMS$
+    )
     {
-        $this->$MODEL_NAME_CAMEL$Repository = $$MODEL_NAME_CAMEL$Repo;
+        $this->$MODEL_NAME_CAMEL$Repository = $$MODEL_NAME_CAMEL$Repository;$FK_REPO_ASSIGN$
     }
 
     /**
@@ -29,8 +31,11 @@ class $MODEL_NAME$Controller extends Controller
      */
     public function index($MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable)
     {
+        $FK_OPTIONS$
         return $$MODEL_NAME_CAMEL$DataTable
-            ->render('$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index');
+            ->render('$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index', [
+                $FK_DATA$
+            ]);
     }
 
     /**

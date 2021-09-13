@@ -17,6 +17,7 @@ return [
     'sync_menu' => 'Sync Menu',
     'sync_permission' => 'Sync Permission',
     'select' => 'Select',
+    'choose' => 'Choose',
 
     # CRUD Status
     'add_success' => 'Add new :model successfully!',

@@ -204,17 +204,19 @@ class DBSyncCommand extends BaseCommand
             ->where("name", $column->getName())
             ->first();
 
+        $htmlType = $column->getType()->getName();
         if (empty($field)) {
             $field = $this->fieldRepository->create([
                 'model_id' => $model->id,
                 'name' => $column->getName(),
-                'html_type' => $column->getType()->getName()
+                'html_type' => $htmlType
             ]);
         } else {
             $field->update([
-                'html_type' => $column->getType()->getName()
+                'html_type' => $htmlType
             ]);
         }
+
         return $field;
     }
 
@@ -424,6 +426,9 @@ class DBSyncCommand extends BaseCommand
         $type = $dbConfig->type;
 
         $htmlType = app("ViewMapping")->predictHTMLType($name, $type);
+        if (Str::contains($field->name, "_id")) {
+            $htmlType = "select";
+        }
 
         $field->update([
             "html_type" => $htmlType

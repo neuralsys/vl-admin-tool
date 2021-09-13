@@ -1,0 +1,2 @@
+/** @var $SOURCE_TABLE_NAME_SINGULAR_HUMAN$Repository */
+private $$SOURCE_TABLE_NAME_SINGULAR_CAMEL$Repository;

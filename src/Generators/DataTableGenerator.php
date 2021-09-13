@@ -91,39 +91,14 @@ class DataTableGenerator extends BaseGenerator
 
     private function generateFKJoinQuery(GeneratorField $field) {
         $templateData = get_template('scaffold.datatable.fk_join', 'vl-admin-tool');
-        $vars = $this->generateFKVars($field);
+        $vars = $this->commandData->generateFKVars($field);
         return trim(fill_template($vars, $templateData));
     }
 
     private function generateFKFilter(GeneratorField $field) {
         $templateData = get_template('scaffold.datatable.fk_filter', 'vl-admin-tool');
-        $vars = $this->generateFKVars($field);
+        $vars = $this->commandData->generateFKVars($field);
         return trim(fill_template($vars, $templateData));
-    }
-
-    private function generateFKVars(GeneratorField $field) {
-        /** @var Field $fieldObj */
-        $fieldObj = $this->commandData->modelObject->fields()->where('name', $field->name)->first();
-        $destinationField = $fieldObj->secondFields[0];
-        $destinationModel = $destinationField->model;
-
-        return [
-            '$SOURCE_TABLE_NAME$' => $destinationModel->table_name,
-            '$SOURCE_COLUMN$' => $destinationField->name,
-            '$TABLE_NAME$' => $this->commandData->modelObject->table_name,
-            '$FOREIGN_COLUMN$' => $fieldObj->name,
-            '$SOURCE_SELECTED_COLUMN$' => $this->findNextColumn($destinationModel, $destinationField),
-            '$SOURCE_TABLE_NAME_SINGULAR$' => Str::camel(Str::singular($destinationModel->table_name)),
-        ];
-    }
-
-    private function findNextColumn(Model $model, Field $markField) {
-        $fields = $model->fields;
-        $mark = false;
-        foreach ($fields as $field) {
-            if ($mark) return $field->name;
-            if ($field->id == $markField->id) $mark = true;
-        }
     }
 
     private function generateSelectedColumns() {
@@ -131,7 +106,7 @@ class DataTableGenerator extends BaseGenerator
 
         /** @var GeneratorField $field */
         foreach ($this->commandData->fields as $field) {
-            if ($field->isShowable && !$field->isForeignKey) {
+            if ($field->isShowable) {
                 $selectedColumns[] = "'{$field->name}'";
             }
         }
@@ -155,17 +130,17 @@ class DataTableGenerator extends BaseGenerator
             $fieldColumn = str_replace('$TABS$', infy_tabs(3), $fieldColumn);
 
             if ($field->isForeignKey) {
-                $vars = $this->generateFKVars($field);
+                $vars = $this->commandData->generateFKVars($field);
 
                 $fieldColumn = str_replace(
                     '$FIELD_NAME$',
-                    "_". $vars['$SOURCE_TABLE_NAME_SINGULAR$']. "_" . $vars['$SOURCE_SELECTED_COLUMN$'],
+                    "_". $vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$']. "_" . $vars['$SOURCE_SELECTED_COLUMN$'],
                     $fieldColumn
                 );
 
                 $fieldColumn = str_replace(
                     '$MODEL_NAME_CAMEL$',
-                    $vars['$SOURCE_TABLE_NAME_SINGULAR$'],
+                    $vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$'],
                     $fieldColumn
                 );
 

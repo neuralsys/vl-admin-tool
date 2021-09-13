@@ -1,7 +1,6 @@
 ## Laravel Admin Tool by Vuongdq
 
 ## Todo:
-- Generate Select Option For Select Field in Controller
 - Auto choose Html Type as Select if field is Foreign Key
     
 

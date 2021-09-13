@@ -97,8 +97,8 @@ class GenerateMenuCommand extends BaseCommand {
                 $menus = '';
                 $condition = '';
                 foreach ($childrenMenus as $childrenMenu) {
-                    if ($condition == '') $condition = "Request::routeIs('$childrenMenu->url_pattern')";
-                    else $condition = $condition . ' | ' . "Request::routeIs('$childrenMenu->url_pattern')";
+                    if ($condition == '') $condition = "Request::routeIs('$childrenMenu->index_route_name')";
+                    else $condition = $condition . ' | ' . "Request::routeIs('$childrenMenu->index_route_name')";
                     $menuObj = $this->generateMenu($childrenMenu, $level + 1);
                     $menus = $menus.PHP_EOL.$menuObj;
                 }

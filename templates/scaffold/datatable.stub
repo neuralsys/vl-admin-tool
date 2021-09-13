@@ -52,18 +52,28 @@ class $MODEL_NAME$DataTable extends DataTable
                     fnRowCallBack(nRow, aData, iDisplayIndex, $MODEL_NAME_CAMEL$SelectedRows);
                  }",
                 'buttons'   => [
-                    [
-                       'extend' => 'export',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
+                    'buttons' => [
+                        [
+                           'extend' => 'export',
+                           'className' => 'btn-sm',
+                           'text' => '<i class="fa fa-download"></i> ' .__('auth.app.export').''
+                        ],
+                        [
+                           'extend' => 'reload',
+                           'className' => 'btn-sm',
+                           'text' => '<i class="fa fa-sync"></i> ' .__('auth.app.reload').''
+                        ],
                     ],
-                    [
-                       'extend' => 'reload',
-                       'className' => 'btn btn-default btn-sm no-corner',
-                       'text' => '<i class="fa fa-refresh"></i> ' .__('auth.app.reload').''
-                    ],
+                    'dom' => [
+                        'button' => [
+                            'className' => 'btn btn-primary'
+                        ],
+                        'buttonLiner' => [
+                            'tag' => null
+                        ]
+                    ]
                 ],
-                 'language' => __('vl-admin-tool-lang::datatable'),
+                 'language' => __('datatable'),
                  "lengthMenu" => [[10, 25, 50, -1], [10, 25, 50, "All"]],
                  'select' => true
             ]);
@@ -88,7 +98,7 @@ class $MODEL_NAME$DataTable extends DataTable
      */
     protected function filename()
     {
-        return '$MODEL_NAME_PLURAL_SNAKE$_datatable_' . time();
+        return __('models/$MODEL_NAME_CAMEL$.plural') . '_' . time();
     }
 
     private function getScript()

@@ -317,14 +317,14 @@ class DBSyncCommand extends BaseCommand
         $isFKorPK = $isPK || $isFK;
 
         $isPassword = strpos($field->name, 'password') !== false;
-        $isSearchable = in_array($dbConfig->type, ['string', 'text']);
+        $isSearchable = in_array($dbConfig->type, ['string']);
 
         $isSearchable = ($isSearchable || $isFK) && !$isPassword && !$isRemberToken;
 
         return [
             'showable' => !$isPK && !$isPassword && !$isRemberToken,
             'searchable' => $isSearchable,
-            'orderable' => !$isPK,
+            'orderable' => $isFK,
             'exportable' => !$isPK && !$isPassword && !$isRemberToken,
             'printable' => !$isPK && !$isPassword && !$isRemberToken,
             'class' => null,

@@ -30,7 +30,7 @@ class DataTableGenerator extends BaseGenerator
 
     public function generate()
     {
-        $templateName = 'datatable';
+        $templateName = 'datatable.main';
 
         $templateData = get_template('scaffold.'.$templateName, 'vl-admin-tool');
 
@@ -54,7 +54,8 @@ class DataTableGenerator extends BaseGenerator
         return [
             '$DATATABLE_COLUMNS$' => implode(','.infy_nl_tab(1, 3), $this->generateDataTableColumns()),
             '$SELECTED_COLUMNS$' => $this->generateSelectedColumns(),
-            '$FK_QUERIES$' => prefix_tabs_each_line($this->generateFKQueries(), 3)
+            '$FK_QUERIES$' => prefix_tabs_each_line($this->generateFKQueries(), 3),
+            '$FK_FILTERS$' => prefix_tabs_each_line($this->generateFKFilters(), 3),
         ];
     }
 
@@ -73,8 +74,29 @@ class DataTableGenerator extends BaseGenerator
         return "\n" . implode("\n", $queries);
     }
 
+    private function generateFKFilters() {
+            $queries = [];
+            /** @var GeneratorField $field */
+            foreach ($this->commandData->fields as $field) {
+                if ($field->isShowable) {
+                    if ($field->isForeignKey) {
+                        $queries[] = $this->generateFKFilter($field);
+                    }
+                }
+            }
+
+            if (count($queries) == 0) return "";
+            return "\n" . implode("\n", $queries);
+        }
+
     private function generateFKJoinQuery(GeneratorField $field) {
-        $templateData = get_template('scaffold.datatable_fk_join', 'vl-admin-tool');
+        $templateData = get_template('scaffold.datatable.fk_join', 'vl-admin-tool');
+        $vars = $this->generateFKVars($field);
+        return trim(fill_template($vars, $templateData));
+    }
+
+    private function generateFKFilter(GeneratorField $field) {
+        $templateData = get_template('scaffold.datatable.fk_filter', 'vl-admin-tool');
         $vars = $this->generateFKVars($field);
         return trim(fill_template($vars, $templateData));
     }

@@ -19,7 +19,7 @@ class $MODEL_NAME$DataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
+        return $dataTable$FK_FILTERS$
             ->addColumn('action', '$NS_VIEW_PREFIX$$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
     }
 

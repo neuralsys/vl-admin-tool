@@ -1,6 +1,6 @@
 Auth::routes([
-    'register' => false,
-    'reset' => false,
-    'confirm' => false,
-    'verify' => false,
+    'register' => true,
+    'reset' => true,
+    'confirm' => true,
+    'verify' => true,
 ]);

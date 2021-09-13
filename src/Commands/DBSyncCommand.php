@@ -388,6 +388,9 @@ class DBSyncCommand extends BaseCommand
                     break;
             }
 
+            # password column
+            if ($field->name == "password") $rule[] = "min:8";
+
             # unique at the end
             if ($dbConfig->unique) $rule[] = "unique:$tableName,". $field->name;
         }

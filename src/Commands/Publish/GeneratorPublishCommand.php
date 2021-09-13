@@ -452,6 +452,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
     {
         return [
             'layouts/app'        => 'layouts/app.blade.php',
+            'layouts/auth'        => 'layouts/auth.blade.php',
             'layouts/sidebar'    => 'layouts/sidebar.blade.php',
             'layouts/navbar'    => 'layouts/navbar.blade.php',
             'layouts/datatables_css'    => 'layouts/datatables_css.blade.php',

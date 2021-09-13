@@ -39,6 +39,7 @@ class GeneratorField
     public $isCreatable = true;
     public $isEditable = true;
     public $isShowable = true;
+    public $isForeignKey;
 
     /** @var $table Table  */
     public $table;
@@ -135,6 +136,7 @@ class GeneratorField
             ) continue;
             $localColum = $foreignKey->getLocalColumns()[0];
             if ($localColum != $this->name) continue;
+            $this->isForeignKey = true;
             $foreignField = $foreignKey->getForeignColumns()[0];
             $foreignTable = $foreignKey->getForeignTableName();
             $cascadeOnUpdate = $foreignKey->onUpdate();

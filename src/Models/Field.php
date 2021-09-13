@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * @property \Illuminate\Database\Eloquent\Collection $dtConfigs
  * @property \Vuongdq\VLAdminTool\Models\Relation $relation
  * @property \Illuminate\Database\Eloquent\Collection $relation1s
+ * @property \Illuminate\Database\Eloquent\Collection $secondFields
  * @property integer $model_id
  * @property string $name
  * @property string $html_type
@@ -80,6 +81,14 @@ class Field extends EloquentModel
     public function relations()
     {
         return $this->hasMany(\Vuongdq\VLAdminTool\Models\Relation::class, 'first_field_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function secondFields()
+    {
+        return $this->belongsToMany(Field::class, 'relations', 'first_field_id', 'second_field_id');
     }
 
     public static function boot() {

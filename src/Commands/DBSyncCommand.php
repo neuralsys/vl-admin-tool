@@ -311,20 +311,22 @@ class DBSyncCommand extends BaseCommand
     public function predictDTConfig(Field $field, DBConfig $dbConfig, Column $column, array $primaryColumns): array
     {
         $isPK = in_array($field->name, $primaryColumns);
+        $isRemberToken = $field->name == "remember_token";
+
         $isFK = strpos($field->name, '_id') !== false; # Todo: update logic for all cases
         $isFKorPK = $isPK || $isFK;
 
         $isPassword = strpos($field->name, 'password') !== false;
         $isSearchable = in_array($dbConfig->type, ['string', 'text']);
 
-        $isSearchable = ($isSearchable || $isFKorPK) && !$isPassword;
+        $isSearchable = ($isSearchable || $isFK) && !$isPassword && !$isRemberToken;
 
         return [
-            'showable' => !$isPK && !$isPassword,
+            'showable' => !$isPK && !$isPassword && !$isRemberToken,
             'searchable' => $isSearchable,
-            'orderable' => false,
-            'exportable' => !$isFKorPK && !$isPassword,
-            'printable' => !$isFKorPK && !$isPassword,
+            'orderable' => !$isPK,
+            'exportable' => !$isPK && !$isPassword && !$isRemberToken,
+            'printable' => !$isPK && !$isPassword && !$isRemberToken,
             'class' => null,
             'has_footer' => false
         ];

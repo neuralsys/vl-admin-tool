@@ -85,6 +85,7 @@ class CommandData
             '$FIELD_NAME$'       => 'name',
             '$FIELD_NAME_CAMEL$'       => 'fieldCamel',
             '$FIELD_DEFAULT_VALUE$'       => 'fieldDefaultValue',
+            '$LANG_FIELD_NAME$'       => 'name',
         ];
 
         $this->config = new GeneratorConfig();

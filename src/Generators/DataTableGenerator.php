@@ -4,7 +4,10 @@ namespace Vuongdq\VLAdminTool\Generators;
 
 use Illuminate\Support\Str;
 use Vuongdq\VLAdminTool\Common\CommandData;
+use Vuongdq\VLAdminTool\Models\Field;
+use Vuongdq\VLAdminTool\Models\Model;
 use Vuongdq\VLAdminTool\Utils\FileUtil;
+use Vuongdq\VLAdminTool\Common\GeneratorField;
 
 class DataTableGenerator extends BaseGenerator
 {
@@ -31,13 +34,11 @@ class DataTableGenerator extends BaseGenerator
 
         $templateData = get_template('scaffold.'.$templateName, 'vl-admin-tool');
 
+        # common vars
         $templateData = fill_template($this->commandData->dynamicVars, $templateData);
 
-        $templateData = str_replace(
-            '$DATATABLE_COLUMNS$',
-            implode(','.infy_nl_tab(1, 3), $this->generateDataTableColumns()),
-            $templateData
-        );
+        # special vars
+        $templateData = fill_template($this->generateSpecialVars(), $templateData);
 
         $path = $this->commandData->config->pathDataTables;
 
@@ -47,6 +48,73 @@ class DataTableGenerator extends BaseGenerator
 
         $this->commandData->commandComment("\nDataTable created: ");
         $this->commandData->commandInfo($fileName);
+    }
+
+    private function generateSpecialVars() {
+        return [
+            '$DATATABLE_COLUMNS$' => implode(','.infy_nl_tab(1, 3), $this->generateDataTableColumns()),
+            '$SELECTED_COLUMNS$' => $this->generateSelectedColumns(),
+            '$FK_QUERIES$' => prefix_tabs_each_line($this->generateFKQueries(), 3)
+        ];
+    }
+
+    private function generateFKQueries() {
+        $queries = [];
+        /** @var GeneratorField $field */
+        foreach ($this->commandData->fields as $field) {
+            if ($field->isShowable) {
+                if ($field->isForeignKey) {
+                    $queries[] = $this->generateFKJoinQuery($field);
+                }
+            }
+        }
+
+        if (count($queries) == 0) return "";
+        return "\n" . implode("\n", $queries);
+    }
+
+    private function generateFKJoinQuery(GeneratorField $field) {
+        $templateData = get_template('scaffold.datatable_fk_join', 'vl-admin-tool');
+        $vars = $this->generateFKVars($field);
+        return trim(fill_template($vars, $templateData));
+    }
+
+    private function generateFKVars(GeneratorField $field) {
+        /** @var Field $fieldObj */
+        $fieldObj = $this->commandData->modelObject->fields()->where('name', $field->name)->first();
+        $destinationField = $fieldObj->secondFields[0];
+        $destinationModel = $destinationField->model;
+
+        return [
+            '$SOURCE_TABLE_NAME$' => $destinationModel->table_name,
+            '$SOURCE_COLUMN$' => $destinationField->name,
+            '$TABLE_NAME$' => $this->commandData->modelObject->table_name,
+            '$FOREIGN_COLUMN$' => $fieldObj->name,
+            '$SOURCE_SELECTED_COLUMN$' => $this->findNextColumn($destinationModel, $destinationField),
+            '$SOURCE_TABLE_NAME_SINGULAR$' => Str::camel(Str::singular($destinationModel->table_name)),
+        ];
+    }
+
+    private function findNextColumn(Model $model, Field $markField) {
+        $fields = $model->fields;
+        $mark = false;
+        foreach ($fields as $field) {
+            if ($mark) return $field->name;
+            if ($field->id == $markField->id) $mark = true;
+        }
+    }
+
+    private function generateSelectedColumns() {
+        $selectedColumns = [];
+
+        /** @var GeneratorField $field */
+        foreach ($this->commandData->fields as $field) {
+            if ($field->isShowable && !$field->isForeignKey) {
+                $selectedColumns[] = "'{$field->name}'";
+            }
+        }
+
+        return implode(",", $selectedColumns);
     }
 
     private function generateDataTableColumns(): array
@@ -63,6 +131,28 @@ class DataTableGenerator extends BaseGenerator
             $fieldColumn = str_replace('$PRINTABLE$', $field->isPrintable ? "true" : "false", $fieldColumn);
             $fieldColumn = str_replace('$CSS_CLASS$', $field->cssClasses, $fieldColumn);
             $fieldColumn = str_replace('$TABS$', infy_tabs(3), $fieldColumn);
+
+            if ($field->isForeignKey) {
+                $vars = $this->generateFKVars($field);
+
+                $fieldColumn = str_replace(
+                    '$FIELD_NAME$',
+                    "_". $vars['$SOURCE_TABLE_NAME_SINGULAR$']. "_" . $vars['$SOURCE_SELECTED_COLUMN$'],
+                    $fieldColumn
+                );
+
+                $fieldColumn = str_replace(
+                    '$MODEL_NAME_CAMEL$',
+                    $vars['$SOURCE_TABLE_NAME_SINGULAR$'],
+                    $fieldColumn
+                );
+
+                $fieldColumn = str_replace(
+                    '$LANG_FIELD_NAME$',
+                    $vars['$SOURCE_SELECTED_COLUMN$'],
+                    $fieldColumn
+                );
+            }
 
             $fieldTemplate = fill_template_with_field_data(
                 $this->commandData->dynamicVars,

@@ -31,7 +31,9 @@ class $MODEL_NAME$DataTable extends DataTable
      */
     public function query($MODEL_NAME$ $model)
     {
-        return $model->newQuery();
+        return $model
+            ->newQuery()
+            ->select($SELECTED_COLUMNS$)$FK_QUERIES$;
     }
 
     /**

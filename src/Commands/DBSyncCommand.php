@@ -291,6 +291,8 @@ class DBSyncCommand extends BaseCommand
                 $res['type'] = 'string';
                 break;
         }
+
+        if ($column->getUnsigned()) $res['type'] = 'unsigned' . Str::ucfirst($res['type']);
         return $res;
     }
 

@@ -11,7 +11,7 @@ class UserRoleTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\UserRole::create([
+        \App\Models\UserRole::firstOrCreate([
            'user_id' => 1,
            'role_id' => 1
         ]);

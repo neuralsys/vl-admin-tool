@@ -123,6 +123,8 @@ class ModelController extends Controller
         $modelName = $model->class_name;
         try {
             $exitCode = Artisan::call("vlat:generate $modelName --skip=$skipOptionValue --force");
+            $composer = app()['composer'];
+            $composer->dumpOptimized();
             if ($exitCode === 0) {
                 return $this->success("Generate $modelName successfully!");
             } else {
@@ -136,11 +138,14 @@ class ModelController extends Controller
     public function sync() {
         try {
             $exitCode = Artisan::call("vlat.sync:db");
+            $composer = app()['composer'];
+            $composer->dumpOptimized();
             if ($exitCode === 0) {
                 return $this->success("Sync database successfully!");
             } else {
                 return $this->error("Sync database failed, exit code=$exitCode!");
             }
+
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }

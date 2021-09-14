@@ -11,7 +11,7 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Role::create([
+        \App\Models\Role::firstOrCreate([
             'code' => \App\Models\Role::SUPER_ADMIN,
             'title' => 'Super Admin'
         ]);

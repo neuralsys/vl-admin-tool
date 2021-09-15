@@ -14,15 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-$AUTH_ROUTES$
+Route::group(['middleware' => ['verifyCaptcha']], function () {
+    $AUTH_ROUTES$
 
-Route::group(['middleware' => ['auth:web', 'verified', 'checkPermission']], function (\Illuminate\Routing\Router $route) {
-    $route->get('/', function () {
-        return redirect()->route("home");
-    })->name("default-home");
+    Route::group(['middleware' => ['auth:web', 'verified', 'checkPermission']], function (\Illuminate\Routing\Router $route) {
+        $route->get('/', function () {
+            return redirect()->route("home");
+        })->name("default-home");
 
-    $route->get('/home', 'HomeController@index')->name('home');
+        $route->get('/home', 'HomeController@index')->name('home');
 
-    $DOMAIN_ROUTES$
-    # v-mp-r
+        $DOMAIN_ROUTES$
+        # v-mp-r
+    });
 });

@@ -13,7 +13,7 @@ class APIRequestsGeneratorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vl-admin-tool.api:requests';
+    protected $name = 'vlat.api:requests';
 
     /**
      * The console command description.

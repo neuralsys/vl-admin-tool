@@ -13,7 +13,7 @@ class RequestsGeneratorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vl-admin-tool.scaffold:requests';
+    protected $name = 'vlat.scaffold:requests';
 
     /**
      * The console command description.

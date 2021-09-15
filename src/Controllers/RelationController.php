@@ -39,7 +39,7 @@ class RelationController extends Controller
             return redirect()->route("fields.index");
 
         $fields = $this->fieldRepository->getFieldsForRelation($request->input('field_id'));
-        $relationTypes = config('vl_admin_tool.relationTypes');
+        $relationTypes = config('relations.relationTypes');
 
         return $relationDataTable->render('vl-admin-tool::relations.index', [
             "field_id" => $request->input("field_id"),

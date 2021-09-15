@@ -26,6 +26,7 @@ return [
     'register'         => 'Register',
 
     'login' => [
+        'label'               => 'Login',
         'title'               => 'Sign in to start your session',
         'forgot_password'     => 'I forgot my password',
         'register_membership' => 'Register a new membership',

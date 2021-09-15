@@ -13,7 +13,7 @@ class ControllerGeneratorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vl-admin-tool.scaffold:controller';
+    protected $name = 'vlat.scaffold:controller';
 
     /**
      * The console command description.

@@ -105,6 +105,16 @@ class DBSyncCommand extends BaseCommand
         $this->ignoreTables = array_merge([
             'migrations',
         ], $this->getAdminTableNames());
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $this->info('Fetching tables from DB connection...');
         $this->schemaManager = DB::getDoctrineSchemaManager();
         $platform = $this->schemaManager->getDatabasePlatform();
         $defaultMappings = [
@@ -119,16 +129,6 @@ class DBSyncCommand extends BaseCommand
         foreach ($mappings as $dbType => $doctrineType) {
             $platform->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
-    {
-        $this->info('Fetching tables from DB connection...');
         $this->getTablesFromTable();
         $this->info('Syncing DB successfully!');
         return 0;

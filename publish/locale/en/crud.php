@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'captcha_invalid' => 'Captcha not valid!',
     'add_new' => 'Add New',
     'cancel' => 'Cancel',
     'save' => 'Save',

@@ -13,7 +13,7 @@ class ViewsGeneratorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vl-admin-tool.scaffold:views';
+    protected $name = 'vlat.scaffold:views';
 
     /**
      * The console command description.

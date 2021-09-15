@@ -14,7 +14,7 @@ class TestsGeneratorCommand extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'vl-admin-tool.api:tests';
+    protected $name = 'vlat.api:tests';
 
     /**
      * The console command description.

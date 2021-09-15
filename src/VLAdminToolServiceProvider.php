@@ -45,10 +45,12 @@ class VLAdminToolServiceProvider extends ServiceProvider {
         # config
         $configPath = $packagePath . '/publish/config/vl_admin_tool.php';
         $relationsConstantsPath = $packagePath . '/publish/config/relations.php';
+        $captchaPath = $packagePath . '/publish/config/captcha.php';
 
         $this->publishes([
             $configPath => config_path('vl_admin_tool.php'),
             $relationsConstantsPath => config_path('relations.php'),
+            $captchaPath => config_path('captcha.php'),
         ], "config");
 
         if ($this->app->runningInConsole()) {
@@ -76,10 +78,6 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new LayoutPublishCommand();
         });
 
-        $this->app->singleton('vlat.publish.user', function ($app) {
-            return new PublishUserCommand();
-        });
-
         $this->app->singleton('vlat.migrate', function ($app) {
             return new MigrateCommand();
         });
@@ -104,22 +102,6 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             return new GenerateModelCommand();
         });
 
-        $this->app->singleton('vlat.generate.repository', function ($app) {
-            return new RepositoryGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.generate.controller', function ($app) {
-            return new ControllerGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.generate.request', function ($app) {
-            return new RequestsGeneratorCommand();
-        });
-
-        $this->app->singleton('vlat.generate.view', function ($app) {
-            return new ViewsGeneratorCommand();
-        });
-
         $this->app->singleton('vlat.rollback', function ($app) {
             return new RollbackGeneratorCommand();
         });
@@ -134,15 +116,9 @@ class VLAdminToolServiceProvider extends ServiceProvider {
             # run specific cases
             'vlat.generate.menu',
             'vlat.publish.layout',
-            'vlat.publish.user',
 
             # generate model with elements
             'vlat.generate',
-            'vlat.generate.model',
-            'vlat.generate.controller',
-            'vlat.generate.repository',
-            'vlat.generate.request',
-            'vlat.generate.view',
 
             # rollback
             'vlat.rollback',
@@ -154,6 +130,9 @@ class VLAdminToolServiceProvider extends ServiceProvider {
         $this->mergeConfigFrom($configPath, 'vl_admin_tool');
 
         $relationsConstantsPath = $packagePath . '/publish/config/relations.php';
-        $this->mergeConfigFrom($relationsConstantsPath, 'vl_admin_tool');
+        $this->mergeConfigFrom($relationsConstantsPath, 'relations');
+
+        $captchaPath = $packagePath . '/publish/config/captcha.php';
+        $this->mergeConfigFrom($captchaPath, 'captcha');
     }
 }

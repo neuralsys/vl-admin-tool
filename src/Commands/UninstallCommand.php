@@ -37,6 +37,8 @@ class UninstallCommand extends BaseCommand
     {
         $this->info('Uninstalling VL Admin Tool...');
         $this->removeTables();
+        $composer = app()['composer'];
+        $composer->dumpOptimized();
         $this->info('Uninstall VL Admin Tool successfully!');
         return 0;
     }

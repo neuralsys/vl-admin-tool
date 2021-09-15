@@ -399,7 +399,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $endLinePos = strpos($content, "];\n}\n");
 
         $middlewareName = Str::camel($fileName);
-        $middlewareLine = "'$middlewareName' => $fileName::class,\n";
+        $middlewareLine = "'$middlewareName' => Middleware\\$fileName::class,\n";
         if (strpos($content, $middlewareLine) !== false) {
             return;
         }

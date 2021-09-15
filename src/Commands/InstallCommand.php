@@ -55,6 +55,9 @@ class InstallCommand extends BaseCommand
         if (!$this->hasOption('skip-sync') || !$this->option('skip-sync'))
             $this->call('vlat.sync:db');
 
+        $composer = app()['composer'];
+        $composer->dumpOptimized();
+        
         $this->info('Install VL Admin Tool successfully!');
         return 0;
     }

@@ -128,6 +128,7 @@ class DataTableGenerator extends BaseGenerator
             $fieldColumn = str_replace('$PRINTABLE$', $field->isPrintable ? "true" : "false", $fieldColumn);
             $fieldColumn = str_replace('$CSS_CLASS$', $field->cssClasses, $fieldColumn);
             $fieldColumn = str_replace('$TABS$', infy_tabs(3), $fieldColumn);
+            $parentLang = "";
 
             if ($field->isForeignKey) {
                 $vars = $this->commandData->generateFKVars($field);
@@ -149,8 +150,12 @@ class DataTableGenerator extends BaseGenerator
                     $vars['$SOURCE_SELECTED_COLUMN$'],
                     $fieldColumn
                 );
+
+                $parentLang = "__('models/{$vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$']}.singular') . \" \" . ";
             }
 
+            $fieldColumn = str_replace('$FK_PARENT_LANG$', $parentLang, $fieldColumn);
+            
             $fieldTemplate = fill_template_with_field_data(
                 $this->commandData->dynamicVars,
                 $this->commandData->fieldNamesMapping,

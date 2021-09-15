@@ -182,10 +182,10 @@ class CommandData
     }
 
     private function findNextColumn(Model $model, Field $markField) {
-        $fields = $model->fields;
+        $fields = $model->fields()->orderBy('pos')->get();
         $mark = false;
         foreach ($fields as $field) {
-            if ($mark) return $field->name;
+            if ($mark && !Str::contains($field->name, "_id")) return $field->name;
             if ($field->id == $markField->id) $mark = true;
         }
     }

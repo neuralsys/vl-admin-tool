@@ -197,7 +197,7 @@ class DBSyncCommand extends BaseCommand
         return $model;
     }
 
-    public function createOrUpdateField(Model $model, Column $column)
+    public function createOrUpdateField(Model $model, Column $column, int $index)
     {
         $field = $this->fieldRepository
             ->where("model_id", $model->id)
@@ -209,11 +209,13 @@ class DBSyncCommand extends BaseCommand
             $field = $this->fieldRepository->create([
                 'model_id' => $model->id,
                 'name' => $column->getName(),
-                'html_type' => $htmlType
+                'html_type' => $htmlType,
+                'pos' => $index
             ]);
         } else {
             $field->update([
-                'html_type' => $htmlType
+                'html_type' => $htmlType,
+                'pos' => $index
             ]);
         }
 
@@ -807,13 +809,15 @@ class DBSyncCommand extends BaseCommand
             if (!in_array($field->name, $columnNames)) $field->delete();
         }
 
+        $pos = 0;
         foreach ($columns as $column) {
             if (in_array($column->getName(), ['created_at', 'deleted_at', 'updated_at'])) continue;
-            $field = $this->createOrUpdateField($model, $column);
+            $field = $this->createOrUpdateField($model, $column, $pos);
             $dbConfig = $this->createOrUpdateDBConfig($field, $column, $tableIndexes);
             $dtConfig = $this->createOrUpdateDTConfig($field, $dbConfig, $column, $primaryColumns);
             $crudConfig = $this->createOrUpdateCRUDConfig($field, $dbConfig, $column, $primaryColumns, $model->table_name);
             $field = $this->updateHTMLType($field, $dbConfig);
+            $pos += 1;
         }
     }
 

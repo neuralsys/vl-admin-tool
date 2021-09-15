@@ -37,7 +37,8 @@ class FieldDataTable extends DataTable {
         return $model
             ->newQuery()
             ->where('model_id', $modelId)
-            ->with('dbConfig', 'dtConfig', 'crudConfig');
+            ->with('dbConfig', 'dtConfig', 'crudConfig')
+            ->orderBy('pos');
     }
 
     /**

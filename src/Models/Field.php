@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * @property integer $model_id
  * @property string $name
  * @property string $html_type
+ * @property integer $pos
  */
 class Field extends EloquentModel
 {
@@ -28,7 +29,8 @@ class Field extends EloquentModel
     public $fillable = [
         'model_id',
         'name',
-        'html_type'
+        'html_type',
+        'pos',
     ];
 
     /**
@@ -40,7 +42,8 @@ class Field extends EloquentModel
         'id' => 'integer',
         'model_id' => 'integer',
         'name' => 'string',
-        'html_type' => 'string'
+        'html_type' => 'string',
+        '$pos' => 'integer',
     ];
 
     /**

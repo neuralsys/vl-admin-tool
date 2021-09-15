@@ -70,7 +70,7 @@ class TableFieldsGenerator
     }
 
     public function getTableColumns() {
-        return $this->modelObject->fields;
+        return $this->modelObject->fields()->orderBy('pos')->get();
     }
 
     public function generateTimestampField($columnName) {

@@ -12,16 +12,16 @@ Route::group(['prefix' => 'permissions'], function ($router) {
 });
 
 Route::group(['prefix' => 'role-permissions'], function ($router) {
-    $router->get('/', 'RolePermissionController@index')->name('rolePermissions.index');
-    // $router->get('{id}', 'RolePermissionController@show')->name('rolePermissions.show');
-    $router->post('/', 'RolePermissionController@store')->name('rolePermissions.store');
-    $router->delete('{id}', 'RolePermissionController@destroy')->name('rolePermissions.destroy');
+    $router->get('/', 'RolePermissionController@index')->name('role-permissions.index');
+    // $router->get('{id}', 'RolePermissionController@show')->name('role-permissions.show');
+    $router->post('/', 'RolePermissionController@store')->name('role-permissions.store');
+    $router->delete('{id}', 'RolePermissionController@destroy')->name('role-permissions.destroy');
 });
 
 Route::group(['prefix' => 'user-roles'], function ($router) {
-    $router->get('/', 'UserRoleController@index')->name('userRoles.index');
-    // $router->get('{id}', 'UserRoleController@show')->name('userRoles.show');
-    $router->post('/', 'UserRoleController@store')->name('userRoles.store');
-    $router->put('{id}', 'UserRoleController@update')->name('userRoles.update');
-    $router->delete('{id}', 'UserRoleController@destroy')->name('userRoles.destroy');
+    $router->get('/', 'UserRoleController@index')->name('user-roles.index');
+    // $router->get('{id}', 'UserRoleController@show')->name('user-roles.show');
+    $router->post('/', 'UserRoleController@store')->name('user-roles.store');
+    $router->put('{id}', 'UserRoleController@update')->name('user-roles.update');
+    $router->delete('{id}', 'UserRoleController@destroy')->name('user-roles.destroy');
 });

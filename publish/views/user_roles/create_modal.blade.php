@@ -1,5 +1,5 @@
 <div class="modal fade" id="userRole-create-modal">
-    <form id="userRole-create-form" method="POST" action="{{route('userRoles.store')}}">
+    <form id="userRole-create-form" method="POST" action="{{route('user-roles.store')}}">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

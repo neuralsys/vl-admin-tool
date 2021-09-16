@@ -335,7 +335,7 @@ class ModelGenerator extends BaseGenerator
             }
 
             $rule = "'".$field->name."' => ";
-            $castType = app(DBTypeRepository::class)->getRuleByDBType($field->fieldType);
+            $castType = app(DBTypeRepository::class)->getCastsTypeByDBType($field->fieldType);
             if ($castType == 'decimal')
                 $rule .= sprintf("'decimal:%d'", $field->numberDecimalPoints);
             else $rule .= "'$castType'";

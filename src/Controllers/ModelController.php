@@ -112,7 +112,7 @@ class ModelController extends Controller
         $ignoreTables = [
             'roles',
             'permissions',
-            'role_users',
+            'user_roles',
             'role_permissions'
         ];
 

@@ -40,7 +40,7 @@ class RoutesGenerator
 
         $markPosition = strripos($this->existRouteContents, "# v-mp-r");
         if ($markPosition !== false) {
-            $this->routeContents = prefix_tabs_each_line($this->routeContents, 1) . PHP_EOL . infy_tabs(1);
+            $this->routeContents = prefix_tabs_each_line($this->routeContents, 2) . PHP_EOL . infy_tabs(2);
             $newContent = substr($this->existRouteContents, 0, $markPosition) . $this->routeContents . substr($this->existRouteContents, $markPosition);
         }
         else $newContent = $this->existRouteContents."\n{$this->routeContents}";

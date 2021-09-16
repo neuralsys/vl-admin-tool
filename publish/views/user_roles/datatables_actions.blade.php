@@ -8,7 +8,7 @@
 
     <button
         class='btn btn-danger btn-xs datatable-action'
-        onclick="deleteRecord(this, '{{route("userRoles.destroy", "%s")}}', true, )"
+        onclick="deleteRecord(this, '{{route("user-roles.destroy", "%s")}}', true, )"
     >
         <i class="fas fa-trash-alt"></i>
     </button>

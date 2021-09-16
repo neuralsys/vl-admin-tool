@@ -42,10 +42,10 @@ class DBTypeRepository {
         "date" => 'date',
         "dateTime" => 'datetime',
         "dateTimeTz" => 'datetime',
-        "timestamp" => 'timestamp',
-        "timestampTz" => 'timestamp',
-        "softDeletes" => 'timestamp',
-        "softDeletesTz" => 'timestamp',
+        "timestamp" => 'datetime',
+        "timestampTz" => 'datetime',
+        "softDeletes" => null,
+        "softDeletesTz" => null,
     ];
 
     /**
@@ -55,7 +55,7 @@ class DBTypeRepository {
         return array_keys(self::MAPPING_CASTS);
     }
 
-    public function getRuleByDBType(string $type) {
+    public function getCastsTypeByDBType(string $type) {
         return self::MAPPING_CASTS[$type];
     }
 }

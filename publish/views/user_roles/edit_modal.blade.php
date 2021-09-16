@@ -1,5 +1,5 @@
 <div class="modal fade" id="userRole-edit-modal">
-    <form id="userRole-edit-form" method="POST" data-template-action="{{route('userRoles.update', '%s')}}">
+    <form id="userRole-edit-form" method="POST" data-template-action="{{route('user-roles.update', '%s')}}">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

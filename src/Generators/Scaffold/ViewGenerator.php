@@ -193,7 +193,6 @@ class ViewGenerator extends BaseGenerator
             $this->commandData->addDynamicVariable('$SIZE$', $minMaxRules);
 
             $fieldTemplate = HTMLFieldGenerator::generateHTML($field, $this->templateType);
-
             if (!empty($fieldTemplate)) {
                 if ($field->isForeignKey) {
                     $vars = $this->commandData->generateFKVars($field);

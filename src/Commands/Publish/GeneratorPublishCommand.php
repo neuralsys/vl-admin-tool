@@ -490,8 +490,8 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $authRoutes = get_template('scaffold/routes/auth', 'vl-admin-tool');
 
         return fill_template([
-            '$AUTH_ROUTES$' => $authRoutes,
-            '$DOMAIN_ROUTES$' => $rolePermissionRoutes,
+            '$AUTH_ROUTES$' => prefix_tabs_each_line($authRoutes, 1),
+            '$DOMAIN_ROUTES$' => prefix_tabs_each_line($rolePermissionRoutes, 1),
         ], $templateRoute);
     }
 

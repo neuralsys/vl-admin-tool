@@ -18,6 +18,7 @@ class CreateFieldsTable extends Migration
             $table->unsignedBigInteger('model_id');
             $table->string('name');
             $table->string('html_type');
+            $table->unsignedInteger('pos');
             $table->timestamps();
 
             $table->foreign('model_id')->references('id')->on('models');

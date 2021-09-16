@@ -106,7 +106,7 @@ class DataTableGenerator extends BaseGenerator
 
         /** @var GeneratorField $field */
         foreach ($this->commandData->fields as $field) {
-            if ($field->isShowable) {
+            if ($field->isShowable || $field->isPrimary) {
                 $selectedColumns[] = "'{$this->commandData->modelObject->table_name}.{$field->name}'";
             }
         }
@@ -155,7 +155,7 @@ class DataTableGenerator extends BaseGenerator
             }
 
             $fieldColumn = str_replace('$FK_PARENT_LANG$', $parentLang, $fieldColumn);
-            
+
             $fieldTemplate = fill_template_with_field_data(
                 $this->commandData->dynamicVars,
                 $this->commandData->fieldNamesMapping,

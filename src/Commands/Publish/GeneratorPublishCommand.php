@@ -62,7 +62,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
         $userPath = app_path('User.php');
         if (file_exists($userPath)) {
-            $userContent = file_get_contents();
+            $userContent = file_get_contents($userPath);
             $userContent = str_replace("namespace App;", "namespace App\Models;", $userContent);
             FileUtil::createDirectoryIfNotExist(app_path('Models'));
             file_put_contents(app_path('Models/User.php'), $userContent);

@@ -194,14 +194,20 @@ class ViewGenerator extends BaseGenerator
 
             $fieldTemplate = HTMLFieldGenerator::generateHTML($field, $this->templateType);
             if (!empty($fieldTemplate)) {
+                $fkSourceLang = "";
                 if ($field->isForeignKey) {
                     $vars = $this->commandData->generateFKVars($field);
                     $fieldTemplate = fill_template([
                         '$FIELD_NAME_CAMEL$' => $vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$'],
                         '$MODEL_NAME_CAMEL$' => $vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$'],
                         '$LANG_FIELD_NAME$' => $vars['$SOURCE_SELECTED_COLUMN$'],
+                        '$LANG_FIELD_NAME$' => $vars['$SOURCE_SELECTED_COLUMN$'],
+                        '$FK_SOURCE$' => "__('models/{$vars['$SOURCE_TABLE_NAME_SINGULAR_CAMEL$']}.singular') . \" \" . ",
                     ], $fieldTemplate);
                 }
+                $fieldTemplate = fill_template([
+                    '$FK_SOURCE$' => $fkSourceLang
+                ], $fieldTemplate);
 
                 $fieldTemplate = fill_template_with_field_data(
                     $this->commandData->dynamicVars,

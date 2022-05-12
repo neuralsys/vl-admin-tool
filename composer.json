@@ -31,7 +31,7 @@
         "php": "^7.3",
         "illuminate/support": "^7.0",
         "laravel/ui": "^2.4",
-        "doctrine/dbal": "=2.3",
+        "doctrine/dbal": "^2.3",
         "yajra/laravel-datatables-buttons": "^4.0",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
